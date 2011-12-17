@@ -1,0 +1,87 @@
+"Job"란, 백엔드에서 처리되는 작업의 가장 작은 단위이다.
+"Service"란, "Job"를 처리하기 위한 백엔드 시스템의 기본단위를 의미한다.
+"Service"는 Scale-out를 기본으로 개발하여 서버 컴퓨터를 추가하면,
+부하 분산이 되도록 한다.
+
+각 "Service"는, "Type"과 "Group"을 기준으로 분할 된다.
+"Service" 끼리의 통신은, BSON를 이용하여 통신한다.
+"Group"에서 "all"과 "single"이라는 Group이름은 예약어이므로 사용할 수 없다.
+
+"Service"가 가동되면 우선 기존에 알고 있는 "Serivce"로 접속시도를 한다
+만일, 현재 가동 되고 있는 "Service"가 없을 경우, "getLiveService" 패킷을
+전송하지 않고 반대의 경우, 패킷을 전송하여 "liveServiceList"를 받아와
+해당 "Service"에 접속을 한다.
+
+다른 "Service"에서 자신에게 접속을 한 경우 접속을 요청한 "Service"로,
+"serviceInfo" 패킷을 전송하여 해당 "Service"가 자신의 정보를 알 수 있도록 한다
+
+이런 과정을 통하여 새로 생성된 "Service"는 모든 "Service"의 정보를 알 수 있게
+되고 이 과정을 거친 신규 "Service"는 "startService" 패킷을 통해
+자신의 "Service" 종류와 서비스가 시작됨을 알린다.
+
+기본적인 "Service"는 모두 all이라는 "Group"에 가입이 되어 있다.
+"Group"를 "all"로 지정한 상태로 패킷을 전송하면 해당 "Service"를 제공하는 모든
+서버에게 패킷을 전송하며, "single"로 지정된 경우, 해당 "Service"를 제공하는 모든
+서버중에 가장 부하가 적은 서버로 패킷을 전송하게 된다.
+만약 새로운 "Group"에 가입을 하고 싶은 경우, "joinGroup" 패킷을 통하여 가입을
+진행하고, 탈퇴를 하고 싶은 경우, "dropGroup" 패킷을 통하여 탈퇴를 할 수 있다.
+특정 "Group"에 가입이 되어 있지 않은 "Service"도 해당 "Group"에 가입중인
+"Service"에 패킷을 전송 할 수 있다.
+
+이렇게 가동된 "Service"들은 특정 주기(60초)를 기준으로 "ping" 패킷을
+모든 "Service"로 전송을 한다.
+"ping" 패킷을 수신 받은 "Serivce"들은 "pong" 패킷을 전송함으로써
+현재 정상 가동되고 있음을 알린다.
+
+서버 점검등의 이유로 "Serivce"의 운영이 중지 될 경우 "stopService" 패킷을 전송
+한다. 
+
+class SerivceJob
+{
+	public SerivceJob(String type);
+	public void setGroup(String name);
+	public void setMessage(Map data);
+	public void send();
+	public delegate void Success(SerivceJob job, Object data);
+	public delegate void Fail(SerivceJob job, Object data);
+}
+
+class ItemSerivceRequest : SerivceJob
+{
+	public ItemSerivceRequest() : SerivceJob("item")
+	public void getItem(long id)
+	{
+		this->setGroup("single");
+		this->setMessage("type"=>"getItem", "id"=>id);
+	}
+}
+
+ItemSerivceRequest itemRequest = new ItemSerivceRequest(); 
+itemRequest->getItem(123);
+itemRequest->Success += this.a;
+itemRequest->Fail += this.b;
+
+아래는 본 백엔드에 사용되는 기본적인 패킷 구조를 설명한다.
+
+{type:"ping"}
+{type:"pong"}
+
+{type:"startService", name:"Map"}
+{type:"startService", name:"Item"}
+
+{type:"getLiveService"}
+
+{
+	type:"liveServiceList",
+	service:[
+			{ip:"10.0.0.10", port:20011},
+			{ip:"10.0.0.11", port:20014}
+		]
+}
+
+{type:"serviceInfo", type:"Map", groups:["Map1","Map2"]}
+
+{type:"joinGroup", groups:["Map1","Map2"]}
+{type:"dropGroup", groups:["Map1","Map2"]}
+
+{type:"stopService"}
