@@ -1,0 +1,27 @@
+P2P는 Client들간의 직접적인 통신을 의미 하며, 대표적으로 캐릭터 좌표등을 교환 하는데 사용된다.
+
+Service와 마찬가지고 Group를 이루고 있으며, Group에 가입된 Client끼리 통신을 하게 되있다.
+
+우선 Service가 새로운 P2P Group를 생성을 하게 되면, 해당 P2P Group에 등록된 모든 Client에게 그 사실을 통보한다.
+
+해당 패킷에는 Group 이름과, Group의 구성원의 IP,port,name가 입력되어 있다.
+
+{type:"joinP2PGroup", group:"testGroup", client:[{ip:"127.0.0.1", port:1234, name:"test"}, {ip:"123.123.123.123", port:4567}]}
+
+그럼 각 Client끼리 통신을 시도하게 되는데, UDP, TCP 순서대로 시도하게 된다.
+
+각 Client끼리 연결이 되면, 연결된 모든 Client들에게 ping/pong 패킷을 송/수신하여 상대 Client와의 속도를 체크한다.
+
+그러면 각 Client들에게는 다른 Client들과의 속도표가 생기게 되는데, 이것을 서버로 전송하여, 가장 빠른 속도를 가진
+Client를 가려낸다.
+
+가려내는 방식은, 각 Client들에게 매겨진 속도를 전부 합한 값을 첫번째로 정렬(작은 순)하며,
+해당 Client에게 연결된 Client의 수를 두번째로 정렬(많은 순)하여 최 상위에 있는 Client 1개를 GroupPresident로
+정한다.
+
+이런 과정을 통하면 네트워크 환경에 의해서 P2P 연결이 안되는 Client가 존재하기 마련인데,
+그 Client들은 자신이 가지고 있는 속도표중에 가장 높은 순위에 있는 Client를 이용해서 다른 Client들에게 
+패킷을 전송한다.
+
+만약 모든 클라이언트들이 P2P 사용이 불가능 할 경우, 프록시 서비스가 그 역할을 대신한다.
+
