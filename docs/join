@@ -1,7 +1,0 @@
-Join Service
-
-Join Service는 게임 내부에서 회원가입을 담당하는 Service이다.
-추측상 가장 적은량의 Service가 가동될 것 같은 부분이다.
-
-
-{type:"join", id:"test", pw:"test", mail:"test@test.com"}
