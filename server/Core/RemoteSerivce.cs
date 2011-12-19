@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net.Sockets;
 
 namespace Netronics
 {
     class RemoteSerivce : Serivce
     {
-        string serivceName;
+        protected Socket oSocket;
+        protected string serivceName;
 
-        public RemoteSerivce(string serivceName)
+        public RemoteSerivce(Socket socket)
         {
-            this.serivceName = serivceName;
+            this.oSocket = socket;
         }
 
         public string getSerivceName()

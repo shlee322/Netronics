@@ -11,9 +11,9 @@ namespace Netronics
         {
             if (buffer.legibleBytes() < 5)
                 return null;
-            
+
             buffer.beginBufferIndex();
-            
+
             UInt32 len = buffer.readUInt32();
             if (len > buffer.legibleBytes())
             {

@@ -10,7 +10,7 @@ namespace Netronics
     {
         MemoryStream buffer = new MemoryStream();
         MemoryStream usedBuffer;
-        
+
         public long legibleBytes()
         {
             return buffer.Length;
