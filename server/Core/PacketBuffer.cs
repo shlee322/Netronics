@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Netronics
 {
-    class PacketBuffer
+    public class PacketBuffer
     {
         MemoryStream buffer = new MemoryStream();
         MemoryStream usedBuffer;
@@ -32,6 +32,11 @@ namespace Netronics
             buffer.WriteTo(usedBuffer);
             buffer = usedBuffer;
             usedBuffer = null;
+        }
+
+        public void write(byte[] buffer, int offset, int count)
+        {
+            this.buffer.Write(buffer, offset, count);
         }
 
         public int read(byte[] buffer, int offset, int count)

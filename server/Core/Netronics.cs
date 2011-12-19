@@ -14,13 +14,15 @@ namespace Netronics
 {
     public class Netronics
     {
-        public enum Flag { Family, SocketType, ProtocolType, ServiceIPAddress, ServicePort }
+        public enum Flag { Family, SocketType, ProtocolType, ServiceIPAddress, ServicePort, PacketDecoder }
 
         static protected AddressFamily family = AddressFamily.InterNetwork;
         static protected SocketType socketType = SocketType.Stream;
         static protected ProtocolType protocolType = ProtocolType.Tcp;
         static protected IPAddress addr = IPAddress.Any;
         static protected int port = 0;
+
+        static protected PacketDecoder packetDecoder = new BSONDecoder();
 
         static protected Serivce oSerivce;
         static protected Socket oSocket;
@@ -55,7 +57,16 @@ namespace Netronics
                     if (value.GetType() != typeof(int)) break;
                     Netronics.port = (int)value;
                     break;
+                case Flag.PacketDecoder:
+                    if (value.GetType() != typeof(PacketDecoder)) break;
+                    Netronics.packetDecoder = (PacketDecoder)value;
+                    break;
             }
+        }
+
+        static public PacketDecoder getPacketDecoder()
+        {
+            return Netronics.packetDecoder;
         }
 
         static public void start()
@@ -92,7 +103,7 @@ namespace Netronics
 
         static protected void acceptCallback(IAsyncResult ar)
         {
-            Socket client = Netronics.oSocket.EndAccept(ar);
+            new RemoteSerivce(Netronics.oSocket.EndAccept(ar));
             Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
         }
 

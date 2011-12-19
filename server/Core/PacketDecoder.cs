@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Netronics
 {
-    interface PacketDecoder
+    public interface PacketDecoder
     {
         object decode(PacketBuffer buffer);
     }
