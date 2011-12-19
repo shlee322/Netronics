@@ -8,13 +8,12 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
-using System.Collections.Generic;
 
 namespace Netronics
 {
     public class Netronics
     {
-        public enum Flag { Family, SocketType, ProtocolType, ServiceIPAddress, ServicePort, PacketDecoder }
+        public enum Flag { Family, SocketType, ProtocolType, ServiceIPAddress, ServicePort, PacketEncoder, PacketDecoder }
 
         static protected AddressFamily family = AddressFamily.InterNetwork;
         static protected SocketType socketType = SocketType.Stream;
@@ -22,6 +21,7 @@ namespace Netronics
         static protected IPAddress addr = IPAddress.Any;
         static protected int port = 0;
 
+        static protected PacketEncoder packetEncoder = new BSONEncoder();
         static protected PacketDecoder packetDecoder = new BSONDecoder();
 
         static protected Serivce oSerivce;
@@ -57,6 +57,10 @@ namespace Netronics
                     if (value.GetType() != typeof(int)) break;
                     Netronics.port = (int)value;
                     break;
+                case Flag.PacketEncoder:
+                    if (value.GetType() != typeof(PacketEncoder)) break;
+                    Netronics.packetEncoder = (PacketEncoder)value;
+                    break;
                 case Flag.PacketDecoder:
                     if (value.GetType() != typeof(PacketDecoder)) break;
                     Netronics.packetDecoder = (PacketDecoder)value;
@@ -64,7 +68,11 @@ namespace Netronics
             }
         }
 
-        static public PacketDecoder getPacketDecoder()
+        static protected PacketEncoder getPacketEncoder()
+        {
+            return Netronics.packetEncoder;
+        }
+        static protected PacketDecoder getPacketDecoder()
         {
             return Netronics.packetDecoder;
         }
@@ -103,8 +111,36 @@ namespace Netronics
 
         static protected void acceptCallback(IAsyncResult ar)
         {
-            new RemoteSerivce(Netronics.oSocket.EndAccept(ar));
+            RemoteSerivce newSerivce = new RemoteSerivce(Netronics.oSocket.EndAccept(ar));
             Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
+
+            newSerivce.getSocket().BeginReceive(newSerivce.getSocketBuffer(), 0, 512, SocketFlags.None, Netronics.readCallback, newSerivce);
+        }
+
+        static protected void readCallback(IAsyncResult ar)
+        {
+            RemoteSerivce serivce = (RemoteSerivce)ar.AsyncState;
+            int len = serivce.getSocket().EndReceive(ar);
+            serivce.getPacketBuffer().write(serivce.getSocketBuffer(), 0, len);
+            dynamic packet = Netronics.getPacketDecoder().decode(serivce.getPacketBuffer());
+            serivce.getSocket().BeginReceive(serivce.getSocketBuffer(), 0, 512, SocketFlags.None, Netronics.readCallback, serivce);
+
+            if (packet == null || packet.type.GetType() != typeof(string))
+                return;
+
+            Netronics.processingPacket(serivce, packet);
+        }
+
+        static protected void processingPacket(RemoteSerivce serivce, dynamic packet)
+        {
+            switch ((string)packet.type)
+            {
+                case "ping":
+                    dynamic data = new JObject();
+                    data.type = "pong";
+                    //여기서 패킷전송
+                    break;
+            }
         }
 
         static public void stop()
@@ -114,10 +150,7 @@ namespace Netronics
 
         static public void processingJob(Job job)
         {
-            MemoryStream ms = new MemoryStream();
-            JsonSerializer serializer = new JsonSerializer();
-            BsonWriter writer = new BsonWriter(ms);
-            serializer.Serialize(writer, job.message);
+            
 
             LinkedList<Serivce> serivceList;
 

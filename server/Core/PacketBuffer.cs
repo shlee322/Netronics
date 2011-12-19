@@ -11,6 +11,11 @@ namespace Netronics
         MemoryStream buffer = new MemoryStream();
         MemoryStream usedBuffer;
 
+        public MemoryStream getBufferStream()
+        {
+            return this.buffer;
+        }
+
         public long legibleBytes()
         {
             return buffer.Length;

@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Netronics
 {
-    public interface PacketDecoder
+    interface PacketEncoder
     {
-        dynamic decode(PacketBuffer buffer);
+        PacketBuffer encode(dynamic data);
     }
 }

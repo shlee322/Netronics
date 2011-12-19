@@ -7,7 +7,7 @@ namespace Netronics
 {
     class BSONDecoder : PacketDecoder
     {
-        public object decode(PacketBuffer buffer)
+        public dynamic decode(PacketBuffer buffer)
         {
             if (buffer.legibleBytes() < 5)
                 return null;
@@ -23,6 +23,8 @@ namespace Netronics
 
             byte[] data = new byte[len];
             buffer.readBytes(data);
+
+            buffer.endBufferIndex();
 
             //현재는 byte array를 리턴하지만, 차후 bson 데이터를 리턴하도록 변경.
             return data;

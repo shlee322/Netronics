@@ -17,27 +17,21 @@ namespace Netronics
         public RemoteSerivce(Socket socket)
         {
             this.oSocket = socket;
-            this.getSocket().BeginReceive(this.socketBuffer, 0, 512, SocketFlags.None, this.readCallback, null);
         }
 
-        protected Socket getSocket()
+        public Socket getSocket()
         {
             return this.oSocket;
         }
 
-        protected void readCallback(IAsyncResult ar)
+        public byte[] getSocketBuffer()
         {
-            int len = this.getSocket().EndReceive(ar);
-            packetBuffer.write(this.socketBuffer, 0, len);
-            object data = Netronics.getPacketDecoder().decode(packetBuffer);
-            this.getSocket().BeginReceive(this.socketBuffer, 0, 512, SocketFlags.None, this.readCallback, null);
-            if (data == null)
-                return;
+            return this.socketBuffer;
+        }
 
-
-            //기본적인 서비스 패킷 처리하고
-            //자기서비스의 processingJob로 넘기자!
-            //Netronics.serivce.processingJob();
+        public PacketBuffer getPacketBuffer()
+        {
+            return this.packetBuffer;
         }
 
         public string getSerivceName()
