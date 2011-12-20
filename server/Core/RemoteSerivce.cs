@@ -6,7 +6,10 @@ using System.Net.Sockets;
 
 namespace Netronics
 {
-    class RemoteSerivce : Serivce
+    /// <summary>
+    /// 원격지의 서비스
+    /// </summary>
+    public class RemoteSerivce : Serivce
     {
 
         protected byte[] socketBuffer = new byte[512];
