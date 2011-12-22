@@ -55,7 +55,7 @@
     <Compile Include="Service.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Netronics.csproj">
+    <ProjectReference Include="..\Framework\Netronics.csproj">
       <Project>{394898C7-12EE-478A-AD9A-7377B5DCC081}</Project>
       <Name>Netronics</Name>
     </ProjectReference>
