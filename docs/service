@@ -36,30 +36,36 @@
 서버 점검등의 이유로 "Serivce"의 운영이 중지 될 경우 "stopService" 패킷을 전송
 한다. 
 
-class SerivceJob
+class Job
 {
-	public SerivceJob(String type);
-	public void setGroup(String name);
-	public void setMessage(Map data);
-	public void send();
-	public delegate void Success(SerivceJob job, Object data);
-	public delegate void Fail(SerivceJob job, Object data);
+	public Job(String type);
+	public string group {};
+	public dynamic message {};
+	public dynamic result {};
+
+	public delegate void Result(Job job);
+	public delegate void Fail(Job job);
 }
 
-class ItemSerivceRequest : SerivceJob
+class ItemJob : Job
 {
-	public ItemSerivceRequest() : SerivceJob("item")
-	public void getItem(long id)
+        static public Job getItem(long id)
+        {
+            ItemJob job = new ItemJob();
+            job.group = "all";
+            job.message.type = "dropGroup";
+            job.message.id = id;
+            return job;
+        }
+
+	private ItemJob()
+		:base("item")
 	{
-		this->setGroup("single");
-		this->setMessage("type"=>"getItem", "id"=>id);
 	}
 }
-
-ItemSerivceRequest itemRequest = new ItemSerivceRequest(); 
-itemRequest->getItem(123);
-itemRequest->Success += this.a;
-itemRequest->Fail += this.b;
+ItemJob itemJob = ItemJob.getItem(123);
+itemJob->Success += this.a;
+itemJob->Fail += this.b;
 
 아래는 본 백엔드에 사용되는 기본적인 패킷 구조를 설명한다.
 
