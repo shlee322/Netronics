@@ -25,7 +25,6 @@ namespace Netronics
             return job;
         }
 
-
         private SerivceJob()
             : base("Netronics")
         {

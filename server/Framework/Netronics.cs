@@ -139,6 +139,8 @@ namespace Netronics
                 return;
             }
 
+            packet = packet.netronics;
+
             switch ((string)packet.type)
             {
                 case "ping":
@@ -146,6 +148,11 @@ namespace Netronics
                     data.type = "pong";
                     //여기서 패킷전송
                     break;
+                case "startService":
+                    break;
+                case "getLiveService":
+                    break;
+
             }
         }
 
@@ -158,7 +165,6 @@ namespace Netronics
 
             Netronics.serivce.processingJob(serivce, job);
         }
-        
 
         static public void stop()
         {
@@ -184,5 +190,7 @@ namespace Netronics
             {
             }
         }
+
+
     }
 }
