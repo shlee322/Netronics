@@ -50,7 +50,7 @@ namespace Netronics
         {
         }
 
-        public void processingJob(Job job)
+        public void processingJob(Serivce serivce, Job job)
         {
             //패킷전송을 만들자.
         }

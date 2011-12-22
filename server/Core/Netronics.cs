@@ -133,6 +133,12 @@ namespace Netronics
 
         static protected void processingPacket(RemoteSerivce serivce, dynamic packet)
         {
+            if (((string)packet.type) != "Netronics")
+            {
+                Netronics.processingJobPacket(serivce, packet);
+                return;
+            }
+
             switch ((string)packet.type)
             {
                 case "ping":
@@ -143,6 +149,17 @@ namespace Netronics
             }
         }
 
+        static protected void processingJobPacket(RemoteSerivce serivce, dynamic packet)
+        {
+            Job job = new Job(packet.serivce);
+            job.group = packet.netronics.group;
+            job.message = packet.netronics.message;
+            job.setReceiver();
+
+            Netronics.serivce.processingJob(serivce, job);
+        }
+        
+
         static public void stop()
         {
             serivce.stop();
@@ -150,8 +167,6 @@ namespace Netronics
 
         static public void processingJob(Job job)
         {
-            
-
             LinkedList<Serivce> serivceList;
 
             lock (Netronics.globalSerivceList)

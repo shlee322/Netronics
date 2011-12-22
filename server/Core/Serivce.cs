@@ -12,6 +12,6 @@ namespace Netronics
         void start();
         void stop();
 
-        void processingJob(Job job);
+        void processingJob(Serivce serivce, Job job);
     }
 }

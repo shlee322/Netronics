@@ -25,7 +25,7 @@ namespace ProxyService
         {
         }
 
-        public void processingJob(Netronics.Job job)
+        public void processingJob(Netronics.Serivce serivce, Netronics.Job job)
         {
         }
     }

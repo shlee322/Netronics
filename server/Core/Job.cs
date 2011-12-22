@@ -12,6 +12,8 @@ namespace Netronics
         protected Serivce serivce;
         protected string groupName = "single";
         protected dynamic oMessage = new JObject();
+        protected dynamic oResult = new JObject();
+        protected bool receiver = false;
 
         public Job(string serivce)
         {
@@ -29,8 +31,51 @@ namespace Netronics
             return this.serivceName;
         }
 
-        public string group { set { this.groupName = value; } get { return this.groupName; } }
-        public dynamic message { set { this.oMessage = value; } get { return this.oMessage; } }
+        public void setReceiver()
+        {
+            receiver = true;
+        }
+
+        public string group
+        {
+            set
+            {
+                this.groupName = value;
+            }
+            get
+            {
+                return this.groupName;
+            }
+        
+        }
+
+        public dynamic message
+        {
+            set
+            {
+                if (!receiver)
+                    this.oMessage = value;
+                else
+                    throw new Exception.JobPermissionException("Sender가 아니므로 메시지를 편집 할 수 없습니다.");
+            }
+            get
+            {
+                return this.oMessage;
+            }
+        }
+
+        public dynamic result {
+            set
+            {
+                if(receiver)
+                    this.oResult = value;
+                throw new Exception.JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
+            }
+            get
+            {
+                return this.oResult;
+            }
+        }
 
         public void callSuccess()
         {
@@ -41,6 +86,7 @@ namespace Netronics
         {
             this.fail(this);
         }
+
 
         public delegate void Result(Job job);
 
