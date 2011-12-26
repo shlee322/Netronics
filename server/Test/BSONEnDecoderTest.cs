@@ -11,7 +11,7 @@ namespace Test
     public class BSONEnDecoderTest
     {
         [TestMethod]
-        public void Test1()
+        public void BSONEnDecoderTest1()
         {
             dynamic data = new Newtonsoft.Json.Linq.JObject();
             data.test1 = "test";
@@ -25,6 +25,8 @@ namespace Test
 
             BSONDecoder decoder = new BSONDecoder();
             dynamic data2 = decoder.decode(buffer);
+
+            System.Console.WriteLine(data2);
         }
     }
 }
