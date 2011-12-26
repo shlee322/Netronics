@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 
 namespace Netronics
 {
-    class BSONDecoder : PacketDecoder
+    public class BSONDecoder : PacketDecoder
     {
+        protected JsonSerializer serializer = new JsonSerializer();
         public dynamic decode(PacketBuffer buffer)
         {
-            if (buffer.legibleBytes() < 5) //버퍼길이가 5미만이면 리턴
+            if (buffer.legibleBytes() < 9) //버퍼길이가 5미만이면 리턴
                 return null;
 
             //버퍼 읽기 시작을 알림
@@ -28,8 +32,9 @@ namespace Netronics
 
             buffer.endBufferIndex();
 
-            //현재는 byte array를 리턴하지만, 차후 bson 데이터를 리턴하도록 변경.
-            return data;
+
+
+            return serializer.Deserialize(new BsonReader(new MemoryStream(data)));
         }
     }
 }

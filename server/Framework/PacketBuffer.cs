@@ -25,23 +25,30 @@ namespace Netronics
         {
             if (usedBuffer == null)
                 usedBuffer = new MemoryStream();
+            buffer.Position = 0;
         }
 
         public void endBufferIndex()
         {
             usedBuffer = null;
+            buffer.Position = 0;
         }
 
         public void resetBufferIndex()
         {
             buffer.WriteTo(usedBuffer);
             buffer = usedBuffer;
-            usedBuffer = null;
+            this.endBufferIndex();
         }
 
         public void write(byte[] buffer, int offset, int count)
         {
             this.buffer.Write(buffer, offset, count);
+        }
+
+        public void write(UInt32 value)
+        {
+            this.write(BitConverter.GetBytes(value), 0, 4);
         }
 
         public int read(byte[] buffer, int offset, int count)
@@ -68,42 +75,42 @@ namespace Netronics
         {
             byte[] int16Data = new byte[2];
             this.read(int16Data, 0, 2);
-            return Convert.ToInt16(int16Data);
+            return BitConverter.ToInt16(int16Data, 0);
         }
 
         public Int32 readInt32()
         {
             byte[] int32Data = new byte[4];
             this.read(int32Data, 0, 4);
-            return Convert.ToInt32(int32Data);
+            return BitConverter.ToInt32(int32Data, 0);
         }
 
         public Int64 readInt64()
         {
             byte[] int64Data = new byte[8];
             this.read(int64Data, 0, 8);
-            return Convert.ToInt64(int64Data);
+            return BitConverter.ToInt64(int64Data, 0);
         }
 
         public UInt16 readUInt16()
         {
             byte[] uint16Data = new byte[2];
             this.read(uint16Data, 0, 2);
-            return Convert.ToUInt16(uint16Data);
+            return BitConverter.ToUInt16(uint16Data, 0);
         }
 
         public UInt32 readUInt32()
         {
             byte[] uint32Data = new byte[4];
             this.read(uint32Data, 0, 4);
-            return Convert.ToUInt32(uint32Data);
+            return BitConverter.ToUInt32(uint32Data, 0);
         }
 
         public UInt64 readUInt64()
         {
             byte[] uint64Data = new byte[8];
             this.read(uint64Data, 0, 8);
-            return Convert.ToUInt64(uint64Data);
+            return BitConverter.ToUInt64(uint64Data, 0);
         }
 
         public byte readByte()

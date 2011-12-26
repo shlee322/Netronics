@@ -8,13 +8,19 @@ using Newtonsoft.Json.Bson;
 
 namespace Netronics
 {
-    class BSONEncoder : PacketEncoder
+    public class BSONEncoder : PacketEncoder
     {
         protected JsonSerializer serializer = new JsonSerializer();
         public PacketBuffer encode(dynamic data)
         {
             PacketBuffer buffer = new PacketBuffer();
-            serializer.Serialize(new BsonWriter(buffer.getBufferStream()), data);
+
+            MemoryStream stream = new MemoryStream();
+            serializer.Serialize(new BsonWriter(stream), data);
+
+            buffer.write((UInt32)stream.Length);
+            stream.WriteTo(buffer.getBufferStream());
+
             return buffer;
         }
     }
