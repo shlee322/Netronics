@@ -10,7 +10,8 @@ namespace Netronics
     {
         protected string serivceName;
         protected Serivce serivce;
-        protected string groupName = "single";
+        protected string groupName = "all";
+        protected int oTake = 0;
         protected dynamic oMessage = new JObject();
         protected dynamic oResult = new JObject();
         protected bool receiver = false;
@@ -47,6 +48,18 @@ namespace Netronics
                 return this.groupName;
             }
         
+        }
+
+        public int take
+        {
+            set
+            {
+                this.oTake = value;
+            }
+            get
+            {
+                return this.oTake;
+            }
         }
 
         public dynamic message

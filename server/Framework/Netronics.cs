@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using Newtonsoft.Json;
@@ -160,6 +161,7 @@ namespace Netronics
         {
             Job job = new Job(packet.serivce);
             job.group = packet.netronics.group;
+            job.take = packet.netronics.take;
             job.message = packet.netronics.message;
             job.setReceiver();
 
@@ -173,22 +175,23 @@ namespace Netronics
 
         static public void processingJob(Job job)
         {
-            LinkedList<Serivce> serivceList;
+            string processingGroup = job.group;
 
-            lock (Netronics.globalSerivceList)
-            {
-                serivceList = Netronics.globalSerivceList[job.getSerivceName()];
-            }
+            //이럼 속도의 문제가 좀 있을것 같음.
+            //나중에 캐싱을 하던지 해보자.
+            IEnumerable<Serivce> serivceList =
+                from serivce in Netronics.globalSerivceList[job.getSerivceName()]
+                where serivce.isGroup(processingGroup)
+                orderby serivce.getLoad() ascending
+                select serivce;
 
-            if (serivceList == null)
-            {
-                job.callFail();
-                return;
-            }
+            if (job.take > 0)
+                serivceList = serivceList.Take(job.take);
 
-            lock (serivceList)
+            Parallel.ForEach(serivceList, serivce =>
             {
-            }
+                serivce.processingJob(Netronics.serivce, job);
+            });
         }
 
 

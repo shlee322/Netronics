@@ -42,6 +42,16 @@ namespace Netronics
             return this.serivceName;
         }
 
+        public float getLoad()
+        {
+            return 0;
+        }
+
+        public bool isGroup(string group)
+        {
+            return false;
+        }
+
         public void start()
         {
         }

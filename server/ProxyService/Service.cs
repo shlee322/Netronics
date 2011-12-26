@@ -25,6 +25,16 @@ namespace ProxyService
         {
         }
 
+        public float getLoad()
+        {
+            return 0;
+        }
+
+        public bool isGroup(string group)
+        {
+            return false;
+        }
+
         public void processingJob(Netronics.Serivce serivce, Netronics.Job job)
         {
         }

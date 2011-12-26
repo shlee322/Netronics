@@ -12,6 +12,9 @@ namespace Netronics
         void start();
         void stop();
 
+        bool isGroup(string name);
+        float getLoad();
+
         void processingJob(Serivce serivce, Job job);
     }
 }
