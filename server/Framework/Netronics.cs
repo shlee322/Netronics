@@ -28,8 +28,6 @@ namespace Netronics
         static protected Serivce oSerivce;
         static protected Socket oSocket;
 
-        static protected Dictionary<string, LinkedList<Serivce>> globalSerivceList;
-
         static public Serivce serivce { set { Netronics.oSerivce = value; } get { return Netronics.oSerivce; } }
 
         static public void setFlag(Flag flag, object value)
@@ -83,19 +81,11 @@ namespace Netronics
             if (Netronics.serivce == null)
                 return;
 
-            Netronics.initSerivceList();
+            PacketProcessor.init(Netronics.serivce);
 
             Netronics.initSocket();
 
             Netronics.serivce.start();
-        }
-
-        static protected void initSerivceList()
-        {
-            Netronics.globalSerivceList = new Dictionary<string, LinkedList<Serivce>>();
-            LinkedList<Serivce> mySerivceType = new System.Collections.Generic.LinkedList<Serivce>();
-            mySerivceType.AddFirst(Netronics.serivce);
-            Netronics.globalSerivceList.Add(Netronics.serivce.getSerivceName(), mySerivceType);
         }
 
         static protected void initSocket()
@@ -112,60 +102,8 @@ namespace Netronics
 
         static protected void acceptCallback(IAsyncResult ar)
         {
-            RemoteSerivce newSerivce = new RemoteSerivce(Netronics.oSocket.EndAccept(ar));
+            new RemoteSerivce(Netronics.oSocket.EndAccept(ar), Netronics.getPacketEncoder(), Netronics.getPacketDecoder());
             Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
-
-            newSerivce.getSocket().BeginReceive(newSerivce.getSocketBuffer(), 0, 512, SocketFlags.None, Netronics.readCallback, newSerivce);
-        }
-
-        static protected void readCallback(IAsyncResult ar)
-        {
-            RemoteSerivce serivce = (RemoteSerivce)ar.AsyncState;
-            int len = serivce.getSocket().EndReceive(ar);
-            serivce.getPacketBuffer().write(serivce.getSocketBuffer(), 0, len);
-            dynamic packet = Netronics.getPacketDecoder().decode(serivce.getPacketBuffer());
-            serivce.getSocket().BeginReceive(serivce.getSocketBuffer(), 0, 512, SocketFlags.None, Netronics.readCallback, serivce);
-
-            if (packet == null || packet.type.GetType() != typeof(string))
-                return;
-
-            Netronics.processingPacket(serivce, packet);
-        }
-
-        static protected void processingPacket(RemoteSerivce serivce, dynamic packet)
-        {
-            if (((string)packet.type) != "Netronics")
-            {
-                Netronics.processingJobPacket(serivce, packet);
-                return;
-            }
-
-            packet = packet.netronics;
-
-            switch ((string)packet.type)
-            {
-                case "ping":
-                    dynamic data = new JObject();
-                    data.type = "pong";
-                    //여기서 패킷전송
-                    break;
-                case "startService":
-                    break;
-                case "getLiveService":
-                    break;
-
-            }
-        }
-
-        static protected void processingJobPacket(RemoteSerivce serivce, dynamic packet)
-        {
-            Job job = new Job(packet.serivce);
-            job.group = packet.netronics.group;
-            job.take = packet.netronics.take;
-            job.message = packet.netronics.message;
-            job.setReceiver();
-
-            Netronics.serivce.processingJob(serivce, job);
         }
 
         static public void stop()
@@ -175,25 +113,7 @@ namespace Netronics
 
         static public void processingJob(Job job)
         {
-            string processingGroup = job.group;
-
-            //이럼 속도의 문제가 좀 있을것 같음.
-            //나중에 캐싱을 하던지 해보자.
-            IEnumerable<Serivce> serivceList =
-                from serivce in Netronics.globalSerivceList[job.getSerivceName()]
-                where serivce.isGroup(processingGroup)
-                orderby serivce.getLoad() ascending
-                select serivce;
-
-            if (job.take > 0)
-                serivceList = serivceList.Take(job.take);
-
-            Parallel.ForEach(serivceList, serivce =>
-            {
-                serivce.processingJob(Netronics.serivce, job);
-            });
+            PacketProcessor.processingJob(job);
         }
-
-
     }
 }

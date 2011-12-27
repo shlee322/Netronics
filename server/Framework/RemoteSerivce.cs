@@ -11,15 +11,44 @@ namespace Netronics
     /// </summary>
     public class RemoteSerivce : Serivce
     {
-
         protected byte[] socketBuffer = new byte[512];
         protected PacketBuffer packetBuffer = new PacketBuffer();
         protected Socket oSocket;
         protected string serivceName;
 
-        public RemoteSerivce(Socket socket)
+        protected PacketEncoder packetEncoder;
+        protected PacketDecoder packetDecoder;
+
+        public RemoteSerivce(Socket socket, PacketEncoder encoder, PacketDecoder decoder)
         {
             this.oSocket = socket;
+            this.packetEncoder = encoder;
+            this.packetDecoder = decoder;
+
+            this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
+        }
+
+        public PacketEncoder getPacketEncoder()
+        {
+            return this.packetEncoder;
+        }
+
+        public PacketDecoder getPacketDecoder()
+        {
+            return this.packetDecoder;
+        }
+
+        protected void readCallback(IAsyncResult ar)
+        {
+            int len = this.getSocket().EndReceive(ar);
+            this.getPacketBuffer().write(this.getSocketBuffer(), 0, len);
+            dynamic packet = this.getPacketDecoder().decode(this.getPacketBuffer());
+            this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
+
+            if (packet == null || packet.type.GetType() != typeof(string))
+                return;
+
+            PacketProcessor.processingPacket(this, packet);
         }
 
         public Socket getSocket()
@@ -57,6 +86,15 @@ namespace Netronics
         }
 
         public void stop()
+        {
+        }
+
+        public void sendMessage(dynamic data)
+        {
+            this.sendPacket(this.getPacketEncoder().encode(data));
+        }
+
+        public void sendPacket(PacketBuffer buffer)
         {
         }
 

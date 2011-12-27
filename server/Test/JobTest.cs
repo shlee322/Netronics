@@ -15,13 +15,27 @@ namespace Test
         {
             Job job = new Job("map");
             job.group = "all";
+            job.take = 3;
             job.message.test = 1;
             job.message.test2 = "abcd";
             job.success += new Job.Result(job_success);
             job.fail += new Job.Result(job_fail);
 
-            job.callSuccess();
-            job.callFail();
+            job.returnResult(true);
+        }
+
+        [TestMethod]
+        public void JobTest2()
+        {
+            Job job = new Job("item");
+            job.group = "all";
+            job.take = 3;
+            job.message.test = 1;
+            job.message.test2 = "abcd";
+            job.success += new Job.Result(job_success);
+            job.fail += new Job.Result(job_fail);
+
+            job.returnResult(false);
         }
 
         void job_fail(Job job)

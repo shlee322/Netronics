@@ -10,8 +10,7 @@ namespace Netronics
         static public SerivceJob joinGroup(string name)
         {
             SerivceJob job = new SerivceJob();
-            job.group = "all";
-            job.message.type = "joinGroup";
+            job.message.type = "iolnGroup";
             job.message.name = name;
             return job;
         }
@@ -19,7 +18,6 @@ namespace Netronics
         static public SerivceJob dropGroup(string name)
         {
             SerivceJob job = new SerivceJob();
-            job.group = "all";
             job.message.type = "dropGroup";
             job.message.name = name;
             return job;

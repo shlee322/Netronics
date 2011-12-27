@@ -51,6 +51,7 @@
     <Compile Include="PacketBuffer.cs" />
     <Compile Include="PacketDecoder.cs" />
     <Compile Include="PacketEncoder.cs" />
+    <Compile Include="PacketProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteSerivce.cs" />
     <Compile Include="Serivce.cs" />
