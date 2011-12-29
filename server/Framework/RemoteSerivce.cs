@@ -52,8 +52,13 @@ namespace Netronics
 
             this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
 
-            foreach(dynamic message in packetList)
-                PacketProcessor.processingPacket(this, message);
+            foreach (dynamic message in packetList)
+            {
+                if (!PacketProcessor.processingPacket(this, message))
+                {
+                    this.getTransaction((string)message.t).returnResult(message.s);
+                }
+            }
         }
 
         public Socket getSocket()
@@ -109,9 +114,19 @@ namespace Netronics
         {
         }
 
+        private string createTransaction(Job job)
+        {
+            return "123";
+        }
+
+        public Job getTransaction(string id)
+        {
+            return new Job("");
+        }
+
         public void processingJob(Serivce serivce, Job job)
         {
-            this.sendMessage(PacketProcessor.createQueryPacket(job));
+            this.sendMessage(PacketProcessor.createQueryPacket(job.transaction == "" ? createTransaction(job) : job.transaction, job));
         }
     }
 }

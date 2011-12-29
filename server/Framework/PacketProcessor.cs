@@ -12,11 +12,9 @@ namespace Netronics
     {
         static protected Dictionary<string, LinkedList<Serivce>> globalSerivceList;
         static protected Serivce serivce;
-        static protected long transactionID;
 
         static public void init(Serivce serivce)
         {
-            PacketProcessor.transactionID = long.MinValue;
             PacketProcessor.serivce = serivce;
             PacketProcessor.initSerivceList();
         }
@@ -29,36 +27,32 @@ namespace Netronics
             PacketProcessor.globalSerivceList.Add(PacketProcessor.serivce.getSerivceName(), mySerivceType);
         }
 
-        static public void processingPacket(RemoteSerivce serivce, dynamic message)
+        static public bool processingPacket(RemoteSerivce serivce, dynamic message)
         {
             string ver = message.v; //버전
             string t = message.t; //트랜젝션 id
             string y = message.y; //타입 q, r
 
             if (y == "q")
+            {
                 processingQueryPacket(serivce, message);
+                return true;
+            }
 
-
-        }
-        
-        static protected String createTransactionID(Job job)
-        {
-            long id = Interlocked.Increment(ref PacketProcessor.transactionID);
-            return "123";
+            return false;
         }
 
-        static public dynamic createQueryPacket(Job job)
+        static public dynamic createQueryPacket(string transactionID, Job job)
         {
             dynamic packet = new JObject();
 
             packet.v = "1";
 
-            if (job.transaction != null) //트랜젝션 부여가 안됬다.
-                packet.t = job.transaction == "" ? createTransactionID(job) : job.transaction;
+            packet.t = transactionID;
 
             packet.y = "q";
 
-            packet.s = job.getSerivceName();
+            //packet.s = job.getSerivceName();
             packet.g = job.group;
             packet.a = job.take;
             packet.m = job.message;

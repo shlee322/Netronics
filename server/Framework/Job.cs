@@ -15,7 +15,6 @@ namespace Netronics
         protected dynamic oMessage = new JObject();
         protected dynamic oResult = new JObject();
         protected bool receiver = false;
-        protected bool isReturnResult = false;
 
         public Job(string serivce)
         {
@@ -119,11 +118,6 @@ namespace Netronics
         {
             if (!receiver)
                 throw new Exception.JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
-
-            if (this.isReturnResult)
-                throw new System.Exception("이미 결과를 반환한 작업입니다.");
-
-            this.isReturnResult = true;
 
             if (success)
                 this.success(this);
