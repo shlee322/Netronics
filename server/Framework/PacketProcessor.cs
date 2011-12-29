@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Netronics
 {
@@ -11,9 +12,11 @@ namespace Netronics
     {
         static protected Dictionary<string, LinkedList<Serivce>> globalSerivceList;
         static protected Serivce serivce;
+        static protected long transactionID;
 
         static public void init(Serivce serivce)
         {
+            PacketProcessor.transactionID = long.MinValue;
             PacketProcessor.serivce = serivce;
             PacketProcessor.initSerivceList();
         }
@@ -26,16 +29,22 @@ namespace Netronics
             PacketProcessor.globalSerivceList.Add(PacketProcessor.serivce.getSerivceName(), mySerivceType);
         }
 
-        static public void processingPacket(RemoteSerivce serivce, dynamic packet)
+        static public void processingPacket(RemoteSerivce serivce, dynamic message)
         {
-            string ver = packet.v; //버전
-            string t = packet.t; //트랜젝션 id
-            string y = packet.y; //타입 q, r
+            string ver = message.v; //버전
+            string t = message.t; //트랜젝션 id
+            string y = message.y; //타입 q, r
 
             if (y == "q")
-                processingQueryPacket(serivce, packet);
+                processingQueryPacket(serivce, message);
 
 
+        }
+        
+        static protected String createTransactionID(Job job)
+        {
+            long id = Interlocked.Increment(ref PacketProcessor.transactionID);
+            return "123";
         }
 
         static public dynamic createQueryPacket(Job job)
@@ -43,7 +52,10 @@ namespace Netronics
             dynamic packet = new JObject();
 
             packet.v = "1";
-            packet.t = "123";
+
+            if (job.transaction != null) //트랜젝션 부여가 안됬다.
+                packet.t = job.transaction == "" ? createTransactionID(job) : job.transaction;
+
             packet.y = "q";
 
             packet.s = job.getSerivceName();

@@ -42,13 +42,18 @@ namespace Netronics
         {
             int len = this.getSocket().EndReceive(ar);
             this.getPacketBuffer().write(this.getSocketBuffer(), 0, len);
-            dynamic packet = this.getPacketDecoder().decode(this.getPacketBuffer());
+
+            LinkedList<dynamic> packetList = new LinkedList<dynamic>();
+
+            dynamic packet;
+            while ((packet = this.getPacketDecoder().decode(this.getPacketBuffer())) != null)
+                packetList.AddLast(packet);
+            packet = null;
+
             this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
 
-            if (packet == null || packet.type.GetType() != typeof(string))
-                return;
-
-            PacketProcessor.processingPacket(this, packet);
+            foreach(dynamic message in packetList)
+                PacketProcessor.processingPacket(this, message);
         }
 
         public Socket getSocket()
