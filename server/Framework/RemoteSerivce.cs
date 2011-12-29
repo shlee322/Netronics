@@ -96,11 +96,17 @@ namespace Netronics
 
         public void sendPacket(PacketBuffer buffer)
         {
+            byte[] sendBuffer = buffer.getBufferStream().ToArray();
+            this.getSocket().BeginSendTo(sendBuffer, 0, sendBuffer.Length, SocketFlags.None, this.getSocket().RemoteEndPoint, new AsyncCallback(this.sendPacketCallback), null);
+        }
+
+        private void sendPacketCallback(IAsyncResult ar)
+        {
         }
 
         public void processingJob(Serivce serivce, Job job)
         {
-            //패킷전송을 만들자.
+            this.sendMessage(PacketProcessor.createQueryPacket(job));
         }
     }
 }

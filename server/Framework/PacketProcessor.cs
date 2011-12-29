@@ -28,67 +28,71 @@ namespace Netronics
 
         static public void processingPacket(RemoteSerivce serivce, dynamic packet)
         {
-            if (((string)packet.type) != "Netronics")
-            {
-                PacketProcessor.processingJobPacket(serivce, packet);
-                return;
-            }
+            string ver = packet.v; //버전
+            string t = packet.t; //트랜젝션 id
+            string y = packet.y; //타입 q, r
 
-            packet = packet.netronics;
+            if (y == "q")
+                processingQueryPacket(serivce, packet);
 
-            switch ((string)packet.type)
-            {
-                case "ping":
-                    dynamic data = new JObject();
-                    data.type = "pong";
-                    //여기서 패킷전송
-                    break;
-                case "startService":
-                    break;
-                case "getLiveService":
-                    break;
-            }
+
         }
 
-        static protected void processingJobPacket(RemoteSerivce serivce, dynamic packet)
+        static public dynamic createQueryPacket(Job job)
         {
-            Job job = new Job(packet.serivce);
-            job.group = packet.netronics.group;
-            job.take = packet.netronics.take;
-            job.message = packet.netronics.message;
-            job.success += new Job.Result(
-                delegate(Job j)
-                {
-                    PacketProcessor.sendJobResult(j, true);
-                }
-                );
-            job.fail += new Job.Result(
-                delegate(Job j)
-                {
-                    PacketProcessor.sendJobResult(j, false);
-                }
-                );
+            dynamic packet = new JObject();
+
+            packet.v = "1";
+            packet.t = "123";
+            packet.y = "q";
+
+            packet.s = job.getSerivceName();
+            packet.g = job.group;
+            packet.a = job.take;
+            packet.m = job.message;
+
+            return packet;
+        }
+
+        static protected void processingQueryPacket(RemoteSerivce serivce, dynamic packet)
+        {
+            Job job = new Job(packet.s);
+            job.transaction = packet.t;
+            job.group = packet.g;
+            job.take = packet.a;
+            job.message = packet.m;
+
+            if (job.transaction != null) //트랜젝션 ID가 null일경우 결과 패킷을 전송하지 않아도 됨.
+            {
+                job.success += new Job.Result(
+                    delegate(Job j)
+                    {
+                        PacketProcessor.sendJobResult(j, true);
+                    }
+                    );
+                job.fail += new Job.Result(
+                    delegate(Job j)
+                    {
+                        PacketProcessor.sendJobResult(j, false);
+                    }
+                    );
+            }
+
             job.setReceiver();
 
             PacketProcessor.serivce.processingJob(serivce, job);
         }
 
-        static protected dynamic createJobResultMessage(string transactionID, bool success, dynamic result)
-        {
-            dynamic packet = new JObject();
-            packet.type = "Netronics";
-            packet.netronics = new JObject();
-            packet.netronics.type = "returnJobResult";
-            packet.netronics.transaction = transactionID;
-            packet.netronics.success = success;
-            packet.netronics.result = result;
-
-            return packet;
-        }
 
         static protected void sendJobResult(Job job, bool success)
         {
-            ((RemoteSerivce)job.getSerivce()).sendMessage(createJobResultMessage(job.getTransactionID(), success, job.result));
+            dynamic packet = new JObject();
+            packet.v = "1";
+            packet.t = job.transaction;
+            packet.y = "r";
+            packet.s = success;
+            packet.r = job.result;
+            ((RemoteSerivce)job.getSerivce()).sendMessage(packet);
         }
 
         static public void processingJob(Job job)

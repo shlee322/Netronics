@@ -46,9 +46,15 @@ namespace Netronics
             receiver = true;
         }
 
-        public string getTransactionID()
+        public string transaction
         {
-            return "";
+            set
+            {
+            }
+            get
+            {
+                return "";
+            }
         }
 
         public string group
