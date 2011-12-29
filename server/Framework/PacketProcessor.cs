@@ -63,28 +63,32 @@ namespace Netronics
         static protected void processingQueryPacket(RemoteSerivce serivce, dynamic packet)
         {
             Job job = new Job(packet.s);
-            job.transaction = packet.t;
             job.group = packet.g;
             job.take = packet.a;
             job.message = packet.m;
 
-            if (job.transaction != null) //트랜젝션 ID가 null일경우 결과 패킷을 전송하지 않아도 됨.
+            if (packet.t != null) //트랜젝션 ID가 null일경우 결과 패킷을 전송하지 않아도 됨.
             {
                 job.success += new Job.Result(
-                    delegate(Job j)
-                    {
-                        PacketProcessor.sendJobResult(j, true);
-                    }
+                        delegate(Job j)
+                        {
+                            PacketProcessor.sendJobResult(j, true);
+                        }
                     );
                 job.fail += new Job.Result(
-                    delegate(Job j)
-                    {
-                        PacketProcessor.sendJobResult(j, false);
-                    }
+                        delegate(Job j)
+                        {
+                            PacketProcessor.sendJobResult(j, false);
+                        }
                     );
+            }
+            else
+            {
+                job.receiveResult = false;
             }
 
             job.setReceiver();
+            job.transaction = packet.t;
 
             PacketProcessor.serivce.processingJob(serivce, job);
         }

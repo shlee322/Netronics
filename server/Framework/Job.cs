@@ -15,6 +15,8 @@ namespace Netronics
         protected dynamic oMessage = new JObject();
         protected dynamic oResult = new JObject();
         protected bool receiver = false;
+        protected bool isReceiveResult = true;
+        protected string oTransactionID = null;
 
         public Job(string serivce)
         {
@@ -45,14 +47,33 @@ namespace Netronics
             receiver = true;
         }
 
+        public bool receiveResult
+        {
+            set
+            {
+                if (receiver)
+                    throw new Exception.JobPermissionException("Sender가 아니므로 메시지를 편집 할 수 없습니다.");
+
+                this.isReceiveResult = value;
+            }
+            get
+            {
+                return isReceiveResult;
+            }
+        }
+
         public string transaction
         {
             set
             {
+                if (!receiver)
+                    throw new Exception.JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
+
+                this.oTransactionID = value;
             }
             get
             {
-                return "";
+                return this.oTransactionID;
             }
         }
 

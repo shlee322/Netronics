@@ -19,6 +19,8 @@ namespace Netronics
         protected PacketEncoder packetEncoder;
         protected PacketDecoder packetDecoder;
 
+        protected Transaction transaction;
+
         public RemoteSerivce(Socket socket, PacketEncoder encoder, PacketDecoder decoder)
         {
             this.oSocket = socket;
@@ -41,24 +43,33 @@ namespace Netronics
         protected void readCallback(IAsyncResult ar)
         {
             int len = this.getSocket().EndReceive(ar);
+
             this.getPacketBuffer().write(this.getSocketBuffer(), 0, len);
 
+            foreach (dynamic message in this.getPacketMessageList())
+            {
+                if (!PacketProcessor.processingPacket(this, message))
+                {
+                    Job job = this.transaction.getTransaction((string)message.t);
+                    if(job != null)
+                        job.returnResult(message.s);
+                }
+            } 
+
+            this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
+
+
+        }
+
+        private LinkedList<dynamic> getPacketMessageList()
+        {
             LinkedList<dynamic> packetList = new LinkedList<dynamic>();
 
             dynamic packet;
             while ((packet = this.getPacketDecoder().decode(this.getPacketBuffer())) != null)
                 packetList.AddLast(packet);
-            packet = null;
 
-            this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
-
-            foreach (dynamic message in packetList)
-            {
-                if (!PacketProcessor.processingPacket(this, message))
-                {
-                    this.getTransaction((string)message.t).returnResult(message.s);
-                }
-            }
+            return packetList;
         }
 
         public Socket getSocket()
@@ -114,19 +125,9 @@ namespace Netronics
         {
         }
 
-        private string createTransaction(Job job)
-        {
-            return "123";
-        }
-
-        public Job getTransaction(string id)
-        {
-            return new Job("");
-        }
-
         public void processingJob(Serivce serivce, Job job)
         {
-            this.sendMessage(PacketProcessor.createQueryPacket(job.transaction == "" ? createTransaction(job) : job.transaction, job));
+            this.sendMessage(PacketProcessor.createQueryPacket(job.receiveResult ? this.transaction.createTransaction(job) : null, job));
         }
     }
 }
