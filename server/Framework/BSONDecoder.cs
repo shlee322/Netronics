@@ -28,11 +28,11 @@ namespace Netronics
         /// <returns>BSON Data</returns>
         public dynamic decode(PacketBuffer buffer)
         {
-            if (buffer.legibleBytes() < 5) //버퍼길이가 5미만이면 리턴
-                return null;
-
             //버퍼 읽기 시작을 알림
             buffer.beginBufferIndex();
+
+            if (buffer.legibleBytes() < 5) //버퍼길이가 5미만이면 리턴
+                return null;
 
             UInt32 len = buffer.readUInt32();
             if (len > buffer.legibleBytes())

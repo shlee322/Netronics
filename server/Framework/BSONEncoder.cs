@@ -35,9 +35,10 @@ namespace Netronics
 
             MemoryStream stream = new MemoryStream();
             serializer.Serialize(new BsonWriter(stream), data);
+            stream.Position = 0;
 
             buffer.write((UInt32)stream.Length);
-            stream.WriteTo(buffer.getBufferStream());
+            buffer.write(stream);
             stream.Dispose();
 
             return buffer;

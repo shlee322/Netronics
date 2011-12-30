@@ -64,7 +64,7 @@ namespace BackendConsole
 
         static void send(Netronics.PacketBuffer buffer)
         {
-            client.Client.Send(buffer.getBufferStream().ToArray());
+            client.Client.Send(buffer.getBytes());
         }
     }
 }

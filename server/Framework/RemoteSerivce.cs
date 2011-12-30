@@ -117,7 +117,7 @@ namespace Netronics
 
         public void sendPacket(PacketBuffer buffer)
         {
-            byte[] sendBuffer = buffer.getBufferStream().ToArray();
+            byte[] sendBuffer = buffer.getBytes();
             this.getSocket().BeginSendTo(sendBuffer, 0, sendBuffer.Length, SocketFlags.None, this.getSocket().RemoteEndPoint, new AsyncCallback(this.sendPacketCallback), null);
         }
 

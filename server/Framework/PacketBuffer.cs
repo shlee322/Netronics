@@ -32,7 +32,12 @@ namespace Netronics
             }
         }
 
-        public MemoryStream getBufferStream()
+        public byte[] getBytes()
+        {
+            return this.buffer.ToArray();
+        }
+
+        private MemoryStream getBufferStream()
         {
             return this.buffer;
         }
@@ -49,20 +54,31 @@ namespace Netronics
 
         public void endBufferIndex()
         {
-            buffer.Position = 0;
+            MemoryStream old = this.buffer;   
+            this.buffer = new MemoryStream();
+
+            byte[] buf = new byte[1024];
+            int len;
+            while((len = old.Read(buf, 0, 1024))>0)
+                buffer.Write(buf, 0, len);
+            old.Dispose();
         }
 
         public void resetBufferIndex()
         {
-            this.endBufferIndex();
+            buffer.Position = 0;
         }
 
         public void write(byte[] buffer, int offset, int count)
         {
-            long position = this.buffer.Position;
             this.buffer.Position = this.buffer.Length;
             this.buffer.Write(buffer, offset, count);
-            this.buffer.Position = position;
+        }
+
+        public void write(Stream stream)
+        {
+            this.buffer.Position = this.buffer.Length;
+            stream.CopyTo(this.buffer);
         }
 
         public void write(UInt32 value)
