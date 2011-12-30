@@ -6,6 +6,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Netronics
 {
+    /// <summary>
+    /// Job란 백엔드단에서 처리되는 데이터의 가장 작은 단위이다.
+    /// </summary>
     public class Job
     {
         protected string serivceName;
@@ -18,27 +21,46 @@ namespace Netronics
         protected bool isReceiveResult = true;
         protected string oTransactionID = null;
 
+        /// <summary>
+        /// 새로운 Job을 생성
+        /// </summary>
+        /// <param name="serivce">Job를 처리할 Serivce</param>
         public Job(string serivce)
         {
             this.serivceName = serivce;
         }
 
+        /// <summary>
+        /// 새로운 Job을 생성
+        /// </summary>
+        /// <param name="serivce">Job을 처리할 Serivce</param>
         public Job(Serivce serivce)
         {
             this.serivce = serivce;
             this.serivceName = serivce.getSerivceName();
         }
 
+        /// <summary>
+        /// Job를 처리하는 서비스를 구하는 메서드 (기본적으로 사용안함)
+        /// </summary>
+        /// <returns>Job를 처리하는 서비스</returns>
         public Serivce getSerivce()
         {
             return this.serivce;
         }
 
+        /// <summary>
+        /// Job를 처리하는 서비스 이름을 구하는 메서드
+        /// </summary>
+        /// <returns>Job를 처리하는 서비스 이름</returns>
         public string getSerivceName()
         {
             return this.serivceName;
         }
 
+        /// <summary>
+        /// Job를 Receiver로 전환하는 메서드+ (프레임워크 내부에서만 사용)
+        /// </summary>
         public void setReceiver()
         {
             if (this.serivce == null)
@@ -47,6 +69,9 @@ namespace Netronics
             receiver = true;
         }
 
+        /// <summary>
+        /// Job 처리후 결과값을 수신 받을지 여부
+        /// </summary>
         public bool receiveResult
         {
             set
@@ -62,6 +87,9 @@ namespace Netronics
             }
         }
 
+        /// <summary>
+        /// Transaction ID (프레임워크 내부에서만 사용)
+        /// </summary>
         public string transaction
         {
             set
@@ -77,6 +105,9 @@ namespace Netronics
             }
         }
 
+        /// <summary>
+        /// Job를 처리할 Serivce Group
+        /// </summary>
         public string group
         {
             set
@@ -92,6 +123,10 @@ namespace Netronics
             }
         }
 
+        /// <summary>
+        /// Job를 처리할 Serivce 갯수
+        /// 0일 경우 모든 Serivce가 처리함
+        /// </summary>
         public int take
         {
             set
@@ -106,6 +141,9 @@ namespace Netronics
             }
         }
 
+        /// <summary>
+        /// Job Message
+        /// </summary>
         public dynamic message
         {
             set
@@ -121,6 +159,9 @@ namespace Netronics
             }
         }
 
+        /// <summary>
+        /// Job Result
+        /// </summary>
         public dynamic result {
             set
             {
@@ -135,6 +176,11 @@ namespace Netronics
             }
         }
 
+        /// <summary>
+        /// Job를 처리한 결과를 리턴하는 메서드
+        /// </summary>
+        /// <param name="serivce">Job를 처리한 Serivce</param>
+        /// <param name="success">성공여부</param>
         public void returnResult(Serivce serivce, bool success = true)
         {
             if (!receiver)
@@ -148,31 +194,58 @@ namespace Netronics
                 this.fail(serivce, arg);
         }
 
+        /// <summary>
+        /// Job 결과 이벤트 인자
+        /// </summary>
         public class ResultEventArgs : EventArgs
         {
             protected Job job;
             protected bool success;
 
+            /// <summary>
+            /// Job 결과 이벤트 인자 생성
+            /// </summary>
+            /// <param name="job">처리된 Job</param>
+            /// <param name="success">성공여부</param>
             public ResultEventArgs(Job job, bool success)
             {
                 this.job = job;
                 this.success = success;
             }
 
+            /// <summary>
+            /// 처리된 Job를 구하는 메서드
+            /// </summary>
+            /// <returns>처리된 Job</returns>
             public Job getJob()
             {
                 return this.job;
             }
 
+            /// <summary>
+            /// 성공여부를 리턴하는 메서드
+            /// </summary>
+            /// <returns>성공여부</returns>
             public bool getSuccess()
             {
                 return this.success;
             }
         }
 
+        /// <summary>
+        /// 결과를 수신 받는 Delegate
+        /// </summary>
+        /// <param name="sender">Job를 처리한 Serivce</param>
+        /// <param name="e">Job 결과 인자값</param>
         public delegate void Result(Serivce sender, ResultEventArgs e);
 
+        /// <summary>
+        /// Job 처리 성공 이벤트
+        /// </summary>
         public event Result success;
+        /// <summary>
+        /// Job 처리 실패 이벤트
+        /// </summary>
         public event Result fail;
     }
 }

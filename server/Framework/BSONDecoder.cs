@@ -8,12 +8,27 @@ using Newtonsoft.Json.Bson;
 
 namespace Netronics
 {
+    /// <summary>
+    /// BSON을 사용하는 Packet Decoder
+    /// 
+    ///  BSON 패킷 구조
+    /// ┌─────────┬────────────┐
+    /// │len = uint(4byte)│ BSON DATA([len] byte)│
+    /// └─────────┴────────────┘
+    ///
+    /// </summary>
     public class BSONDecoder : PacketDecoder
     {
         protected JsonSerializer serializer = new JsonSerializer();
+
+        /// <summary>
+        /// BSON 패킷 구조를 따르는 PacketBuffer을 BSON Data로 변환 시키는 메서드
+        /// </summary>
+        /// <param name="buffer">BSON 패킷 구조를 따르는 Packet Buffer</param>
+        /// <returns>BSON Data</returns>
         public dynamic decode(PacketBuffer buffer)
         {
-            if (buffer.legibleBytes() < 9) //버퍼길이가 5미만이면 리턴
+            if (buffer.legibleBytes() < 5) //버퍼길이가 5미만이면 리턴
                 return null;
 
             //버퍼 읽기 시작을 알림
