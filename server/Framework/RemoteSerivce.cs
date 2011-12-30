@@ -19,7 +19,7 @@ namespace Netronics
         protected PacketEncoder packetEncoder;
         protected PacketDecoder packetDecoder;
 
-        protected Transaction transaction;
+        protected Transaction transaction = new Transaction();
 
         public RemoteSerivce(Socket socket, PacketEncoder encoder, PacketDecoder decoder)
         {
