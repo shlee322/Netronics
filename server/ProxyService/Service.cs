@@ -21,11 +21,17 @@ namespace ProxyService
 
         public void init()
         {
-            divider.addProcessor(
+            this.divider.addProcessor(
                 delegate (AutoTypeDivider.DividerEventArgs e)
                 {
-                    return true;
-                }, null);
+                    return e.getJob().message.type == "test";
+                }, this.test);
+        }
+
+        private void test(AutoTypeDivider.DividerEventArgs e)
+        {
+            e.getJob().result.a = "ok";
+            e.getJob().returnResult(this);
         }
 
         public void start()
