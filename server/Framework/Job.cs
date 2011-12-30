@@ -11,8 +11,8 @@ namespace Netronics
     /// </summary>
     public class Job
     {
-        protected string serivceName;
-        protected Serivce serivce;
+        protected string serviceName;
+        protected Service service;
         protected string groupName = "all";
         protected int oTake = 0;
         protected dynamic oMessage = new JObject();
@@ -24,38 +24,38 @@ namespace Netronics
         /// <summary>
         /// 새로운 Job을 생성
         /// </summary>
-        /// <param name="serivce">Job를 처리할 Serivce</param>
-        public Job(string serivce)
+        /// <param name="Service">Job를 처리할 Service</param>
+        public Job(string service)
         {
-            this.serivceName = serivce;
+            this.serviceName = service;
         }
 
         /// <summary>
         /// 새로운 Job을 생성
         /// </summary>
-        /// <param name="serivce">Job을 처리할 Serivce</param>
-        public Job(Serivce serivce)
+        /// <param name="Service">Job을 처리할 Service</param>
+        public Job(Service service)
         {
-            this.serivce = serivce;
-            this.serivceName = serivce.getSerivceName();
+            this.service = service;
+            this.serviceName = service.getServiceName();
         }
 
         /// <summary>
         /// Job를 처리하는 서비스를 구하는 메서드 (기본적으로 사용안함)
         /// </summary>
         /// <returns>Job를 처리하는 서비스</returns>
-        public Serivce getSerivce()
+        public Service getService()
         {
-            return this.serivce;
+            return this.service;
         }
 
         /// <summary>
         /// Job를 처리하는 서비스 이름을 구하는 메서드
         /// </summary>
         /// <returns>Job를 처리하는 서비스 이름</returns>
-        public string getSerivceName()
+        public string getServiceName()
         {
-            return this.serivceName;
+            return this.serviceName;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Netronics
         }
 
         /// <summary>
-        /// Job를 처리할 Serivce Group
+        /// Job를 처리할 Service Group
         /// </summary>
         public string group
         {
@@ -121,8 +121,8 @@ namespace Netronics
         }
 
         /// <summary>
-        /// Job를 처리할 Serivce 갯수
-        /// 0일 경우 모든 Serivce가 처리함
+        /// Job를 처리할 Service 갯수
+        /// 0일 경우 모든 Service가 처리함
         /// </summary>
         public int take
         {
@@ -176,9 +176,9 @@ namespace Netronics
         /// <summary>
         /// Job를 처리한 결과를 리턴하는 메서드
         /// </summary>
-        /// <param name="serivce">Job를 처리한 Serivce</param>
+        /// <param name="Service">Job를 처리한 Service</param>
         /// <param name="success">성공여부</param>
-        public void returnResult(Serivce serivce, bool success = true)
+        public void returnResult(Service service, bool success = true)
         {
             if (!receiver)
                 throw new Exception.JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
@@ -186,9 +186,9 @@ namespace Netronics
             ResultEventArgs arg = new ResultEventArgs(this, success);
 
             if (success)
-                this.success(serivce, arg);
+                this.success(service, arg);
             else
-                this.fail(serivce, arg);
+                this.fail(service, arg);
         }
 
         /// <summary>
@@ -232,9 +232,9 @@ namespace Netronics
         /// <summary>
         /// 결과를 수신 받는 Delegate
         /// </summary>
-        /// <param name="sender">Job를 처리한 Serivce</param>
+        /// <param name="sender">Job를 처리한 Service</param>
         /// <param name="e">Job 결과 인자값</param>
-        public delegate void Result(Serivce sender, ResultEventArgs e);
+        public delegate void Result(Service sender, ResultEventArgs e);
 
         /// <summary>
         /// Job 처리 성공 이벤트

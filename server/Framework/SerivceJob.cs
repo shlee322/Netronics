@@ -6,79 +6,79 @@ using Newtonsoft.Json.Linq;
 
 namespace Netronics
 {
-    public class SerivceJob : Job
+    public class ServiceJob : Job
     {
-        static public SerivceJob ping(float load)
+        static public ServiceJob ping(float load)
         {
-            SerivceJob job = new SerivceJob();
+            ServiceJob job = new ServiceJob();
             job.message.s = "Netronics";
             job.message.t = "ping";
             job.message.l = load;
             return job;
         }
 
-        static public SerivceJob startSerivce(Serivce serivce)
+        static public ServiceJob startService(Service Service)
         {
-            SerivceJob job = new SerivceJob();
+            ServiceJob job = new ServiceJob();
             job.message.s = "Netronics";
             job.message.t = "startService";
-            job.message.n = serivce.getSerivceName();
+            job.message.n = Service.getServiceName();
             return job;
         }
 
-        static public SerivceJob stopService(Serivce serivce)
+        static public ServiceJob stopService(Service Service)
         {
-            SerivceJob job = new SerivceJob();
+            ServiceJob job = new ServiceJob();
             job.message.s = "Netronics";
             job.message.t = "stopService";
             return job;
         }
 
-        static public SerivceJob serviceInfo(Serivce serivce)
+        static public ServiceJob serviceInfo(Service Service)
         {
-            SerivceJob job = new SerivceJob();
+            ServiceJob job = new ServiceJob();
             job.receiveResult = false;
             job.message.s = "Netronics";
             job.message.t = "serviceInfo";
-            job.message.n = serivce.getSerivceName();
-            job.message.g = new JArray(serivce.getGroupArray());
+            job.message.n = Service.getServiceName();
+            job.message.g = new JArray(Service.getGroupArray());
             return job;
         }
 
-        static public SerivceJob getLiveSerivce()
+        static public ServiceJob getLiveService()
         {
-            SerivceJob job = new SerivceJob();
+            ServiceJob job = new ServiceJob();
             job.message.s = "Netronics";
-            job.message.t = "getLiveSerivce";
+            job.message.t = "getLiveService";
             return job;
         }
 
-        static public SerivceJob liveServiceList(List<object> serivceInfoList)
+        static public ServiceJob liveServiceList(List<object> ServiceInfoList)
         {
-            SerivceJob job = new SerivceJob();
+            ServiceJob job = new ServiceJob();
             job.message.s = "Netronics";
             job.message.t = "liveServiceList";
-            job.message.e = serivceInfoList;
+            job.message.e = ServiceInfoList;
             return job;
         }
 
-        static public SerivceJob joinGroup(string name)
+        static public ServiceJob joinGroup(string name)
         {
-            SerivceJob job = new SerivceJob();
+            ServiceJob job = new ServiceJob();
             job.message.type = "iolnGroup";
             job.message.name = name;
             return job;
         }
 
-        static public SerivceJob dropGroup(string name)
+        static public ServiceJob dropGroup(string name)
         {
-            SerivceJob job = new SerivceJob();
+            ServiceJob job = new ServiceJob();
             job.message.type = "dropGroup";
             job.message.name = name;
             return job;
         }
 
-        private SerivceJob()
+        private ServiceJob()
             : base("all")
         {
         }

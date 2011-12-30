@@ -25,10 +25,10 @@ namespace Netronics
         static protected PacketEncoder packetEncoder = new BSONEncoder();
         static protected PacketDecoder packetDecoder = new BSONDecoder();
 
-        static protected Serivce oSerivce;
+        static protected Service oService;
         static protected Socket oSocket;
 
-        static public Serivce serivce { set { Netronics.oSerivce = value; } get { return Netronics.oSerivce; } }
+        static public Service service { set { Netronics.oService = value; } get { return Netronics.oService; } }
 
         static public void setFlag(Flag flag, object value)
         {
@@ -78,15 +78,15 @@ namespace Netronics
 
         static public void start()
         {
-            if (Netronics.serivce == null)
+            if (Netronics.service == null)
                 return;
 
-            PacketProcessor.init(Netronics.serivce);
+            PacketProcessor.init(Netronics.service);
             Netronics.initSocket();
-            Netronics.serivce.init();
+            Netronics.service.init();
 
             Netronics.startSocket();
-            Netronics.serivce.start();
+            Netronics.service.start();
         }
 
         static protected void initSocket()
@@ -103,13 +103,13 @@ namespace Netronics
 
         static protected void acceptCallback(IAsyncResult ar)
         {
-            new RemoteSerivce(Netronics.oSocket.EndAccept(ar), Netronics.getPacketEncoder(), Netronics.getPacketDecoder()).processingJob(Netronics.serivce, SerivceJob.serviceInfo(Netronics.serivce));
+            new RemoteService(Netronics.oSocket.EndAccept(ar), Netronics.getPacketEncoder(), Netronics.getPacketDecoder()).processingJob(Netronics.service, ServiceJob.serviceInfo(Netronics.service));
             Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
         }
 
         static public void stop()
         {
-            serivce.stop();
+            Netronics.service.stop();
         }
 
         static public void processingJob(Job job)

@@ -10,24 +10,24 @@ namespace Netronics
 {
     public class PacketProcessor
     {
-        static protected Dictionary<string, LinkedList<Serivce>> globalSerivceList;
-        static protected Serivce serivce;
+        static protected Dictionary<string, LinkedList<Service>> globalServiceList;
+        static protected Service service;
 
-        static public void init(Serivce serivce)
+        static public void init(Service service)
         {
-            PacketProcessor.serivce = serivce;
-            PacketProcessor.initSerivceList();
+            PacketProcessor.service = service;
+            PacketProcessor.initServiceList();
         }
 
-        static protected void initSerivceList()
+        static protected void initServiceList()
         {
-            PacketProcessor.globalSerivceList = new Dictionary<string, LinkedList<Serivce>>();
-            LinkedList<Serivce> mySerivceType = new System.Collections.Generic.LinkedList<Serivce>();
-            mySerivceType.AddFirst(PacketProcessor.serivce);
-            PacketProcessor.globalSerivceList.Add(PacketProcessor.serivce.getSerivceName(), mySerivceType);
+            PacketProcessor.globalServiceList = new Dictionary<string, LinkedList<Service>>();
+            LinkedList<Service> myServiceType = new System.Collections.Generic.LinkedList<Service>();
+            myServiceType.AddFirst(PacketProcessor.service);
+            PacketProcessor.globalServiceList.Add(PacketProcessor.service.getServiceName(), myServiceType);
         }
 
-        static public bool processingPacket(RemoteSerivce serivce, dynamic message)
+        static public bool processingPacket(RemoteService service, dynamic message)
         {
             string ver = message.v; //버전
             string t = message.t; //트랜젝션 id
@@ -35,7 +35,7 @@ namespace Netronics
 
             if (y == "q")
             {
-                processingQueryPacket(serivce, message);
+                processingQueryPacket(service, message);
                 return true;
             }
 
@@ -53,7 +53,7 @@ namespace Netronics
 
             packet.y = "q";
 
-            packet.s = job.getSerivceName();
+            packet.s = job.getServiceName();
             packet.g = job.group;
             packet.a = job.take;
             packet.m = job.message;
@@ -61,7 +61,7 @@ namespace Netronics
             return packet;
         }
 
-        static protected void processingQueryPacket(RemoteSerivce serivce, dynamic packet)
+        static protected void processingQueryPacket(RemoteService service, dynamic packet)
         {
             Job job = new Job(packet.s);
             job.group = packet.g;
@@ -71,13 +71,13 @@ namespace Netronics
             if (packet.t != null) //트랜젝션 ID가 null일경우 결과 패킷을 전송하지 않아도 됨.
             {
                 job.success += new Job.Result(
-                        delegate(Serivce sender, Job.ResultEventArgs e)
+                        delegate(Service sender, Job.ResultEventArgs e)
                         {
                             PacketProcessor.sendJobResult(e.getJob(), true);
                         }
                     );
                 job.fail += new Job.Result(
-                        delegate(Serivce sender, Job.ResultEventArgs e)
+                        delegate(Service sender, Job.ResultEventArgs e)
                         {
                             PacketProcessor.sendJobResult(e.getJob(), false);
                         }
@@ -91,7 +91,7 @@ namespace Netronics
             job.setReceiver();
             job.transaction = packet.t;
 
-            PacketProcessor.serivce.processingJob(serivce, job);
+            PacketProcessor.service.processingJob(service, job);
         }
 
 
@@ -104,7 +104,7 @@ namespace Netronics
             packet.y = "r";
             packet.s = success;
             packet.r = job.result;
-            ((RemoteSerivce)job.getSerivce()).sendMessage(packet);
+            ((RemoteService)job.getService()).sendMessage(packet);
         }
 
         static public void processingJob(Job job)
@@ -114,18 +114,18 @@ namespace Netronics
             //이럼 속도의 문제가 좀 있을것 같음.
             //나중에 캐싱을 하던지 해보자.
             /*
-            IEnumerable<Serivce> serivceList =
-                from serivce in PacketProcessor.globalSerivceList[job.getSerivceName()].AsParallel()
-                where serivce.isGroup(processingGroup)
-                orderby serivce.getLoad() ascending
-                select serivce;
+            IEnumerable<Service> ServiceList =
+                from Service in PacketProcessor.globalServiceList[job.getServiceName()].AsParallel()
+                where Service.isGroup(processingGroup)
+                orderby Service.getLoad() ascending
+                select Service;
 
             if (job.take > 0)
-                serivceList = serivceList.Take(job.take);
+                ServiceList = ServiceList.Take(job.take);
 
-            Parallel.ForEach(serivceList, serivce =>
+            Parallel.ForEach(ServiceList, Service =>
             {
-                serivce.processingJob(PacketProcessor.serivce, job);
+                Service.processingJob(PacketProcessor.Service, job);
             });*/
         }
     }

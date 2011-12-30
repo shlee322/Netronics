@@ -9,19 +9,19 @@ namespace Netronics
     /// <summary>
     /// 원격지의 서비스
     /// </summary>
-    public class RemoteSerivce : Serivce
+    public class RemoteService : Service
     {
         protected byte[] socketBuffer = new byte[512];
         protected PacketBuffer packetBuffer = new PacketBuffer();
         protected Socket oSocket;
-        protected string serivceName;
+        protected string ServiceName;
 
         protected PacketEncoder packetEncoder;
         protected PacketDecoder packetDecoder;
 
         protected Transaction transaction = new Transaction();
 
-        public RemoteSerivce(Socket socket, PacketEncoder encoder, PacketDecoder decoder)
+        public RemoteService(Socket socket, PacketEncoder encoder, PacketDecoder decoder)
         {
             this.oSocket = socket;
             this.packetEncoder = encoder;
@@ -87,9 +87,9 @@ namespace Netronics
             return this.packetBuffer;
         }
 
-        public string getSerivceName()
+        public string getServiceName()
         {
-            return this.serivceName;
+            return this.ServiceName;
         }
 
         public float getLoad()
@@ -134,7 +134,7 @@ namespace Netronics
         {
         }
 
-        public void processingJob(Serivce serivce, Job job)
+        public void processingJob(Service Service, Job job)
         {
             this.sendMessage(PacketProcessor.createQueryPacket(job.receiveResult ? this.transaction.createTransaction(job) : null, job));
         }

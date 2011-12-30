@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Netronics
 {
-    public interface Serivce
+    public interface Service
     {
-        string getSerivceName();
+        string getServiceName();
 
         void init();
         void start();
@@ -17,6 +17,6 @@ namespace Netronics
         string[] getGroupArray();
         float getLoad();
 
-        void processingJob(Serivce serivce, Job job);
+        void processingJob(Service Service, Job job);
     }
 }

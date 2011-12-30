@@ -18,7 +18,7 @@ namespace ProxyService
 
         protected override void OnStart(string[] args)
         {
-            Netronics.Netronics.serivce = new Service();
+            Netronics.Netronics.service = new Service();
             Netronics.Netronics.start();
         }
 

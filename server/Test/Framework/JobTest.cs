@@ -41,11 +41,11 @@ namespace Test
             job.returnResult(null, false);
         }
 
-        void job_fail(Serivce sender, Job.ResultEventArgs e)
+        void job_fail(Service sender, Job.ResultEventArgs e)
         {
         }
 
-        void job_success(Serivce sender, Job.ResultEventArgs e)
+        void job_success(Service sender, Job.ResultEventArgs e)
         {
         }
     }

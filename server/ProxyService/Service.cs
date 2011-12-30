@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Netronics;
 
 namespace ProxyService
 {
-    class Service : Serivce
+    class Service : Netronics.Service
     {
-        AutoTypeDivider divider = new AutoTypeDivider();
+        Netronics.AutoTypeDivider divider = new Netronics.AutoTypeDivider();
 
         public Service()
         {
         }
 
-        public string getSerivceName()
+        public string getServiceName()
         {
             return "Proxy";
         }
@@ -22,13 +21,13 @@ namespace ProxyService
         public void init()
         {
             this.divider.addProcessor(
-                delegate (AutoTypeDivider.DividerEventArgs e)
+                delegate(Netronics.AutoTypeDivider.DividerEventArgs e)
                 {
                     return e.getJob().message.type == "test";
                 }, this.test);
         }
 
-        private void test(AutoTypeDivider.DividerEventArgs e)
+        private void test(Netronics.AutoTypeDivider.DividerEventArgs e)
         {
             e.getJob().result.a = "ok";
             e.getJob().returnResult(this);
@@ -36,7 +35,7 @@ namespace ProxyService
 
         public void start()
         {
-            Netronics.Netronics.processingJob(Netronics.SerivceJob.joinGroup("testGroup"));
+            Netronics.Netronics.processingJob(Netronics.ServiceJob.joinGroup("testGroup"));
         }
 
         public void stop()
@@ -58,9 +57,9 @@ namespace ProxyService
             return false;
         }
 
-        public void processingJob(Netronics.Serivce serivce, Netronics.Job job)
+        public void processingJob(Netronics.Service Service, Netronics.Job job)
         {
-            divider.processingJob(serivce, job);
+            divider.processingJob(Service, job);
         }
     }
 }

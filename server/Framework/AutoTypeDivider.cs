@@ -28,18 +28,18 @@ namespace Netronics
 
         public class DividerEventArgs : EventArgs
         {
-            private Serivce serivce;
+            private Service service;
             private Job job;
 
-            public DividerEventArgs(Serivce serivce, Job job)
+            public DividerEventArgs(Service service, Job job)
             {
-                this.serivce = serivce;
+                this.service = service;
                 this.job = job;
             }
 
-            public Serivce getSerivce()
+            public Service getService()
             {
-                return this.serivce;
+                return this.service;
             }
 
             public Job getJob()
@@ -53,9 +53,9 @@ namespace Netronics
         public delegate bool Divider(DividerEventArgs e);
         public delegate void Processor(DividerEventArgs e);
 
-        public void processingJob(Serivce serivce, Job job)
+        public void processingJob(Service service, Job job)
         {
-            this.dividErevent(this, new DividerEventArgs(serivce, job));
+            this.dividErevent(this, new DividerEventArgs(service, job));
         }
 
         public void addProcessor(Divider divider, Processor processor)

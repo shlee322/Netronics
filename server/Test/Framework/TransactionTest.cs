@@ -17,11 +17,11 @@ namespace Test
             for(int i=0; i<50; i++)
                 transaction.createTransaction(new Job("test" + i));
 
-            System.Console.WriteLine(transaction.getTransaction("0").getSerivceName());
+            System.Console.WriteLine(transaction.getTransaction("0").getServiceName());
 
-            System.Console.WriteLine(transaction.getTransaction("3").getSerivceName());
+            System.Console.WriteLine(transaction.getTransaction("3").getServiceName());
 
-            System.Console.WriteLine(transaction.getTransaction("40").getSerivceName());
+            System.Console.WriteLine(transaction.getTransaction("40").getServiceName());
 
             System.Console.WriteLine(transaction.getTransaction("40"));
 
