@@ -102,6 +102,11 @@ namespace Netronics
             return false;
         }
 
+        public string[] getGroupArray()
+        {
+            return new string[] { };
+        }
+
         public void init()
         {
         }

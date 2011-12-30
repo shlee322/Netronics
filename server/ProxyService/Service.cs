@@ -42,6 +42,11 @@ namespace ProxyService
             return 0;
         }
 
+        public string[] getGroupArray()
+        {
+            return new string[] { };
+        }
+
         public bool isGroup(string group)
         {
             return false;

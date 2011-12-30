@@ -48,7 +48,8 @@ namespace Netronics
 
             packet.v = "1";
 
-            packet.t = transactionID;
+            if(transactionID != null)
+                packet.t = transactionID;
 
             packet.y = "q";
 
@@ -98,7 +99,8 @@ namespace Netronics
         {
             dynamic packet = new JObject();
             packet.v = "1";
-            packet.t = job.transaction;
+            if(packet.t != null)
+                packet.t = job.transaction;
             packet.y = "r";
             packet.s = success;
             packet.r = job.result;

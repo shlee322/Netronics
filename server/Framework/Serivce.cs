@@ -14,6 +14,7 @@ namespace Netronics
         void stop();
 
         bool isGroup(string name);
+        string[] getGroupArray();
         float getLoad();
 
         void processingJob(Serivce serivce, Job job);

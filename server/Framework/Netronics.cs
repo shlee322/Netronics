@@ -103,7 +103,7 @@ namespace Netronics
 
         static protected void acceptCallback(IAsyncResult ar)
         {
-            new RemoteSerivce(Netronics.oSocket.EndAccept(ar), Netronics.getPacketEncoder(), Netronics.getPacketDecoder());
+            new RemoteSerivce(Netronics.oSocket.EndAccept(ar), Netronics.getPacketEncoder(), Netronics.getPacketDecoder()).processingJob(Netronics.serivce, SerivceJob.serviceInfo(Netronics.serivce));
             Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
         }
 

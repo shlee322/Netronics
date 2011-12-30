@@ -44,7 +44,14 @@ namespace BackendConsole
                     continue;
                 }
 
-                send(encoder.encode(JObject.Parse(line)));
+                try
+                {
+                    send(encoder.encode(JObject.Parse(line)));
+                }
+                catch (Exception)
+                {
+                    System.Console.WriteLine("데이터 형식이 잘못되었습니다.");
+                }
             }
         }
 
@@ -58,7 +65,7 @@ namespace BackendConsole
             {
                 System.Console.WriteLine(data);
             }
-
+            System.Console.Write("\n#");
             client.Client.BeginReceive(socketBuffer, 0, 1024, System.Net.Sockets.SocketFlags.None, new AsyncCallback(read), null);
         }
 
