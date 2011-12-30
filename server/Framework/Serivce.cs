@@ -9,6 +9,7 @@ namespace Netronics
     {
         string getSerivceName();
 
+        void init();
         void start();
         void stop();
 

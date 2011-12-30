@@ -82,10 +82,10 @@ namespace Netronics
                 return;
 
             PacketProcessor.init(Netronics.serivce);
-
             Netronics.initSocket();
-            Netronics.startSocket();
+            Netronics.serivce.init();
 
+            Netronics.startSocket();
             Netronics.serivce.start();
         }
 

@@ -52,7 +52,7 @@ namespace Netronics
 
             packet.y = "q";
 
-            //packet.s = job.getSerivceName();
+            packet.s = job.getSerivceName();
             packet.g = job.group;
             packet.a = job.take;
             packet.m = job.message;

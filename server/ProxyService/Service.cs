@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Netronics;
 
 namespace ProxyService
 {
-    class Service : Netronics.Serivce
+    class Service : Serivce
     {
+        AutoTypeDivider divider = new AutoTypeDivider();
+
         public Service()
         {
         }
@@ -14,6 +17,15 @@ namespace ProxyService
         public string getSerivceName()
         {
             return "Proxy";
+        }
+
+        public void init()
+        {
+            divider.addProcessor(
+                delegate (AutoTypeDivider.DividerEventArgs e)
+                {
+                    return true;
+                }, null);
         }
 
         public void start()
@@ -37,6 +49,7 @@ namespace ProxyService
 
         public void processingJob(Netronics.Serivce serivce, Netronics.Job job)
         {
+            divider.processingJob(serivce, job);
         }
     }
 }

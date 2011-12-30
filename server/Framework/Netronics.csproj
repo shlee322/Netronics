@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoTypeDivider.cs" />
     <Compile Include="BSONDecoder.cs" />
     <Compile Include="BSONEncoder.cs" />
     <Compile Include="Exception\JobPermissionException.cs" />
