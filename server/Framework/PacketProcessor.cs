@@ -70,15 +70,15 @@ namespace Netronics
             if (packet.t != null) //트랜젝션 ID가 null일경우 결과 패킷을 전송하지 않아도 됨.
             {
                 job.success += new Job.Result(
-                        delegate(Job j)
+                        delegate(Serivce sender, Job.ResultEventArgs e)
                         {
-                            PacketProcessor.sendJobResult(j, true);
+                            PacketProcessor.sendJobResult(e.getJob(), true);
                         }
                     );
                 job.fail += new Job.Result(
-                        delegate(Job j)
+                        delegate(Serivce sender, Job.ResultEventArgs e)
                         {
-                            PacketProcessor.sendJobResult(j, false);
+                            PacketProcessor.sendJobResult(e.getJob(), false);
                         }
                     );
             }

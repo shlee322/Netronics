@@ -21,7 +21,7 @@ namespace Test
             job.success += new Job.Result(job_success);
             job.fail += new Job.Result(job_fail);
 
-            job.returnResult(true);
+            job.returnResult(null, true);
         }
 
         [TestMethod]
@@ -35,14 +35,14 @@ namespace Test
             job.success += new Job.Result(job_success);
             job.fail += new Job.Result(job_fail);
 
-            job.returnResult(false);
+            job.returnResult(null, false);
         }
 
-        void job_fail(Job job)
+        void job_fail(Serivce sender, Job.ResultEventArgs e)
         {
         }
 
-        void job_success(Job job)
+        void job_success(Serivce sender, Job.ResultEventArgs e)
         {
         }
     }

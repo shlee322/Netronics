@@ -135,18 +135,42 @@ namespace Netronics
             }
         }
 
-        public void returnResult(bool success = true)
+        public void returnResult(Serivce serivce, bool success = true)
         {
             if (!receiver)
                 throw new Exception.JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
 
+            ResultEventArgs arg = new ResultEventArgs(this, success);
+
             if (success)
-                this.success(this);
+                this.success(serivce, arg);
             else
-                this.fail(this);
+                this.fail(serivce, arg);
         }
 
-        public delegate void Result(Job job);
+        public class ResultEventArgs : EventArgs
+        {
+            protected Job job;
+            protected bool success;
+
+            public ResultEventArgs(Job job, bool success)
+            {
+                this.job = job;
+                this.success = success;
+            }
+
+            public Job getJob()
+            {
+                return this.job;
+            }
+
+            public bool getSuccess()
+            {
+                return this.success;
+            }
+        }
+
+        public delegate void Result(Serivce sender, ResultEventArgs e);
 
         public event Result success;
         public event Result fail;

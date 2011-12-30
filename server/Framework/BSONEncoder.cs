@@ -20,6 +20,7 @@ namespace Netronics
 
             buffer.write((UInt32)stream.Length);
             stream.WriteTo(buffer.getBufferStream());
+            stream.Dispose();
 
             return buffer;
         }

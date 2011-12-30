@@ -32,6 +32,11 @@ namespace Netronics
                 return this.job;
             }
 
+            public override int GetHashCode()
+            {
+                return this.getTransactionID().GetHashCode();
+            }
+
             public override bool Equals(object i)
             {
                 if (i.GetType() != typeof(Item))

@@ -52,7 +52,7 @@ namespace Netronics
                 {
                     Job job = this.transaction.getTransaction((string)message.t);
                     if(job != null)
-                        job.returnResult(message.s);
+                        job.returnResult(this, message.s);
                 }
             } 
 

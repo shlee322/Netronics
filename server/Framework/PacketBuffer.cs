@@ -6,10 +6,34 @@ using System.IO;
 
 namespace Netronics
 {
-    public class PacketBuffer
+    public class PacketBuffer : IDisposable
     {
         MemoryStream buffer = new MemoryStream();
         MemoryStream usedBuffer;
+
+        protected bool disposed = false;
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    buffer.Dispose();
+                    if (this.usedBuffer != null)
+                        this.usedBuffer.Dispose();
+                }
+
+                disposed = true;
+            }
+        }
 
         public MemoryStream getBufferStream()
         {
