@@ -9,7 +9,6 @@ namespace Netronics
     public class PacketBuffer : IDisposable
     {
         MemoryStream buffer = new MemoryStream();
-        MemoryStream usedBuffer;
 
         protected bool disposed = false;
 
@@ -27,8 +26,6 @@ namespace Netronics
                 if (disposing)
                 {
                     buffer.Dispose();
-                    if (this.usedBuffer != null)
-                        this.usedBuffer.Dispose();
                 }
 
                 disposed = true;
@@ -42,32 +39,30 @@ namespace Netronics
 
         public long legibleBytes()
         {
-            return buffer.Length;
+            return buffer.Length - buffer.Position;
         }
 
         public void beginBufferIndex()
         {
-            if (usedBuffer == null)
-                usedBuffer = new MemoryStream();
             buffer.Position = 0;
         }
 
         public void endBufferIndex()
         {
-            usedBuffer = null;
             buffer.Position = 0;
         }
 
         public void resetBufferIndex()
         {
-            buffer.WriteTo(usedBuffer);
-            buffer = usedBuffer;
             this.endBufferIndex();
         }
 
         public void write(byte[] buffer, int offset, int count)
         {
+            long position = this.buffer.Position;
+            this.buffer.Position = this.buffer.Length;
             this.buffer.Write(buffer, offset, count);
+            this.buffer.Position = position;
         }
 
         public void write(UInt32 value)
@@ -78,8 +73,6 @@ namespace Netronics
         public int read(byte[] buffer, int offset, int count)
         {
             int len = this.buffer.Read(buffer, offset, count);
-            if (usedBuffer != null)
-                usedBuffer.Write(buffer, offset, count);
             return len;
         }
 

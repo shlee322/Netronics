@@ -26,7 +26,6 @@ namespace Test
             BSONDecoder decoder = new BSONDecoder();
             dynamic data2 = decoder.decode(buffer);
 
-            System.Console.WriteLine(data2);
         }
     }
 }

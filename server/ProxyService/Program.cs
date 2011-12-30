@@ -14,15 +14,19 @@ namespace ProxyService
         static void Main()
         {
             Netronics.Netronics.serivce = new Service();
+            Netronics.Netronics.setFlag(Netronics.Netronics.Flag.ServicePort, 10051);
             Netronics.Netronics.start();
+
+            while (true)
+                System.Threading.Thread.Sleep(500);
 
             return;
 
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
-			{ 
-				new ProxyService() 
-			};
+            { 
+                new ProxyService() 
+            };
             ServiceBase.Run(ServicesToRun);
         }
     }

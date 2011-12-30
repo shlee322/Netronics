@@ -84,6 +84,7 @@ namespace Netronics
             PacketProcessor.init(Netronics.serivce);
 
             Netronics.initSocket();
+            Netronics.startSocket();
 
             Netronics.serivce.start();
         }
@@ -92,12 +93,12 @@ namespace Netronics
         {
             Netronics.oSocket = new System.Net.Sockets.Socket(Netronics.family, Netronics.socketType, Netronics.protocolType);
             Netronics.oSocket.Bind(new IPEndPoint(Netronics.addr, Netronics.port));
-            Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
         }
 
         static protected void startSocket()
         {
             Netronics.oSocket.Listen(50);
+            Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
         }
 
         static protected void acceptCallback(IAsyncResult ar)

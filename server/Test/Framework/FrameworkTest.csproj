@@ -36,7 +36,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Framework\lib\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\Framework\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -51,11 +51,12 @@
   <ItemGroup>
     <Compile Include="BSONEnDecoderTest.cs" />
     <Compile Include="JobTest.cs" />
+    <Compile Include="PacketBufferTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TransactionTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Framework\Netronics.csproj">
+    <ProjectReference Include="..\..\Framework\Netronics.csproj">
       <Project>{394898C7-12EE-478A-AD9A-7377B5DCC081}</Project>
       <Name>Netronics</Name>
     </ProjectReference>

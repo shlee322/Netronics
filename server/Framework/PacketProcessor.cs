@@ -111,6 +111,7 @@ namespace Netronics
 
             //이럼 속도의 문제가 좀 있을것 같음.
             //나중에 캐싱을 하던지 해보자.
+            /*
             IEnumerable<Serivce> serivceList =
                 from serivce in PacketProcessor.globalSerivceList[job.getSerivceName()].AsParallel()
                 where serivce.isGroup(processingGroup)
@@ -123,7 +124,7 @@ namespace Netronics
             Parallel.ForEach(serivceList, serivce =>
             {
                 serivce.processingJob(PacketProcessor.serivce, job);
-            });
+            });*/
         }
     }
 }
