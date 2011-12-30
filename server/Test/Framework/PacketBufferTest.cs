@@ -32,7 +32,7 @@ namespace Test
             buffer.write(0);
             buffer.write(5);
 
-
+            buffer.beginBufferIndex();
             uint m = 0;
             for (int i = 0; i < 4; i++)
                 m += buffer.readUInt32();

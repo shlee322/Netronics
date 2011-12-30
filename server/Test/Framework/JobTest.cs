@@ -21,6 +21,8 @@ namespace Test
             job.success += new Job.Result(job_success);
             job.fail += new Job.Result(job_fail);
 
+            job.setReceiver();
+
             job.returnResult(null, true);
         }
 
@@ -35,6 +37,7 @@ namespace Test
             job.success += new Job.Result(job_success);
             job.fail += new Job.Result(job_fail);
 
+            job.setReceiver();
             job.returnResult(null, false);
         }
 

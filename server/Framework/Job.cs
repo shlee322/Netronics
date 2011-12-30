@@ -63,9 +63,6 @@ namespace Netronics
         /// </summary>
         public void setReceiver()
         {
-            if (this.serivce == null)
-                throw new System.Exception("Serivce가 지정되 있지 않습니다.");
-
             receiver = true;
         }
 
