@@ -48,7 +48,11 @@ namespace Netronics
 
             foreach (dynamic message in this.getPacketMessageList())
             {
-                if (!PacketProcessor.processingPacket(this, message))
+                if (PacketProcessor.getPacketType(this, message) == "q")
+                {
+                    PacketProcessor.processingPacket(this, message);
+                }
+                else
                 {
                     Job job = this.transaction.getTransaction((string)message.t);
                     if(job != null)

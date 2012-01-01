@@ -27,19 +27,19 @@ namespace Netronics
             PacketProcessor.globalServiceList.Add(PacketProcessor.service.getServiceName(), myServiceType);
         }
 
-        static public bool processingPacket(RemoteService service, dynamic message)
+        static public string getPacketType(RemoteService service, dynamic message)
         {
+            return message.y;
+        }
+
+        static public void processingPacket(RemoteService service, dynamic message)
+        {
+            /*
             string ver = message.v; //버전
             string t = message.t; //트랜젝션 id
             string y = message.y; //타입 q, r
-
-            if (y == "q")
-            {
-                processingQueryPacket(service, message);
-                return true;
-            }
-
-            return false;
+            */
+            processingQueryPacket(service, message);
         }
 
         static public dynamic createQueryPacket(string transactionID, Job job)
@@ -63,7 +63,7 @@ namespace Netronics
 
         static protected void processingQueryPacket(RemoteService service, dynamic packet)
         {
-            Job job = new Job(packet.s);
+            Job job = new Job((string)packet.s);
             job.group = packet.g;
             job.take = packet.a;
             job.message = packet.m;
