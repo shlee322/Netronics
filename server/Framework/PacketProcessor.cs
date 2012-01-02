@@ -53,9 +53,6 @@ namespace Netronics
 
             packet.y = "q";
 
-            packet.s = job.getServiceName();
-            packet.g = job.group;
-            packet.a = job.take;
             packet.m = job.message;
 
             return packet;
@@ -63,9 +60,7 @@ namespace Netronics
 
         static protected void processingQueryPacket(RemoteService service, dynamic packet)
         {
-            Job job = new Job((string)packet.s);
-            job.group = packet.g;
-            job.take = packet.a;
+            Job job = new Job(service);
             job.message = packet.m;
 
             if (packet.t != null) //트랜젝션 ID가 null일경우 결과 패킷을 전송하지 않아도 됨.
