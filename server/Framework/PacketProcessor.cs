@@ -97,9 +97,13 @@ namespace Netronics
             if(packet.t != null)
                 packet.t = job.transaction;
             packet.y = "r";
-            packet.s = success;
-            packet.r = job.result;
-            ((RemoteService)job.getService()).sendMessage(packet);
+            if(success)
+                packet.r = job.result;
+            else
+                packet.f = true;
+
+            if (!((RemoteService)job.getService()).sendMessage(packet))
+                job.returnResult(job.getService(), false);
         }
 
         static public void processingJob(Job job)

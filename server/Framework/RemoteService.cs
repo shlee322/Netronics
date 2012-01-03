@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Netronics
 {
@@ -43,22 +44,31 @@ namespace Netronics
         protected void readCallback(IAsyncResult ar)
         {
             int len = this.getSocket().EndReceive(ar);
-
+            DateTime time = DateTime.Now;
             this.getPacketBuffer().write(this.getSocketBuffer(), 0, len);
 
-            foreach (dynamic message in this.getPacketMessageList())
+            Parallel.ForEach(this.getPacketMessageList(), message =>
             {
                 if (PacketProcessor.getPacketType(this, message) == "q")
                 {
-                    PacketProcessor.processingPacket(this, message);
+                    new Task(new Action(delegate()
+                        {
+                            PacketProcessor.processingPacket(this, message);
+                        })).Start();
                 }
                 else
                 {
                     Job job = this.transaction.getTransaction((string)message.t);
-                    if(job != null)
-                        job.returnResult(this, message.s);
+                    if (job != null)
+                    {
+                        new Task(new Action(delegate()
+                            {
+                                job.returnResult(this, message.f != true ? true : false);
+                            })).Start();
+                    }
                 }
-            } 
+            });
+            System.Console.WriteLine(DateTime.Now.Ticks - time.Ticks);
 
             this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
 
@@ -96,7 +106,7 @@ namespace Netronics
             return this.ServiceName;
         }
 
-        public float getLoad()
+        public double getLoad()
         {
             return 0;
         }
@@ -123,19 +133,28 @@ namespace Netronics
         {
         }
 
-        public void sendMessage(dynamic data)
+        public bool sendMessage(dynamic data)
         {
-            this.sendPacket(this.getPacketEncoder().encode(data));
+            return this.sendPacket(this.getPacketEncoder().encode(data));
         }
 
-        public void sendPacket(PacketBuffer buffer)
+        public bool sendPacket(PacketBuffer buffer)
         {
             byte[] sendBuffer = buffer.getBytes();
-            this.getSocket().BeginSendTo(sendBuffer, 0, sendBuffer.Length, SocketFlags.None, this.getSocket().RemoteEndPoint, new AsyncCallback(this.sendPacketCallback), null);
+            try
+            {
+                this.getSocket().BeginSendTo(sendBuffer, 0, sendBuffer.Length, SocketFlags.None, this.getSocket().RemoteEndPoint, new AsyncCallback(this.sendPacketCallback), null);
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+            return true;
         }
 
         private void sendPacketCallback(IAsyncResult ar)
         {
+            this.getSocket().EndSendTo(ar);
         }
 
         public void processingJob(Service Service, Job job)

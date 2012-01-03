@@ -57,6 +57,7 @@
     <Compile Include="RemoteService.cs" />
     <Compile Include="Service.cs" />
     <Compile Include="ServiceJob.cs" />
+    <Compile Include="State.cs" />
     <Compile Include="Transaction.cs" />
   </ItemGroup>
   <ItemGroup />

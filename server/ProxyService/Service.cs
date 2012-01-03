@@ -29,8 +29,9 @@ namespace ProxyService
 
         private void test(Netronics.AutoTypeDivider.DividerEventArgs e)
         {
-            e.getJob().result.a = "ok";
+            e.getJob().result.time = e.getJob().message.time;
             e.getJob().returnResult(this);
+            //e.getJob().getService().processingJob(this, new TestJob());
         }
 
         public void start()
@@ -42,9 +43,9 @@ namespace ProxyService
         {
         }
 
-        public float getLoad()
+        public double getLoad()
         {
-            return 0;
+            return Netronics.State.getLoad();
         }
 
         public string[] getGroupArray()
@@ -60,6 +61,20 @@ namespace ProxyService
         public void processingJob(Netronics.Service Service, Netronics.Job job)
         {
             divider.processingJob(Service, job);
+        }
+    }
+
+    class TestJob : Netronics.Job
+    {
+        public TestJob()
+            : base("Test")
+        {
+            this.message.test = "test";
+            this.success += new Result(TestJob_success);
+        }
+
+        void TestJob_success(Netronics.Service sender, Netronics.Job.ResultEventArgs e)
+        {
         }
     }
 }

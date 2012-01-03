@@ -49,17 +49,24 @@ namespace Netronics
         public string createTransaction(Job job)
         {
             Item item = new Item(Convert.ToString(nextTransactionID++), job);
-            this.list.AddLast(item);
+            lock (this.list)
+            {
+                this.list.AddLast(item);
+            }
             return item.getTransactionID();
         }
 
         public Job getTransaction(string id)
         {
-            LinkedListNode<Item> node = this.list.Find(new Item(id, null));
-            if (node == null)
-                return null;
-            Job job = node.Value.getJob();
-            this.list.Remove(node);
+            Job job = null;
+            lock (this.list)
+            {
+                LinkedListNode<Item> node = this.list.Find(new Item(id, null));
+                if (node == null)
+                    return null;
+                job = node.Value.getJob();
+                this.list.Remove(node);
+            }
             return job;
         }
     }
