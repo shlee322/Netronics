@@ -48,11 +48,21 @@ namespace Netronics
         {
             this.run = false;
             this.getSocket().EndDisconnect(ar);
+            //할당된 작업 해제 등등
         }
 
         protected void readCallback(IAsyncResult ar)
         {
-            int len = this.getSocket().EndReceive(ar);
+            int len;
+            try
+            {
+                len = this.getSocket().EndReceive(ar);
+            }
+            catch (SocketException)
+            {
+                return;
+            }
+
             this.getPacketBuffer().write(this.getSocketBuffer(), 0, len);
 
             LinkedList<dynamic> messageList = this.getPacketMessageList();
