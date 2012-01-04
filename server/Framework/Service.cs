@@ -17,6 +17,8 @@ namespace Netronics
         string[] getGroupArray();
         double getLoad();
 
+        bool getRunning();
+
         void processingJob(Service Service, Job job);
     }
 }

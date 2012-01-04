@@ -87,6 +87,8 @@ namespace Netronics
             job.transaction = packet.t;
 
             PacketProcessor.service.processingJob(service, job);
+
+            job.Dispose();
         }
 
 

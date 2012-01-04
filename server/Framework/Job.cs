@@ -9,7 +9,7 @@ namespace Netronics
     /// <summary>
     /// Job란 백엔드단에서 처리되는 데이터의 가장 작은 단위이다.
     /// </summary>
-    public class Job
+    public class Job : IDisposable
     {
         protected string serviceName;
         protected Service service;
@@ -20,6 +20,30 @@ namespace Netronics
         protected bool receiver = false;
         protected bool isReceiveResult = true;
         protected string oTransactionID = null;
+
+        protected bool disposed = false;
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    this.service = null;
+                    this.oMessage = null;
+                    this.oResult = null;
+                }
+
+                disposed = true;
+            }
+        }
 
         /// <summary>
         /// 새로운 Job을 생성
@@ -189,6 +213,8 @@ namespace Netronics
                 this.success(service, arg);
             else
                 this.fail(service, arg);
+
+            this.Dispose();
         }
 
         /// <summary>

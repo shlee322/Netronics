@@ -9,6 +9,7 @@ namespace Netronics
     public class PacketBuffer : IDisposable
     {
         MemoryStream buffer = new MemoryStream();
+        byte[] buf = new byte[1024];
 
         protected bool disposed = false;
 
@@ -57,7 +58,6 @@ namespace Netronics
             MemoryStream old = this.buffer;   
             this.buffer = new MemoryStream();
 
-            byte[] buf = new byte[1024];
             int len;
             while((len = old.Read(buf, 0, 1024))>0)
                 buffer.Write(buf, 0, len);

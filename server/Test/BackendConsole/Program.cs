@@ -6,6 +6,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace BackendConsole
 {
@@ -20,6 +21,8 @@ namespace BackendConsole
         static protected Netronics.PacketBuffer buffer;
 
         static protected byte[] socketBuffer = new byte[1024];
+
+        static protected int testint;
 
 
         static void Main(string[] args)
@@ -46,11 +49,13 @@ namespace BackendConsole
 
                 if (line == "test1")
                 {
+                    testint = 0;
                     //while (true)
                     for(int i=0; i<100000000; i++)
                     {
                         send(encoder.encode(JObject.Parse("{\"v\":\"1\", \"t\":\"test\", \"y\":\"q\", \"m\":{\"type\":\"test\", \"time\":\"" + DateTime.Now.Ticks + "\"}}")));
                         System.Threading.Thread.Sleep(0);
+                        System.Console.WriteLine("{0} - {1}",i,testint);
                     }
                     continue;
                 }
@@ -87,14 +92,16 @@ namespace BackendConsole
             {
                 if (data.y == "r" && data.r.time != null)
                 {
-                    System.Console.WriteLine(DateTime.Now.Ticks - Convert.ToInt64((string)data.r.time));
+                    Interlocked.Increment(ref testint);
+                    //System.Console.WriteLine(DateTime.Now.Ticks - Convert.ToInt64((string)data.r.time));
                 }
                 else
                 {
                     System.Console.WriteLine(data);
+                    System.Console.Write("\n#");
                 }
             }
-            System.Console.Write("\n#");
+            
             client.Client.BeginReceive(socketBuffer, 0, 1024, System.Net.Sockets.SocketFlags.None, new AsyncCallback(read), null);
         }
 

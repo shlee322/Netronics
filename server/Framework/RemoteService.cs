@@ -22,12 +22,15 @@ namespace Netronics
 
         protected Transaction transaction = new Transaction();
 
+        protected bool run = false;
+
         public RemoteService(Socket socket, PacketEncoder encoder, PacketDecoder decoder)
         {
             this.oSocket = socket;
             this.packetEncoder = encoder;
             this.packetDecoder = decoder;
 
+            this.getSocket().BeginDisconnect(false, new AsyncCallback(this.disconnectCallback), null);
             this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
         }
 
@@ -41,38 +44,44 @@ namespace Netronics
             return this.packetDecoder;
         }
 
+        protected void disconnectCallback(IAsyncResult ar)
+        {
+            run = false;
+            this.getSocket().EndDisconnect(ar);
+        }
+
         protected void readCallback(IAsyncResult ar)
         {
             int len = this.getSocket().EndReceive(ar);
-            DateTime time = DateTime.Now;
             this.getPacketBuffer().write(this.getSocketBuffer(), 0, len);
 
-            Parallel.ForEach(this.getPacketMessageList(), message =>
-            {
-                if (PacketProcessor.getPacketType(this, message) == "q")
+            LinkedList<dynamic> messageList = this.getPacketMessageList();
+            new Task(new Action(delegate()
                 {
-                    new Task(new Action(delegate()
-                        {
-                            PacketProcessor.processingPacket(this, message);
-                        })).Start();
-                }
-                else
-                {
-                    Job job = this.transaction.getTransaction((string)message.t);
-                    if (job != null)
+                    Parallel.ForEach(messageList, message =>
                     {
-                        new Task(new Action(delegate()
+                        if (PacketProcessor.getPacketType(this, message) == "q")
+                        {
+                            new Task(new Action(delegate()
+                                {
+                                    PacketProcessor.processingPacket(this, message);
+                                })).Start();
+                        }
+                        else
+                        {
+                            Job job = this.transaction.getTransaction((string)message.t);
+                            if (job != null)
                             {
-                                job.returnResult(this, message.f != true ? true : false);
-                            })).Start();
-                    }
-                }
-            });
-            System.Console.WriteLine(DateTime.Now.Ticks - time.Ticks);
+                                new Task(new Action(delegate()
+                                    {
+                                        job.returnResult(this, message.f != true ? true : false);
+                                    })).Start();
+                            }
+                        }
+                    });
+                })).Start();
 
             this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
-
-
         }
 
         private LinkedList<dynamic> getPacketMessageList()
@@ -111,6 +120,11 @@ namespace Netronics
             return 0;
         }
 
+        public bool getRunning()
+        {
+            return this.run;
+        }
+
         public bool isGroup(string group)
         {
             return false;
@@ -135,7 +149,10 @@ namespace Netronics
 
         public bool sendMessage(dynamic data)
         {
-            return this.sendPacket(this.getPacketEncoder().encode(data));
+            PacketBuffer buffer = this.getPacketEncoder().encode(data);
+            bool r = this.sendPacket(buffer);
+            buffer.Dispose();
+            return r;
         }
 
         public bool sendPacket(PacketBuffer buffer)
