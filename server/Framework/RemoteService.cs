@@ -46,7 +46,7 @@ namespace Netronics
 
         protected void disconnectCallback(IAsyncResult ar)
         {
-            run = false;
+            this.run = false;
             this.getSocket().EndDisconnect(ar);
         }
 
@@ -56,32 +56,35 @@ namespace Netronics
             this.getPacketBuffer().write(this.getSocketBuffer(), 0, len);
 
             LinkedList<dynamic> messageList = this.getPacketMessageList();
-            new Task(new Action(delegate()
+
+            Task task = new Task(() =>
                 {
                     Parallel.ForEach(messageList, message =>
                     {
                         if (PacketProcessor.getPacketType(this, message) == "q")
                         {
-                            new Task(new Action(delegate()
+                            Parallel.Invoke(() =>
                                 {
                                     PacketProcessor.processingPacket(this, message);
-                                })).Start();
+                                });
                         }
                         else
                         {
                             Job job = this.transaction.getTransaction((string)message.t);
                             if (job != null)
                             {
-                                new Task(new Action(delegate()
+                                Parallel.Invoke(() =>
                                     {
                                         job.returnResult(this, message.f != true ? true : false);
-                                    })).Start();
+                                    });
                             }
                         }
                     });
-                })).Start();
+                });
 
             this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
+
+            task.Start();
         }
 
         private LinkedList<dynamic> getPacketMessageList()

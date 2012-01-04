@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace BackendConsole
 {
@@ -51,12 +52,10 @@ namespace BackendConsole
                 {
                     testint = 0;
                     //while (true)
-                    for(int i=0; i<100000000; i++)
+                    Parallel.For(0, 100000000, index =>
                     {
                         send(encoder.encode(JObject.Parse("{\"v\":\"1\", \"t\":\"test\", \"y\":\"q\", \"m\":{\"type\":\"test\", \"time\":\"" + DateTime.Now.Ticks + "\"}}")));
-                        System.Threading.Thread.Sleep(0);
-                        System.Console.WriteLine("{0} - {1}",i,testint);
-                    }
+                    });
                     continue;
                 }
 
@@ -93,6 +92,7 @@ namespace BackendConsole
                 if (data.y == "r" && data.r.time != null)
                 {
                     Interlocked.Increment(ref testint);
+                    System.Console.WriteLine(testint);
                     //System.Console.WriteLine(DateTime.Now.Ticks - Convert.ToInt64((string)data.r.time));
                 }
                 else

@@ -62,6 +62,11 @@ namespace ProxyService
         {
             divider.processingJob(Service, job);
         }
+
+        public bool getRunning()
+        {
+            return true;
+        }
     }
 
     class TestJob : Netronics.Job
