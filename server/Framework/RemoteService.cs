@@ -20,7 +20,7 @@ namespace Netronics
         protected PacketEncoder packetEncoder;
         protected PacketDecoder packetDecoder;
 
-        protected Transaction transaction = new Transaction();
+        protected Transaction transaction;
 
         protected bool run = false;
 
@@ -29,6 +29,7 @@ namespace Netronics
             this.oSocket = socket;
             this.packetEncoder = encoder;
             this.packetDecoder = decoder;
+            this.transaction = new Transaction();
 
             this.getSocket().BeginDisconnect(false, new AsyncCallback(this.disconnectCallback), null);
             this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
@@ -48,6 +49,15 @@ namespace Netronics
         {
             this.run = false;
             this.getSocket().EndDisconnect(ar);
+
+            this.packetBuffer.Dispose();
+            this.packetBuffer = null;
+
+            Parallel.ForEach(this.transaction.Dispose(), item =>
+            {
+                item.getJob().returnResult(this, false);
+            });
+            this.transaction = null;
             //할당된 작업 해제 등등
         }
 
@@ -165,6 +175,7 @@ namespace Netronics
             PacketBuffer buffer = this.getPacketEncoder().encode(data);
             bool r = this.sendPacket(buffer);
             buffer.Dispose();
+
             return r;
         }
 
@@ -189,7 +200,20 @@ namespace Netronics
 
         public void processingJob(Service Service, Job job)
         {
-            this.sendMessage(PacketProcessor.createQueryPacket(job.receiveResult ? this.transaction.createTransaction(job) : null, job));
+            string id = null;
+            if(job.receiveResult)
+            {
+                id = this.transaction.createTransaction(job);
+                if (id == null)
+                {
+                    job.returnResult(this, false);
+                    return;
+                }
+            }
+
+            job.addProcessor();
+
+            this.sendMessage(PacketProcessor.createQueryPacket(id, job));
         }
     }
 }

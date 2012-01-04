@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Netronics
 {
@@ -9,9 +10,7 @@ namespace Netronics
     {
         private LinkedList<Item> list = new LinkedList<Item>();
         private long nextTransactionID = 0;
-
-
-        class Item
+        public class Item
         {
             private string id;
             private Job job;
@@ -49,7 +48,7 @@ namespace Netronics
         public string createTransaction(Job job)
         {
             Item item = new Item(Convert.ToString(nextTransactionID++), job);
-            lock (this.list)
+            lock (this)
             {
                 this.list.AddLast(item);
             }
@@ -59,8 +58,11 @@ namespace Netronics
         public Job getTransaction(string id)
         {
             Job job = null;
-            lock (this.list)
+            lock (this)
             {
+                if (this.list == null)
+                    return null;
+
                 LinkedListNode<Item> node = this.list.Find(new Item(id, null));
                 if (node == null)
                     return null;
@@ -68,6 +70,16 @@ namespace Netronics
                 this.list.Remove(node);
             }
             return job;
+        }
+
+        public LinkedList<Item> Dispose()
+        {
+            LinkedList<Item> item = this.list;
+            lock (this)
+            {
+                this.list = null;
+                return item;
+            }
         }
     }
 }

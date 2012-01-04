@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Netronics
 {
@@ -22,6 +24,8 @@ namespace Netronics
         protected string oTransactionID = null;
 
         protected bool disposed = false;
+
+        protected int processorCount = 0;
 
         public void Dispose()
         {
@@ -204,17 +208,21 @@ namespace Netronics
         /// <param name="success">성공여부</param>
         public void returnResult(Service service, bool success = true)
         {
-            if (!receiver)
-                throw new Exception.JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
+            Parallel.Invoke(() =>
+            {
+                if (!receiver)
+                    throw new Exception.JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
 
-            ResultEventArgs arg = new ResultEventArgs(this, success);
+                ResultEventArgs arg = new ResultEventArgs(this, success);
 
-            if (success)
-                this.success(service, arg);
-            else
-                this.fail(service, arg);
+                if (success)
+                    this.success(service, arg);
+                else
+                    this.fail(service, arg);
 
-            this.Dispose();
+                if(Interlocked.Decrement(ref this.processorCount) < 1)
+                    this.Dispose();
+            });
         }
 
         /// <summary>
@@ -253,6 +261,11 @@ namespace Netronics
             {
                 return this.success;
             }
+        }
+
+        public void addProcessor()
+        {
+            Interlocked.Increment(ref this.processorCount);
         }
 
         /// <summary>
