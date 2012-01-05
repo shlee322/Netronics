@@ -25,6 +25,8 @@ namespace BackendConsole
 
         static protected int testint;
 
+        static protected DateTime time;
+
 
         static void Main(string[] args)
         {
@@ -52,10 +54,10 @@ namespace BackendConsole
                 {
                     testint = 0;
                     //while (true)
-                    Parallel.For(0, 100000000, index =>
-                    {
+                    time = DateTime.Now;
+                    for(int i=0; i<10000; i++)
                         send(encoder.encode(JObject.Parse("{\"v\":\"1\", \"t\":\"test\", \"y\":\"q\", \"m\":{\"type\":\"test\", \"time\":\"" + DateTime.Now.Ticks + "\"}}")));
-                    });
+                    
                     continue;
                 }
 
@@ -91,8 +93,13 @@ namespace BackendConsole
             {
                 if (data.y == "r" && data.r.time != null)
                 {
-                    Interlocked.Increment(ref testint);
                     System.Console.WriteLine(testint);
+
+                    if (Interlocked.Increment(ref testint) == 10000)
+                    {
+                        System.Console.WriteLine(DateTime.Now.Ticks - time.Ticks);
+                    }
+                    
                     //System.Console.WriteLine(DateTime.Now.Ticks - Convert.ToInt64((string)data.r.time));
                 }
                 else
@@ -109,6 +116,7 @@ namespace BackendConsole
         {
             byte[] data = buffer.getBytes();
             client.Client.BeginSendTo(data, 0, data.Length, System.Net.Sockets.SocketFlags.None, client.Client.RemoteEndPoint, new AsyncCallback(sendto), null);
+            buffer.Dispose();
         }
 
         static void sendto(IAsyncResult ar)

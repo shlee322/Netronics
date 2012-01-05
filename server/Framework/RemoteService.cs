@@ -31,7 +31,6 @@ namespace Netronics
             this.packetDecoder = decoder;
             this.transaction = new Transaction();
 
-            this.getSocket().BeginDisconnect(false, new AsyncCallback(this.disconnectCallback), null);
             this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
         }
 
@@ -45,10 +44,9 @@ namespace Netronics
             return this.packetDecoder;
         }
 
-        protected void disconnectCallback(IAsyncResult ar)
+        protected void disconnect()
         {
             this.run = false;
-            this.getSocket().EndDisconnect(ar);
 
             this.packetBuffer.Dispose();
             this.packetBuffer = null;
@@ -70,6 +68,7 @@ namespace Netronics
             }
             catch (SocketException)
             {
+                this.disconnect();
                 return;
             }
 
