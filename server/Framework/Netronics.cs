@@ -14,7 +14,7 @@ namespace Netronics
 {
     public class Netronics
     {
-        public enum Flag { Family, SocketType, ProtocolType, ServiceIPAddress, ServicePort, PacketEncoder, PacketDecoder }
+        public enum Flag { Family, SocketType, ProtocolType, ServiceIPAddress, ServicePort, PacketEncoder, PacketDecoder}
 
         static protected AddressFamily family = AddressFamily.InterNetwork;
         static protected SocketType socketType = SocketType.Stream;
@@ -71,6 +71,7 @@ namespace Netronics
         {
             return Netronics.packetEncoder;
         }
+		
         static protected PacketDecoder getPacketDecoder()
         {
             return Netronics.packetDecoder;

@@ -15,6 +15,8 @@ namespace ProxyService
         private Client[] client;
         private int nextClientID;
         private Stack<int> removeClientID;
+		
+		private Handshake handshake;
 
         static void add()
         {
@@ -29,7 +31,6 @@ namespace ProxyService
             this.serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this.serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
         }
-
 
         public void start()
         {
@@ -48,6 +49,11 @@ namespace ProxyService
 
             return this.removeClientID.Pop();
         }
+		
+		public void setHandshake(Handshake handshake)
+		{
+			this.handshake = handshake;
+		}
 
         private void accept(IAsyncResult ar)
         {
@@ -59,7 +65,7 @@ namespace ProxyService
             }
             else
             {
-                this.client[id] = new Client(id, socket);
+                this.client[id] = new Client(id, socket, this.handshake.getInstance());
             }
             this.serverSocket.BeginAccept(new AsyncCallback(this.accept), null);
         }

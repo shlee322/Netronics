@@ -7,7 +7,8 @@ namespace ProxyService
 {
     class Service : Netronics.Service
     {
-        Netronics.AutoTypeDivider divider = new Netronics.AutoTypeDivider();
+        private Netronics.AutoTypeDivider divider = new Netronics.AutoTypeDivider();
+		private bool run = false;
 
         public Service()
         {
@@ -36,11 +37,12 @@ namespace ProxyService
 
         public void start()
         {
-            Netronics.Netronics.processingJob(Netronics.ServiceJob.joinGroup("testGroup"));
+            this.run = true;
         }
 
         public void stop()
         {
+			this.run = false;
         }
 
         public double getLoad()
@@ -66,7 +68,7 @@ namespace ProxyService
 
         public bool getRunning()
         {
-            return true;
+            return this.run;
         }
     }
 
