@@ -2,15 +2,15 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Netronics;
 
 namespace Test
 {
-    [TestClass]
+    [TestFixture()]
     public class TransactionTest
     {
-        [TestMethod]
+        [Test()]
         public void TransactionTest1()
         {
             Transaction transaction = new Transaction();

@@ -69,12 +69,14 @@ namespace Netronics
                         delegate(Service sender, Job.ResultEventArgs e)
                         {
                             PacketProcessor.sendJobResult(e.getJob(), true);
+							job.Dispose();
                         }
                     );
                 job.fail += new Job.Result(
                         delegate(Service sender, Job.ResultEventArgs e)
                         {
                             PacketProcessor.sendJobResult(e.getJob(), false);
+							job.Dispose();
                         }
                     );
             }
@@ -87,8 +89,9 @@ namespace Netronics
             job.transaction = packet.t;
 
             PacketProcessor.service.processingJob(service, job);
-
-            job.Dispose();
+			
+			if(!job.receiveResult)
+            	job.Dispose();
         }
 
 

@@ -2,15 +2,15 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Netronics;
 
 namespace Test
 {
-    [TestClass]
+    [TestFixture()]
     public class BSONEnDecoderTest
     {
-        [TestMethod]
+        [Test()]
         public void BSONEnDecoderTest1()
         {
             dynamic data = new Newtonsoft.Json.Linq.JObject();
@@ -25,6 +25,7 @@ namespace Test
 
             BSONDecoder decoder = new BSONDecoder();
             dynamic data2 = decoder.decode(buffer);
+			System.Console.WriteLine(data2);
 
         }
     }

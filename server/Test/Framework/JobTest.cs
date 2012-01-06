@@ -2,15 +2,15 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Netronics;
 
 namespace Test
 {
-    [TestClass]
+    [TestFixture()]
     public class JobTest
     {
-        [TestMethod]
+        [Test()]
         public void JobTest1()
         {
             Job job = new Job("map");
@@ -26,7 +26,7 @@ namespace Test
             job.returnResult(null, true);
         }
 
-        [TestMethod]
+        [Test()]
         public void JobTest2()
         {
             Job job = new Job("item");

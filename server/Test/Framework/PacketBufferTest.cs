@@ -2,15 +2,15 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Netronics;
 
 namespace Test
 {
-    [TestClass]
+    [TestFixture()]
     public class PacketBufferTest
     {
-        [TestMethod]
+        [Test()]
         public void PacketBufferTest1()
         {
             PacketBuffer buffer = new PacketBuffer();
@@ -23,7 +23,7 @@ namespace Test
             catch (Exception) { return; }
             throw new Exception("Ssibal");
         }
-        [TestMethod]
+        [Test()]
         public void PacketBufferTest2()
         {
             PacketBuffer buffer = new PacketBuffer();

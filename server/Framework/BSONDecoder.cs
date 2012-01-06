@@ -46,10 +46,12 @@ namespace Netronics
             buffer.readBytes(data);
 
             buffer.endBufferIndex();
-
-
-
-            return serializer.Deserialize(new BsonReader(new MemoryStream(data)));
+			
+			MemoryStream stream = new MemoryStream(data);
+			dynamic res = serializer.Deserialize(new BsonReader(stream));
+			stream.Dispose();
+			
+            return res;
         }
     }
 }

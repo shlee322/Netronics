@@ -60,6 +60,7 @@ namespace ProxyService
 
         public void processingJob(Netronics.Service Service, Netronics.Job job)
         {
+			job.addProcessor();
             divider.processingJob(Service, job);
         }
 

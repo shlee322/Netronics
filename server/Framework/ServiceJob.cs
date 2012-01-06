@@ -20,6 +20,7 @@ namespace Netronics
         static public ServiceJob startService(Service Service)
         {
             ServiceJob job = new ServiceJob();
+			job.receiveResult = false;
             job.message.s = "Netronics";
             job.message.t = "startService";
             job.message.n = Service.getServiceName();
@@ -29,6 +30,7 @@ namespace Netronics
         static public ServiceJob stopService(Service Service)
         {
             ServiceJob job = new ServiceJob();
+			job.receiveResult = false;
             job.message.s = "Netronics";
             job.message.t = "stopService";
             return job;
@@ -53,18 +55,10 @@ namespace Netronics
             return job;
         }
 
-        static public ServiceJob liveServiceList(List<object> ServiceInfoList)
-        {
-            ServiceJob job = new ServiceJob();
-            job.message.s = "Netronics";
-            job.message.t = "liveServiceList";
-            job.message.e = ServiceInfoList;
-            return job;
-        }
-
         static public ServiceJob joinGroup(string name)
         {
             ServiceJob job = new ServiceJob();
+			job.receiveResult = false;
             job.message.type = "iolnGroup";
             job.message.name = name;
             return job;
@@ -73,6 +67,7 @@ namespace Netronics
         static public ServiceJob dropGroup(string name)
         {
             ServiceJob job = new ServiceJob();
+			job.receiveResult = false;
             job.message.type = "dropGroup";
             job.message.name = name;
             return job;
