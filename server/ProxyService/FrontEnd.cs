@@ -65,7 +65,7 @@ namespace ProxyService
             }
             else
             {
-                this.client[id] = new Client(id, socket, this.handshake.getInstance());
+                this.client[id] = new Client(id, socket, this.handshake);
             }
             this.serverSocket.BeginAccept(new AsyncCallback(this.accept), null);
         }

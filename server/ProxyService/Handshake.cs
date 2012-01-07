@@ -4,7 +4,7 @@ namespace ProxyService
 {
 	public interface Handshake
 	{
-		struct Handshake getInstance();
+		struct Handshake getInstance(Client client);
 		
 		PacketEncoder getPacketEncoder();
 		PacketDecoder getPacketDecoder();

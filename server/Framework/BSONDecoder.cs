@@ -12,9 +12,9 @@ namespace Netronics
     /// BSON을 사용하는 Packet Decoder
     /// 
     ///  BSON 패킷 구조
-    /// ┌─────────┬────────────┐
-    /// │len = uint(4byte)│ BSON DATA([len] byte)│
-    /// └─────────┴────────────┘
+    /// ┌─────────┬───────────┐
+    /// │len = uint(4byte)│BSON DATA([len] byte)│
+    /// └─────────┴───────────┘
     ///
     /// </summary>
     public class BSONDecoder : PacketDecoder

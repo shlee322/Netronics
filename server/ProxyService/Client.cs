@@ -19,7 +19,7 @@ namespace ProxyService
         {
             this.id = id;
             this.socket = socket;
-			this.handshake = handshake;
+			this.handshake = handshake.getInstance(this);
 			
 			this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
         }
