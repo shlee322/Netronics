@@ -114,7 +114,7 @@ namespace Netronics
         protected static void AcceptCallback(IAsyncResult ar)
         {
             new RemoteService(_Socket.EndAccept(ar), GetPacketEncoder(), GetPacketDecoder()).
-                ProcessingJob(Service, ServiceJob.serviceInfo(Service));
+                ProcessingJob(Service, ServiceJob.ServiceInfo(Service));
             _Socket.BeginAccept(AcceptCallback, null);
         }
 

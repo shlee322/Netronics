@@ -9,7 +9,7 @@ namespace Netronics
         {
         }
 
-        public static ServiceJob ping(float load)
+        public static ServiceJob Ping(float load)
         {
             var job = new ServiceJob();
             job.Message.s = "Netronics";
@@ -18,17 +18,17 @@ namespace Netronics
             return job;
         }
 
-        public static ServiceJob startService(Service Service)
+        public static ServiceJob StartService(Service service)
         {
             var job = new ServiceJob();
             job.ReceiveResult = false;
             job.Message.s = "Netronics";
             job.Message.t = "startService";
-            job.Message.n = Service.GetServiceName();
+            job.Message.n = service.GetServiceName();
             return job;
         }
 
-        public static ServiceJob stopService(Service Service)
+        public static ServiceJob StopService(Service service)
         {
             var job = new ServiceJob();
             job.ReceiveResult = false;
@@ -37,18 +37,18 @@ namespace Netronics
             return job;
         }
 
-        public static ServiceJob serviceInfo(Service Service)
+        public static ServiceJob ServiceInfo(Service service)
         {
             var job = new ServiceJob();
             job.ReceiveResult = false;
             job.Message.s = "Netronics";
             job.Message.t = "serviceInfo";
-            job.Message.n = Service.GetServiceName();
-            job.Message.g = new JArray(Service.GetGroupArray());
+            job.Message.n = service.GetServiceName();
+            job.Message.g = new JArray(service.GetGroupArray());
             return job;
         }
 
-        public static ServiceJob getLiveService()
+        public static ServiceJob GetLiveService()
         {
             var job = new ServiceJob();
             job.Message.s = "Netronics";
@@ -56,7 +56,7 @@ namespace Netronics
             return job;
         }
 
-        public static ServiceJob joinGroup(string name)
+        public static ServiceJob JoinGroup(string name)
         {
             var job = new ServiceJob();
             job.ReceiveResult = false;
@@ -65,7 +65,7 @@ namespace Netronics
             return job;
         }
 
-        public static ServiceJob dropGroup(string name)
+        public static ServiceJob DropGroup(string name)
         {
             var job = new ServiceJob();
             job.ReceiveResult = false;
