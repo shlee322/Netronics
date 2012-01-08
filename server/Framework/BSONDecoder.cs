@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
@@ -20,6 +17,8 @@ namespace Netronics
     public class BSONDecoder : PacketDecoder
     {
         protected JsonSerializer serializer = new JsonSerializer();
+
+        #region PacketDecoder Members
 
         /// <summary>
         /// BSON 패킷 구조를 따르는 PacketBuffer을 BSON Data로 변환 시키는 메서드
@@ -42,16 +41,18 @@ namespace Netronics
                 return null;
             }
 
-            byte[] data = new byte[len];
+            var data = new byte[len];
             buffer.readBytes(data);
 
             buffer.endBufferIndex();
-			
-			MemoryStream stream = new MemoryStream(data);
-			dynamic res = serializer.Deserialize(new BsonReader(stream));
-			stream.Dispose();
-			
+
+            var stream = new MemoryStream(data);
+            dynamic res = serializer.Deserialize(new BsonReader(stream));
+            stream.Dispose();
+
             return res;
         }
+
+        #endregion
     }
 }

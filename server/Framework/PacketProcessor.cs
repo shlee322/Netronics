@@ -1,38 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace Netronics
 {
     public class PacketProcessor
     {
-        static protected Dictionary<string, LinkedList<Service>> globalServiceList;
-        static protected Service service;
+        protected static Dictionary<string, LinkedList<Service>> globalServiceList;
+        protected static Service service;
 
-        static public void init(Service service)
+        public static void init(Service service)
         {
             PacketProcessor.service = service;
-            PacketProcessor.initServiceList();
+            initServiceList();
         }
 
-        static protected void initServiceList()
+        protected static void initServiceList()
         {
-            PacketProcessor.globalServiceList = new Dictionary<string, LinkedList<Service>>();
-            LinkedList<Service> myServiceType = new System.Collections.Generic.LinkedList<Service>();
-            myServiceType.AddFirst(PacketProcessor.service);
-            PacketProcessor.globalServiceList.Add(PacketProcessor.service.getServiceName(), myServiceType);
+            globalServiceList = new Dictionary<string, LinkedList<Service>>();
+            var myServiceType = new LinkedList<Service>();
+            myServiceType.AddFirst(service);
+            globalServiceList.Add(service.getServiceName(), myServiceType);
         }
 
-        static public string getPacketType(RemoteService service, dynamic message)
+        public static string getPacketType(RemoteService service, dynamic message)
         {
             return message.y;
         }
 
-        static public void processingPacket(RemoteService service, dynamic message)
+        public static void processingPacket(RemoteService service, dynamic message)
         {
             /*
             string ver = message.v; //버전
@@ -42,13 +37,13 @@ namespace Netronics
             processingQueryPacket(service, message);
         }
 
-        static public dynamic createQueryPacket(string transactionID, Job job)
+        public static dynamic createQueryPacket(string transactionID, Job job)
         {
             dynamic packet = new JObject();
 
             packet.v = "1";
 
-            if(transactionID != null)
+            if (transactionID != null)
                 packet.t = transactionID;
 
             packet.y = "q";
@@ -58,27 +53,23 @@ namespace Netronics
             return packet;
         }
 
-        static protected void processingQueryPacket(RemoteService service, dynamic packet)
+        protected static void processingQueryPacket(RemoteService service, dynamic packet)
         {
-            Job job = new Job(service);
+            var job = new Job(service);
             job.message = packet.m;
 
             if (packet.t != null) //트랜젝션 ID가 null일경우 결과 패킷을 전송하지 않아도 됨.
             {
-                job.success += new Job.Result(
-                        delegate(Service sender, Job.ResultEventArgs e)
-                        {
-                            PacketProcessor.sendJobResult(e.getJob(), true);
-							job.Dispose();
-                        }
-                    );
-                job.fail += new Job.Result(
-                        delegate(Service sender, Job.ResultEventArgs e)
-                        {
-                            PacketProcessor.sendJobResult(e.getJob(), false);
-							job.Dispose();
-                        }
-                    );
+                job.success += delegate(Service sender, Job.ResultEventArgs e)
+                                   {
+                                       sendJobResult(e.getJob(), true);
+                                       job.Dispose();
+                                   };
+                job.fail += delegate(Service sender, Job.ResultEventArgs e)
+                                {
+                                    sendJobResult(e.getJob(), false);
+                                    job.Dispose();
+                                };
             }
             else
             {
@@ -89,29 +80,29 @@ namespace Netronics
             job.transaction = packet.t;
 
             PacketProcessor.service.processingJob(service, job);
-			
-			if(!job.receiveResult)
-            	job.Dispose();
+
+            if (!job.receiveResult)
+                job.Dispose();
         }
 
 
-        static protected void sendJobResult(Job job, bool success)
+        protected static void sendJobResult(Job job, bool success)
         {
             dynamic packet = new JObject();
             packet.v = "1";
-            if(packet.t != null)
+            if (packet.t != null)
                 packet.t = job.transaction;
             packet.y = "r";
-            if(success)
+            if (success)
                 packet.r = job.result;
             else
                 packet.f = true;
 
-            if (!((RemoteService)job.getService()).sendMessage(packet))
+            if (!((RemoteService) job.getService()).sendMessage(packet))
                 job.returnResult(job.getService(), false);
         }
 
-        static public void processingJob(Job job)
+        public static void processingJob(Job job)
         {
             string processingGroup = job.group;
 

@@ -1,119 +1,129 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net.Sockets;
 using System.Net;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
+using System.Net.Sockets;
 
 namespace Netronics
 {
     public class Netronics
     {
-        public enum Flag { Family, SocketType, ProtocolType, ServiceIPAddress, ServicePort, PacketEncoder, PacketDecoder}
+        #region Flag enum
 
-        static protected AddressFamily family = AddressFamily.InterNetwork;
-        static protected SocketType socketType = SocketType.Stream;
-        static protected ProtocolType protocolType = ProtocolType.Tcp;
-        static protected IPAddress addr = IPAddress.Any;
-        static protected int port = 0;
+        public enum Flag
+        {
+            Family,
+            SocketType,
+            ProtocolType,
+            ServiceIPAddress,
+            ServicePort,
+            PacketEncoder,
+            PacketDecoder
+        }
 
-        static protected PacketEncoder packetEncoder = new BSONEncoder();
-        static protected PacketDecoder packetDecoder = new BSONDecoder();
+        #endregion
 
-        static protected Service oService;
-        static protected Socket oSocket;
+        private static AddressFamily family = AddressFamily.InterNetwork;
+        private static SocketType socketType = SocketType.Stream;
+        private static ProtocolType protocolType = ProtocolType.Tcp;
+        private static IPAddress addr = IPAddress.Any;
+        private static int port;
 
-        static public Service service { set { Netronics.oService = value; } get { return Netronics.oService; } }
+        private static PacketEncoder packetEncoder = new BSONEncoder();
+        private static PacketDecoder packetDecoder = new BSONDecoder();
 
-        static public void setFlag(Flag flag, object value)
+        protected static Service oService;
+        protected static Socket oSocket;
+
+        public static Service service
+        {
+            set { oService = value; }
+            get { return oService; }
+        }
+
+        public static void setFlag(Flag flag, object value)
         {
             switch (flag)
             {
                 case Flag.Family:
-                    if (value.GetType() != typeof(AddressFamily)) break;
-                    Netronics.family = (AddressFamily)value;
+                    if (value.GetType() != typeof (AddressFamily)) break;
+                    family = (AddressFamily) value;
                     break;
                 case Flag.SocketType:
-                    if (value.GetType() != typeof(SocketType)) break;
-                    Netronics.socketType = (SocketType)value;
+                    if (value.GetType() != typeof (SocketType)) break;
+                    socketType = (SocketType) value;
                     break;
                 case Flag.ProtocolType:
-                    if (value.GetType() != typeof(ProtocolType)) break;
-                    Netronics.protocolType = (ProtocolType)value;
+                    if (value.GetType() != typeof (ProtocolType)) break;
+                    protocolType = (ProtocolType) value;
                     break;
                 case Flag.ServiceIPAddress:
-                    if (value.GetType() == typeof(IPAddress))
-                        Netronics.addr = (IPAddress)value;
-                    if (value.GetType() == typeof(string))
-                        Netronics.addr = IPAddress.Parse((string)value);
+                    if (value.GetType() == typeof (IPAddress))
+                        addr = (IPAddress) value;
+                    if (value.GetType() == typeof (string))
+                        addr = IPAddress.Parse((string) value);
                     break;
                 case Flag.ServicePort:
-                    if (value.GetType() != typeof(int)) break;
-                    Netronics.port = (int)value;
+                    if (value.GetType() != typeof (int)) break;
+                    port = (int) value;
                     break;
                 case Flag.PacketEncoder:
-                    if (value.GetType() != typeof(PacketEncoder)) break;
-                    Netronics.packetEncoder = (PacketEncoder)value;
+                    if (value.GetType() != typeof (PacketEncoder)) break;
+                    packetEncoder = (PacketEncoder) value;
                     break;
                 case Flag.PacketDecoder:
-                    if (value.GetType() != typeof(PacketDecoder)) break;
-                    Netronics.packetDecoder = (PacketDecoder)value;
+                    if (value.GetType() != typeof (PacketDecoder)) break;
+                    packetDecoder = (PacketDecoder) value;
                     break;
             }
         }
 
-        static protected PacketEncoder getPacketEncoder()
+        protected static PacketEncoder getPacketEncoder()
         {
-            return Netronics.packetEncoder;
-        }
-		
-        static protected PacketDecoder getPacketDecoder()
-        {
-            return Netronics.packetDecoder;
+            return packetEncoder;
         }
 
-        static public void start()
+        protected static PacketDecoder getPacketDecoder()
         {
-            if (Netronics.service == null)
+            return packetDecoder;
+        }
+
+        public static void start()
+        {
+            if (service == null)
                 return;
 
-            PacketProcessor.init(Netronics.service);
-            Netronics.initSocket();
-            Netronics.service.init();
+            PacketProcessor.init(service);
+            initSocket();
+            service.init();
 
-            Netronics.startSocket();
-            Netronics.service.start();
+            startSocket();
+            service.start();
         }
 
-        static protected void initSocket()
+        protected static void initSocket()
         {
-            Netronics.oSocket = new System.Net.Sockets.Socket(Netronics.family, Netronics.socketType, Netronics.protocolType);
-            Netronics.oSocket.Bind(new IPEndPoint(Netronics.addr, Netronics.port));
+            oSocket = new Socket(family, socketType, protocolType);
+            oSocket.Bind(new IPEndPoint(addr, port));
         }
 
-        static protected void startSocket()
+        protected static void startSocket()
         {
-            Netronics.oSocket.Listen(50);
-            Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
+            oSocket.Listen(50);
+            oSocket.BeginAccept(acceptCallback, null);
         }
 
-        static protected void acceptCallback(IAsyncResult ar)
+        protected static void acceptCallback(IAsyncResult ar)
         {
-            new RemoteService(Netronics.oSocket.EndAccept(ar), Netronics.getPacketEncoder(), Netronics.getPacketDecoder()).processingJob(Netronics.service, ServiceJob.serviceInfo(Netronics.service));
-            Netronics.oSocket.BeginAccept(new AsyncCallback(Netronics.acceptCallback), null);
+            new RemoteService(oSocket.EndAccept(ar), getPacketEncoder(), getPacketDecoder()).
+                processingJob(service, ServiceJob.serviceInfo(service));
+            oSocket.BeginAccept(acceptCallback, null);
         }
 
-        static public void stop()
+        public static void stop()
         {
-            Netronics.service.stop();
+            service.stop();
         }
 
-        static public void processingJob(Job job)
+        public static void processingJob(Job job)
         {
             PacketProcessor.processingJob(job);
         }

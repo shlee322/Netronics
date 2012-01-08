@@ -1,16 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Netronics
 {
     public class AutoTypeDivider
     {
-        class DividerEvent
+        #region Delegates
+
+        public delegate bool Divider(DividerEventArgs e);
+
+        public delegate void Processor(DividerEventArgs e);
+
+        #endregion
+
+        private event EventHandler<DividerEventArgs> dividErevent;
+
+        public void processingJob(Service service, Job job)
         {
-            private Divider divider;
-            private Processor processor;
+            dividErevent(this, new DividerEventArgs(service, job));
+        }
+
+        public void addProcessor(Divider divider, Processor processor)
+        {
+            dividErevent += new DividerEvent(divider, processor).processingJob;
+        }
+
+        #region Nested type: DividerEvent
+
+        private class DividerEvent
+        {
+            private readonly Divider divider;
+            private readonly Processor processor;
 
             public DividerEvent(Divider divider, Processor processor)
             {
@@ -20,16 +39,20 @@ namespace Netronics
 
             public void processingJob(object sender, DividerEventArgs e)
             {
-                if (!this.divider(e))
+                if (!divider(e))
                     return;
-                this.processor(e);
+                processor(e);
             }
         }
 
+        #endregion
+
+        #region Nested type: DividerEventArgs
+
         public class DividerEventArgs : EventArgs
         {
-            private Service service;
-            private Job job;
+            private readonly Job job;
+            private readonly Service service;
 
             public DividerEventArgs(Service service, Job job)
             {
@@ -39,28 +62,15 @@ namespace Netronics
 
             public Service getService()
             {
-                return this.service;
+                return service;
             }
 
             public Job getJob()
             {
-                return this.job;
+                return job;
             }
         }
 
-        private event EventHandler<DividerEventArgs> dividErevent;
-
-        public delegate bool Divider(DividerEventArgs e);
-        public delegate void Processor(DividerEventArgs e);
-
-        public void processingJob(Service service, Job job)
-        {
-            this.dividErevent(this, new DividerEventArgs(service, job));
-        }
-
-        public void addProcessor(Divider divider, Processor processor)
-        {
-            dividErevent += new EventHandler<DividerEventArgs>(new DividerEvent(divider, processor).processingJob);
-        }
+        #endregion
     }
 }

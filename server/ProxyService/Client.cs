@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net.Sockets;
+using Netronics;
 
 namespace ProxyService
 {
-    class Client
+    public class Client
     {
         private int id;
         private Socket socket;
@@ -20,8 +21,8 @@ namespace ProxyService
             this.id = id;
             this.socket = socket;
 			this.handshake = handshake.getInstance(this);
-			
-			this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
+
+            this.getSocket().BeginReceive(this.socketBuffer, 0, 512, SocketFlags.None, this.readCallback, null);
         }
 		
 		private Socket getSocket()
@@ -32,13 +33,20 @@ namespace ProxyService
 		private void disconnect()
 		{
 		}
+
+
+        private PacketBuffer getPacketBuffer()
+        {
+            return this.packetBuffer;
+        }
 		
 		private void processingHandshake()
 		{
 			PacketDecoder packetDecoder = this.handshake.getPacketDecoder();
+            dynamic packet;
 			while ((packet = packetDecoder.decode(this.getPacketBuffer())) != null)
 			{
-				if(this.handshake.processingHandshake(packetBuffer))
+				if(this.handshake.processingHandshake(this, packet))
 				{
 					this.handshake = null;
 					break;
@@ -63,7 +71,7 @@ namespace ProxyService
                 return;
             }
 
-            this.getPacketBuffer().write(this.getSocketBuffer(), 0, len);
+            this.getPacketBuffer().write(this.socketBuffer, 0, len);
 			
 			if(this.handshake != null)
 				this.processingHandshake();
@@ -71,7 +79,7 @@ namespace ProxyService
 			if(this.handshake == null)
 				this.processingPacket();
 			
-            this.getSocket().BeginReceive(this.getSocketBuffer(), 0, 512, SocketFlags.None, this.readCallback, null);
+            this.getSocket().BeginReceive(this.socketBuffer, 0, 512, SocketFlags.None, this.readCallback, null);
         }
     }
 }

@@ -1,28 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace Netronics
 {
     public class PacketBuffer : IDisposable
     {
-        MemoryStream buffer = new MemoryStream();
-        byte[] buf = new byte[1024];
+        private readonly byte[] buf = new byte[1024];
+        private MemoryStream buffer = new MemoryStream();
 
-        protected bool disposed = false;
+        protected bool disposed;
+
+        #region IDisposable Members
 
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
 
             GC.SuppressFinalize(this);
         }
 
+        #endregion
+
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
@@ -35,12 +36,7 @@ namespace Netronics
 
         public byte[] getBytes()
         {
-            return this.buffer.ToArray();
-        }
-
-        private MemoryStream getBufferStream()
-        {
-            return this.buffer;
+            return buffer.ToArray();
         }
 
         public long legibleBytes()
@@ -55,11 +51,11 @@ namespace Netronics
 
         public void endBufferIndex()
         {
-            MemoryStream old = this.buffer;   
-            this.buffer = new MemoryStream();
+            MemoryStream old = buffer;
+            buffer = new MemoryStream();
 
             int len;
-            while((len = old.Read(buf, 0, 1024))>0)
+            while ((len = old.Read(buf, 0, 1024)) > 0)
                 buffer.Write(buf, 0, len);
             old.Dispose();
         }
@@ -77,13 +73,13 @@ namespace Netronics
 
         public void write(Stream stream)
         {
-            this.buffer.Position = this.buffer.Length;
-            stream.CopyTo(this.buffer);
+            buffer.Position = buffer.Length;
+            stream.CopyTo(buffer);
         }
 
         public void write(UInt32 value)
         {
-            this.write(BitConverter.GetBytes(value), 0, 4);
+            write(BitConverter.GetBytes(value), 0, 4);
         }
 
         public int read(byte[] buffer, int offset, int count)
@@ -94,62 +90,62 @@ namespace Netronics
 
         public void readBytes(byte[] buffer)
         {
-            this.read(buffer, 0, buffer.Length);
+            read(buffer, 0, buffer.Length);
         }
 
         public byte[] readBytes(int length)
         {
-            byte[] buffer = new byte[length];
-            this.readBytes(buffer);
+            var buffer = new byte[length];
+            readBytes(buffer);
             return buffer;
         }
 
         public Int16 readInt16()
         {
-            byte[] int16Data = new byte[2];
-            this.read(int16Data, 0, 2);
+            var int16Data = new byte[2];
+            read(int16Data, 0, 2);
             return BitConverter.ToInt16(int16Data, 0);
         }
 
         public Int32 readInt32()
         {
-            byte[] int32Data = new byte[4];
-            this.read(int32Data, 0, 4);
+            var int32Data = new byte[4];
+            read(int32Data, 0, 4);
             return BitConverter.ToInt32(int32Data, 0);
         }
 
         public Int64 readInt64()
         {
-            byte[] int64Data = new byte[8];
-            this.read(int64Data, 0, 8);
+            var int64Data = new byte[8];
+            read(int64Data, 0, 8);
             return BitConverter.ToInt64(int64Data, 0);
         }
 
         public UInt16 readUInt16()
         {
-            byte[] uint16Data = new byte[2];
-            this.read(uint16Data, 0, 2);
+            var uint16Data = new byte[2];
+            read(uint16Data, 0, 2);
             return BitConverter.ToUInt16(uint16Data, 0);
         }
 
         public UInt32 readUInt32()
         {
-            byte[] uint32Data = new byte[4];
-            this.read(uint32Data, 0, 4);
+            var uint32Data = new byte[4];
+            read(uint32Data, 0, 4);
             return BitConverter.ToUInt32(uint32Data, 0);
         }
 
         public UInt64 readUInt64()
         {
-            byte[] uint64Data = new byte[8];
-            this.read(uint64Data, 0, 8);
+            var uint64Data = new byte[8];
+            read(uint64Data, 0, 8);
             return BitConverter.ToUInt64(uint64Data, 0);
         }
 
         public byte readByte()
         {
-            byte[] byteData = new byte[1];
-            this.read(byteData, 0, 1);
+            var byteData = new byte[1];
+            read(byteData, 0, 1);
             return byteData[0];
         }
     }

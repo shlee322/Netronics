@@ -26,6 +26,10 @@ namespace Test
             System.Console.WriteLine(transaction.getTransaction("40"));
 
             System.Console.WriteLine(transaction.getTransaction("60"));
+
+            transaction.Dispose();
+
+            System.Console.WriteLine(transaction.getTransaction("60"));
         }
     }
 }

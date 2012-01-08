@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
@@ -22,6 +19,8 @@ namespace Netronics
     {
         protected JsonSerializer serializer = new JsonSerializer();
 
+        #region PacketEncoder Members
+
         /// <summary>
         /// BSON Encode 함수
         /// 
@@ -31,17 +30,19 @@ namespace Netronics
         /// <returns>BSON 패킷 구조를 따르는 PacketBuffer</returns>
         public PacketBuffer encode(dynamic data)
         {
-            PacketBuffer buffer = new PacketBuffer();
+            var buffer = new PacketBuffer();
 
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
             serializer.Serialize(new BsonWriter(stream), data);
             stream.Position = 0;
 
-            buffer.write((UInt32)stream.Length);
+            buffer.write((UInt32) stream.Length);
             buffer.write(stream);
             stream.Dispose();
 
             return buffer;
         }
+
+        #endregion
     }
 }

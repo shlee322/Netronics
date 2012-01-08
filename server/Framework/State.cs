@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
 namespace Netronics
 {
     public class State
     {
-        static private PerformanceCounter cpu;
+        private static readonly PerformanceCounter cpu;
+
         static State()
         {
             cpu = new PerformanceCounter();

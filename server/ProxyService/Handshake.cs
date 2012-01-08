@@ -1,15 +1,16 @@
 using System;
+using Netronics;
 
 namespace ProxyService
 {
 	public interface Handshake
 	{
-		struct Handshake getInstance(Client client);
+		Handshake getInstance(Client client);
 		
 		PacketEncoder getPacketEncoder();
 		PacketDecoder getPacketDecoder();
 		
-		bool processingHandshake(Client client);
+		bool processingHandshake(Client client, dynamic message);
 	}
 }
 

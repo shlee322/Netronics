@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\local\lib\json.net\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\lib\json.net\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
