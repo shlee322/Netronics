@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceProcess;
-using System.Text;
+using Netronics;
 
 namespace ProxyService
 {
@@ -13,6 +13,7 @@ namespace ProxyService
         /// </summary>
         static void Main()
         {
+            ModuleLoader.LoadModules();
             Netronics.Netronics.Service = new Service();
             Netronics.Netronics.SetFlag(Netronics.Netronics.Flag.ServicePort, 10051);
             Netronics.Netronics.Start();

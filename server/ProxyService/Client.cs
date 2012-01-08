@@ -20,12 +20,12 @@ namespace ProxyService
         {
             this.id = id;
             this.socket = socket;
-			this.handshake = handshake.getInstance(this);
+			this.handshake = handshake;
 
-            this.getSocket().BeginReceive(this.socketBuffer, 0, 512, SocketFlags.None, this.readCallback, null);
+            this.GetSocket().BeginReceive(socketBuffer, 0, 512, SocketFlags.None, readCallback, null);
         }
 		
-		private Socket getSocket()
+		private Socket GetSocket()
 		{
 			return this.socket;
 		}
@@ -35,18 +35,18 @@ namespace ProxyService
 		}
 
 
-        private PacketBuffer getPacketBuffer()
+        private PacketBuffer GetPacketBuffer()
         {
             return this.packetBuffer;
         }
 		
-		private void processingHandshake()
+		private void ProcessingHandshake()
 		{
-			IPacketDecoder packetDecoder = this.handshake.getPacketDecoder();
+			IPacketDecoder packetDecoder = handshake.GetPacketDecoder();
             dynamic packet;
-			while ((packet = packetDecoder.Decode(this.getPacketBuffer())) != null)
+			while ((packet = packetDecoder.Decode(GetPacketBuffer())) != null)
 			{
-				if(this.handshake.processingHandshake(this, packet))
+				if(this.handshake.ProcessingHandshake(this, packet))
 				{
 					this.handshake = null;
 					break;
@@ -63,7 +63,7 @@ namespace ProxyService
             int len;
             try
             {
-                len = this.getSocket().EndReceive(ar);
+                len = this.GetSocket().EndReceive(ar);
             }
             catch (SocketException)
             {
@@ -71,15 +71,15 @@ namespace ProxyService
                 return;
             }
 
-            this.getPacketBuffer().Write(this.socketBuffer, 0, len);
+            this.GetPacketBuffer().Write(this.socketBuffer, 0, len);
 			
 			if(this.handshake != null)
-				this.processingHandshake();
+				this.ProcessingHandshake();
 			
 			if(this.handshake == null)
 				this.processingPacket();
 			
-            this.getSocket().BeginReceive(this.socketBuffer, 0, 512, SocketFlags.None, this.readCallback, null);
+            this.GetSocket().BeginReceive(this.socketBuffer, 0, 512, SocketFlags.None, this.readCallback, null);
         }
     }
 }

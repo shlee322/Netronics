@@ -1,73 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.Sockets;
 using System.Net;
 
 namespace ProxyService
 {
-    class FrontEnd
+    public class FrontEnd
     {
-        const int MAX_CLIENT_ID = 30000;
+        const int MaxClientID = 30000;
 
-        private Socket serverSocket;
-        private Client[] client;
-        private int nextClientID;
-        private Stack<int> removeClientID;
+        private Socket _serverSocket;
+        private Client[] _client;
+        private int _nextClientID;
+        private Stack<int> _removeClientID;
 		
-		private Handshake handshake;
+        public delegate Handshake GetHandshakeInstance();
 
-        static void add()
+        private GetHandshakeInstance _handshakeInstance;
+
+        private static void add(FrontEnd frontEnd)
         {
         }
 
-
-        public FrontEnd(int port)
+        public FrontEnd()
         {
-            this.client = new Client[MAX_CLIENT_ID];
-            this.nextClientID = 0;
-            this.removeClientID = new Stack<int>();
-            this.serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            this.serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+            add(this);
         }
 
-        public void start()
+        public void Start(int port)
         {
-            this.serverSocket.BeginAccept(new AsyncCallback(this.accept), null);
-            this.serverSocket.Listen(50);
+            _client = new Client[MaxClientID];
+            _nextClientID = 0;
+            _removeClientID = new Stack<int>();
+            _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+            _serverSocket.BeginAccept(Accept, null);
+            _serverSocket.Listen(50);
         }
 
-        private int getClientID()
+        private int GetClientID()
         {
-            if (this.removeClientID.Count == 0)
+            if (_removeClientID.Count == 0)
             {
-                if (this.nextClientID == MAX_CLIENT_ID)
+                if (_nextClientID == MaxClientID)
                     return -1;
-                return this.nextClientID++;
+                return _nextClientID++;
             }
 
-            return this.removeClientID.Pop();
+            return _removeClientID.Pop();
         }
-		
-		public void setHandshake(Handshake handshake)
+
+		public void SetHandshake(GetHandshakeInstance handshake)
 		{
-			this.handshake = handshake;
+		    _handshakeInstance = handshake;
 		}
 
-        private void accept(IAsyncResult ar)
+        private void Accept(IAsyncResult ar)
         {
-            Socket socket = this.serverSocket.EndAccept(ar);
-            int id = this.getClientID();
+            Socket socket = _serverSocket.EndAccept(ar);
+            int id = GetClientID();
             if (id == -1)
             {
                 socket.Disconnect(false);
             }
             else
             {
-                this.client[id] = new Client(id, socket, this.handshake);
+                _client[id] = new Client(id, socket, _handshakeInstance());
             }
-            this.serverSocket.BeginAccept(new AsyncCallback(this.accept), null);
+            _serverSocket.BeginAccept(Accept, null);
         }
 
     }

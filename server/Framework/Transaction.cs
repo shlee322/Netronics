@@ -54,8 +54,8 @@ namespace Netronics
 
             public Item(string id, Job job)
             {
-                this._id = id;
-                this._job = job;
+                _id = id;
+                _job = job;
             }
 
             public string GetTransactionId()

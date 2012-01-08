@@ -5,12 +5,10 @@ namespace ProxyService
 {
 	public interface Handshake
 	{
-		Handshake getInstance(Client client);
+		IPacketEncoder GetPacketEncoder();
+		IPacketDecoder GetPacketDecoder();
 		
-		IPacketEncoder getPacketEncoder();
-		IPacketDecoder getPacketDecoder();
-		
-		bool processingHandshake(Client client, dynamic message);
+		bool ProcessingHandshake(Client client, dynamic message);
 	}
 }
 
