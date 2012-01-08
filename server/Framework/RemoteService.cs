@@ -11,130 +11,130 @@ namespace Netronics
     public class RemoteService : Service
     {
         protected string ServiceName;
-        protected Socket oSocket;
-        protected PacketBuffer packetBuffer = new PacketBuffer();
+        protected Socket Socket;
+        protected PacketBuffer PacketBuffer = new PacketBuffer();
 
-        protected PacketDecoder packetDecoder;
-        protected PacketEncoder packetEncoder;
+        protected IPacketDecoder PacketDecoder;
+        protected IPacketEncoder PacketEncoder;
 
-        protected bool run;
-        protected byte[] socketBuffer = new byte[512];
-        protected Transaction transaction;
+        protected bool Run;
+        protected byte[] SocketBuffer = new byte[512];
+        protected Transaction Transaction;
 
-        public RemoteService(Socket socket, PacketEncoder encoder, PacketDecoder decoder)
+        public RemoteService(Socket socket, IPacketEncoder encoder, IPacketDecoder decoder)
         {
-            oSocket = socket;
-            packetEncoder = encoder;
-            packetDecoder = decoder;
-            transaction = new Transaction();
+            Socket = socket;
+            PacketEncoder = encoder;
+            PacketDecoder = decoder;
+            Transaction = new Transaction();
 
-            getSocket().BeginReceive(getSocketBuffer(), 0, 512, SocketFlags.None, readCallback, null);
+            GetSocket().BeginReceive(GetSocketBuffer(), 0, 512, SocketFlags.None, ReadCallback, null);
         }
 
         #region Service Members
 
-        public string getServiceName()
+        public string GetServiceName()
         {
             return ServiceName;
         }
 
-        public double getLoad()
+        public double GetLoad()
         {
             return 0;
         }
 
-        public bool getRunning()
+        public bool GetRunning()
         {
-            return run;
+            return Run;
         }
 
-        public bool isGroup(string group)
+        public bool IsGroup(string group)
         {
             return false;
         }
 
-        public string[] getGroupArray()
+        public string[] GetGroupArray()
         {
             return new string[] {};
         }
 
-        public void init()
+        public void Init()
         {
         }
 
-        public void start()
+        public void Start()
         {
         }
 
-        public void stop()
+        public void Stop()
         {
         }
 
-        public void processingJob(Service Service, Job job)
+        public void ProcessingJob(Service service, Job job)
         {
             string id = null;
-            if (job.receiveResult)
+            if (job.ReceiveResult)
             {
-                id = transaction.createTransaction(job);
+                id = Transaction.CreateTransaction(job);
                 if (id == null)
                 {
-                    job.returnResult(this, false);
+                    job.ReturnResult(this, false);
                     return;
                 }
             }
 
-            job.addProcessor();
+            job.AddProcessor();
 
-            sendMessage(PacketProcessor.createQueryPacket(id, job));
+            SendMessage(PacketProcessor.CreateQueryPacket(id, job));
         }
 
         #endregion
 
-        public PacketEncoder getPacketEncoder()
+        public IPacketEncoder GetPacketEncoder()
         {
-            return packetEncoder;
+            return PacketEncoder;
         }
 
-        public PacketDecoder getPacketDecoder()
+        public IPacketDecoder GetPacketDecoder()
         {
-            return packetDecoder;
+            return PacketDecoder;
         }
 
-        protected void disconnect()
+        protected void Disconnect()
         {
-            run = false;
+            Run = false;
 
-            packetBuffer.Dispose();
-            packetBuffer = null;
+            PacketBuffer.Dispose();
+            PacketBuffer = null;
 
-            Parallel.ForEach(transaction.Dispose(), item => { item.getJob().returnResult(this, false); });
-            transaction = null;
+            Parallel.ForEach(Transaction.Dispose(), item => { item.GetJob().ReturnResult(this, false); });
+            Transaction = null;
             //할당된 작업 해제 등등
         }
 
-        protected void readCallback(IAsyncResult ar)
+        protected void ReadCallback(IAsyncResult ar)
         {
             int len;
             try
             {
-                len = getSocket().EndReceive(ar);
+                len = GetSocket().EndReceive(ar);
             }
             catch (SocketException)
             {
-                disconnect();
+                Disconnect();
                 return;
             }
 
-            getPacketBuffer().write(getSocketBuffer(), 0, len);
+            GetPacketBuffer().Write(GetSocketBuffer(), 0, len);
 
-            LinkedList<dynamic> messageList = getPacketMessageList();
+            LinkedList<dynamic> messageList = GetPacketMessageList();
 
             var task = new Task(() =>
                                     {
                                         Parallel.ForEach(messageList, message =>
                                                                           {
                                                                               if (
-                                                                                  PacketProcessor.getPacketType(this,
+                                                                                  PacketProcessor.GetPacketType(this,
                                                                                                                 message) ==
                                                                                   "q")
                                                                               {
@@ -142,78 +142,76 @@ namespace Netronics
                                                                                       () =>
                                                                                           {
                                                                                               PacketProcessor.
-                                                                                                  processingPacket(
+                                                                                                  ProcessingPacket(
                                                                                                       this, message);
                                                                                           });
                                                                               }
                                                                               else
                                                                               {
                                                                                   Job job =
-                                                                                      transaction.getTransaction(
+                                                                                      Transaction.GetTransaction(
                                                                                           (string) message.t);
                                                                                   if (job != null)
                                                                                   {
                                                                                       Parallel.Invoke(
                                                                                           () =>
                                                                                               {
-                                                                                                  job.returnResult(
+                                                                                                  job.ReturnResult(
                                                                                                       this,
-                                                                                                      message.f != true
-                                                                                                          ? true
-                                                                                                          : false);
+                                                                                                      !message.f);
                                                                                               });
                                                                                   }
                                                                               }
                                                                           });
                                     });
 
-            getSocket().BeginReceive(getSocketBuffer(), 0, 512, SocketFlags.None, readCallback, null);
+            GetSocket().BeginReceive(GetSocketBuffer(), 0, 512, SocketFlags.None, ReadCallback, null);
 
             task.Start();
         }
 
-        private LinkedList<dynamic> getPacketMessageList()
+        private LinkedList<dynamic> GetPacketMessageList()
         {
             var packetList = new LinkedList<dynamic>();
 
             dynamic packet;
-            while ((packet = getPacketDecoder().decode(getPacketBuffer())) != null)
+            while ((packet = GetPacketDecoder().Decode(GetPacketBuffer())) != null)
                 packetList.AddLast(packet);
 
             return packetList;
         }
 
-        public Socket getSocket()
+        public Socket GetSocket()
         {
-            return oSocket;
+            return Socket;
         }
 
-        public byte[] getSocketBuffer()
+        public byte[] GetSocketBuffer()
         {
-            return socketBuffer;
+            return SocketBuffer;
         }
 
-        public PacketBuffer getPacketBuffer()
+        public PacketBuffer GetPacketBuffer()
         {
-            return packetBuffer;
+            return PacketBuffer;
         }
 
-        public bool sendMessage(dynamic data)
+        public bool SendMessage(dynamic data)
         {
-            PacketBuffer buffer = getPacketEncoder().encode(data);
-            bool r = sendPacket(buffer);
+            PacketBuffer buffer = GetPacketEncoder().Encode(data);
+            bool r = SendPacket(buffer);
             buffer.Dispose();
 
             return r;
         }
 
-        public bool sendPacket(PacketBuffer buffer)
+        public bool SendPacket(PacketBuffer buffer)
         {
-            byte[] sendBuffer = buffer.getBytes();
+            byte[] sendBuffer = buffer.GetBytes();
             try
             {
-                getSocket().BeginSendTo(sendBuffer, 0, sendBuffer.Length, SocketFlags.None, getSocket().RemoteEndPoint,
-                                        sendPacketCallback, null);
+                GetSocket().BeginSendTo(sendBuffer, 0, sendBuffer.Length, SocketFlags.None, GetSocket().RemoteEndPoint,
+                                        SendPacketCallback, null);
             }
             catch (System.Exception)
             {
@@ -222,9 +220,9 @@ namespace Netronics
             return true;
         }
 
-        private void sendPacketCallback(IAsyncResult ar)
+        private void SendPacketCallback(IAsyncResult ar)
         {
-            getSocket().EndSendTo(ar);
+            GetSocket().EndSendTo(ar);
         }
     }
 }

@@ -5,24 +5,24 @@ namespace Netronics
 {
     public class State
     {
-        private static readonly PerformanceCounter cpu;
+        private static readonly PerformanceCounter CPU;
 
         static State()
         {
-            cpu = new PerformanceCounter();
-            cpu.CategoryName = "Processor";
-            cpu.CounterName = "% Processor Time";
-            cpu.InstanceName = "_Total";
+            CPU = new PerformanceCounter();
+            CPU.CategoryName = "Processor";
+            CPU.CounterName = "% Processor Time";
+            CPU.InstanceName = "_Total";
         }
 
-        public static double getLoad()
+        public static double GetLoad()
         {
-            return Math.Pow(1.1, getCPULoad());
+            return Math.Pow(1.1, GetCPULoad());
         }
 
-        public static float getCPULoad()
+        public static float GetCPULoad()
         {
-            return cpu.NextValue();
+            return CPU.NextValue();
         }
     }
 }

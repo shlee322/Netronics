@@ -18,13 +18,13 @@ namespace ProxyService
 
         protected override void OnStart(string[] args)
         {
-            Netronics.Netronics.service = new Service();
-            Netronics.Netronics.start();
+            Netronics.Netronics.Service = new Service();
+            Netronics.Netronics.Start();
         }
 
         protected override void OnStop()
         {
-            Netronics.Netronics.stop();
+            Netronics.Netronics.Stop();
         }
     }
 }

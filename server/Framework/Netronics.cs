@@ -13,7 +13,7 @@ namespace Netronics
             Family,
             SocketType,
             ProtocolType,
-            ServiceIPAddress,
+            ServiceIpAddress,
             ServicePort,
             PacketEncoder,
             PacketDecoder
@@ -21,111 +21,111 @@ namespace Netronics
 
         #endregion
 
-        private static AddressFamily family = AddressFamily.InterNetwork;
-        private static SocketType socketType = SocketType.Stream;
-        private static ProtocolType protocolType = ProtocolType.Tcp;
-        private static IPAddress addr = IPAddress.Any;
-        private static int port;
+        private static AddressFamily _family = AddressFamily.InterNetwork;
+        private static SocketType _socketType = SocketType.Stream;
+        private static ProtocolType _protocolType = ProtocolType.Tcp;
+        private static IPAddress _addr = IPAddress.Any;
+        private static int _port;
 
-        private static PacketEncoder packetEncoder = new BSONEncoder();
-        private static PacketDecoder packetDecoder = new BSONDecoder();
+        private static IPacketEncoder _packetEncoder = new BsonEncoder();
+        private static IPacketDecoder _packetDecoder = new BsonDecoder();
 
-        protected static Service oService;
-        protected static Socket oSocket;
+        protected static Service _Service;
+        protected static Socket _Socket;
 
-        public static Service service
+        public static Service Service
         {
-            set { oService = value; }
-            get { return oService; }
+            set { _Service = value; }
+            get { return _Service; }
         }
 
-        public static void setFlag(Flag flag, object value)
+        public static void SetFlag(Flag flag, object value)
         {
             switch (flag)
             {
                 case Flag.Family:
-                    if (value.GetType() != typeof (AddressFamily)) break;
-                    family = (AddressFamily) value;
+                    if (value is AddressFamily) break;
+                    _family = (AddressFamily) value;
                     break;
                 case Flag.SocketType:
-                    if (value.GetType() != typeof (SocketType)) break;
-                    socketType = (SocketType) value;
+                    if (value is SocketType) break;
+                    _socketType = (SocketType) value;
                     break;
                 case Flag.ProtocolType:
-                    if (value.GetType() != typeof (ProtocolType)) break;
-                    protocolType = (ProtocolType) value;
+                    if (value is ProtocolType) break;
+                    _protocolType = (ProtocolType) value;
                     break;
-                case Flag.ServiceIPAddress:
-                    if (value.GetType() == typeof (IPAddress))
-                        addr = (IPAddress) value;
-                    if (value.GetType() == typeof (string))
-                        addr = IPAddress.Parse((string) value);
+                case Flag.ServiceIpAddress:
+                    if (value is IPAddress)
+                        _addr = (IPAddress) value;
+                    if (value is string)
+                        _addr = IPAddress.Parse((string) value);
                     break;
                 case Flag.ServicePort:
-                    if (value.GetType() != typeof (int)) break;
-                    port = (int) value;
+                    if (value is int) break;
+                    _port = (int) value;
                     break;
                 case Flag.PacketEncoder:
-                    if (value.GetType() != typeof (PacketEncoder)) break;
-                    packetEncoder = (PacketEncoder) value;
+                    if (value is IPacketEncoder) break;
+                    _packetEncoder = (IPacketEncoder) value;
                     break;
                 case Flag.PacketDecoder:
-                    if (value.GetType() != typeof (PacketDecoder)) break;
-                    packetDecoder = (PacketDecoder) value;
+                    if (value is IPacketDecoder) break;
+                    _packetDecoder = (IPacketDecoder) value;
                     break;
             }
         }
 
-        protected static PacketEncoder getPacketEncoder()
+        protected static IPacketEncoder GetPacketEncoder()
         {
-            return packetEncoder;
+            return _packetEncoder;
         }
 
-        protected static PacketDecoder getPacketDecoder()
+        protected static IPacketDecoder GetPacketDecoder()
         {
-            return packetDecoder;
+            return _packetDecoder;
         }
 
-        public static void start()
+        public static void Start()
         {
-            if (service == null)
+            if (Service == null)
                 return;
 
-            PacketProcessor.init(service);
-            initSocket();
-            service.init();
+            PacketProcessor.Init(Service);
+            InitSocket();
+            Service.Init();
 
-            startSocket();
-            service.start();
+            StartSocket();
+            Service.Start();
         }
 
-        protected static void initSocket()
+        protected static void InitSocket()
         {
-            oSocket = new Socket(family, socketType, protocolType);
-            oSocket.Bind(new IPEndPoint(addr, port));
+            _Socket = new Socket(_family, _socketType, _protocolType);
+            _Socket.Bind(new IPEndPoint(_addr, _port));
         }
 
-        protected static void startSocket()
+        protected static void StartSocket()
         {
-            oSocket.Listen(50);
-            oSocket.BeginAccept(acceptCallback, null);
+            _Socket.Listen(50);
+            _Socket.BeginAccept(AcceptCallback, null);
         }
 
-        protected static void acceptCallback(IAsyncResult ar)
+        protected static void AcceptCallback(IAsyncResult ar)
         {
-            new RemoteService(oSocket.EndAccept(ar), getPacketEncoder(), getPacketDecoder()).
-                processingJob(service, ServiceJob.serviceInfo(service));
-            oSocket.BeginAccept(acceptCallback, null);
+            new RemoteService(_Socket.EndAccept(ar), GetPacketEncoder(), GetPacketDecoder()).
+                ProcessingJob(Service, ServiceJob.serviceInfo(Service));
+            _Socket.BeginAccept(AcceptCallback, null);
         }
 
-        public static void stop()
+        public static void Stop()
         {
-            service.stop();
+            Service.Stop();
         }
 
-        public static void processingJob(Job job)
+        public static void ProcessingJob(Job job)
         {
-            PacketProcessor.processingJob(job);
+            PacketProcessor.ProcessingJob(job);
         }
     }
 }

@@ -14,9 +14,9 @@ namespace Netronics
     /// └─────────┴───────────┘
     ///
     /// </summary>
-    public class BSONDecoder : PacketDecoder
+    public class BsonDecoder : IPacketDecoder
     {
-        protected JsonSerializer serializer = new JsonSerializer();
+        protected JsonSerializer Serializer = new JsonSerializer();
 
         #region PacketDecoder Members
 
@@ -25,29 +25,29 @@ namespace Netronics
         /// </summary>
         /// <param name="buffer">BSON 패킷 구조를 따르는 Packet Buffer</param>
         /// <returns>BSON Data</returns>
-        public dynamic decode(PacketBuffer buffer)
+        public dynamic Decode(PacketBuffer buffer)
         {
             //버퍼 읽기 시작을 알림
-            buffer.beginBufferIndex();
+            buffer.BeginBufferIndex();
 
-            if (buffer.legibleBytes() < 5) //버퍼길이가 5미만이면 리턴
+            if (buffer.LegibleBytes() < 5) //버퍼길이가 5미만이면 리턴
                 return null;
 
-            UInt32 len = buffer.readUInt32();
-            if (len > buffer.legibleBytes())
+            UInt32 len = buffer.ReadUInt32();
+            if (len > buffer.LegibleBytes())
             {
                 //버퍼의 길이가 실제 패킷 길이보다 모자름으로, 리셋후 리턴
-                buffer.resetBufferIndex();
+                buffer.ResetBufferIndex();
                 return null;
             }
 
             var data = new byte[len];
-            buffer.readBytes(data);
+            buffer.ReadBytes(data);
 
-            buffer.endBufferIndex();
+            buffer.EndBufferIndex();
 
             var stream = new MemoryStream(data);
-            dynamic res = serializer.Deserialize(new BsonReader(stream));
+            dynamic res = Serializer.Deserialize(new BsonReader(stream));
             stream.Dispose();
 
             return res;

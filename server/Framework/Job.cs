@@ -18,131 +18,131 @@ namespace Netronics
         /// </summary>
         /// <param name="sender">Job를 처리한 Service</param>
         /// <param name="e">Job 결과 인자값</param>
-        public delegate void Result(Service sender, ResultEventArgs e);
+        public delegate void ResultDelegate(Service sender, ResultEventArgs e);
 
         #endregion
 
-        protected bool disposed;
+        protected bool Disposed;
 
-        protected string groupName = "all";
-        protected bool isReceiveResult = true;
-        protected dynamic oMessage = new JObject();
-        protected dynamic oResult = new JObject();
-        protected int oTake;
-        protected string oTransactionID;
+        protected string GroupName = "all";
+        protected bool IsReceiveResult = true;
+        protected dynamic _Message = new JObject();
+        protected dynamic _Result = new JObject();
+        protected int _Take;
+        protected string _TransactionID;
 
-        protected int processorCount;
-        protected bool receiver;
-        protected Service service;
-        protected string serviceName;
+        protected int ProcessorCount;
+        protected bool Receiver;
+        protected Service Service;
+        protected string ServiceName;
 
         /// <summary>
         /// 새로운 Job을 생성
         /// </summary>
-        /// <param name="Service">Job를 처리할 Service</param>
+        /// <param name="service">Job를 처리할 Service</param>
         public Job(string service)
         {
-            serviceName = service;
+            ServiceName = service;
         }
 
         /// <summary>
         /// 새로운 Job을 생성
         /// </summary>
-        /// <param name="Service">Job을 처리할 Service</param>
+        /// <param name="service">Job을 처리할 Service</param>
         public Job(Service service)
         {
-            this.service = service;
-            serviceName = service.getServiceName();
+            this.Service = service;
+            ServiceName = service.GetServiceName();
         }
 
         /// <summary>
         /// Job 처리후 결과값을 수신 받을지 여부
         /// </summary>
-        public bool receiveResult
+        public bool ReceiveResult
         {
             set
             {
-                if (receiver)
+                if (Receiver)
                     throw new JobPermissionException("Sender가 아니므로 메시지를 편집 할 수 없습니다.");
 
-                isReceiveResult = value;
+                IsReceiveResult = value;
             }
-            get { return isReceiveResult; }
+            get { return IsReceiveResult; }
         }
 
         /// <summary>
         /// Transaction ID (프레임워크 내부에서만 사용)
         /// </summary>
-        public string transaction
+        public string Transaction
         {
             set
             {
-                if (!receiver)
+                if (!Receiver)
                     throw new JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
 
-                oTransactionID = value;
+                _TransactionID = value;
             }
-            get { return oTransactionID; }
+            get { return _TransactionID; }
         }
 
         /// <summary>
         /// Job를 처리할 Service Group
         /// </summary>
-        public string group
+        public string Group
         {
             set
             {
-                if (receiver)
+                if (Receiver)
                     throw new JobPermissionException("Sender가 아니므로 메시지를 편집 할 수 없습니다.");
 
-                groupName = value;
+                GroupName = value;
             }
-            get { return groupName; }
+            get { return GroupName; }
         }
 
         /// <summary>
         /// Job를 처리할 Service 갯수
         /// 0일 경우 모든 Service가 처리함
         /// </summary>
-        public int take
+        public int Take
         {
             set
             {
-                if (receiver)
+                if (Receiver)
                     throw new JobPermissionException("Sender가 아니므로 메시지를 편집 할 수 없습니다.");
-                oTake = value;
+                _Take = value;
             }
-            get { return oTake; }
+            get { return _Take; }
         }
 
         /// <summary>
         /// Job Message
         /// </summary>
-        public dynamic message
+        public dynamic Message
         {
             set
             {
-                if (receiver)
+                if (Receiver)
                     throw new JobPermissionException("Sender가 아니므로 메시지를 편집 할 수 없습니다.");
 
-                oMessage = value;
+                _Message = value;
             }
-            get { return oMessage; }
+            get { return _Message; }
         }
 
         /// <summary>
         /// Job Result
         /// </summary>
-        public dynamic result
+        public dynamic Result
         {
             set
             {
-                if (!receiver)
+                if (!Receiver)
                     throw new JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
 
-                oResult = value;
+                _Result = value;
             }
-            get { return oResult; }
+            get { return _Result; }
         }
 
         #region IDisposable Members
@@ -158,16 +158,16 @@ namespace Netronics
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!Disposed)
             {
                 if (disposing)
                 {
-                    service = null;
-                    oMessage = null;
-                    oResult = null;
+                    Service = null;
+                    _Message = null;
+                    _Result = null;
                 }
 
-                disposed = true;
+                Disposed = true;
             }
         }
 
@@ -175,66 +175,66 @@ namespace Netronics
         /// Job를 처리하는 서비스를 구하는 메서드 (기본적으로 사용안함)
         /// </summary>
         /// <returns>Job를 처리하는 서비스</returns>
-        public Service getService()
+        public Service GetService()
         {
-            return service;
+            return Service;
         }
 
         /// <summary>
         /// Job를 처리하는 서비스 이름을 구하는 메서드
         /// </summary>
         /// <returns>Job를 처리하는 서비스 이름</returns>
-        public string getServiceName()
+        public string GetServiceName()
         {
-            return serviceName;
+            return ServiceName;
         }
 
         /// <summary>
         /// Job를 Receiver로 전환하는 메서드+ (프레임워크 내부에서만 사용)
         /// </summary>
-        public void setReceiver()
+        public void SetReceiver()
         {
-            receiver = true;
+            Receiver = true;
         }
 
         /// <summary>
         /// Job를 처리한 결과를 리턴하는 메서드
         /// </summary>
-        /// <param name="Service">Job를 처리한 Service</param>
+        /// <param name="service">Job를 처리한 Service</param>
         /// <param name="success">성공여부</param>
-        public void returnResult(Service service, bool success = true)
+        public void ReturnResult(Service service, bool success = true)
         {
             Parallel.Invoke(() =>
                                 {
-                                    if (!receiver)
+                                    if (!Receiver)
                                         throw new JobPermissionException("Receiver가 아니므로 결과값을 편집 할 수 없습니다.");
 
                                     var arg = new ResultEventArgs(this, success);
 
                                     if (success)
-                                        this.success(service, arg);
+                                        this.Success(service, arg);
                                     else
-                                        fail(service, arg);
+                                        Fail(service, arg);
 
-                                    if (Interlocked.Decrement(ref processorCount) < 1)
+                                    if (Interlocked.Decrement(ref ProcessorCount) < 1)
                                         Dispose();
                                 });
         }
 
-        public void addProcessor()
+        public void AddProcessor()
         {
-            Interlocked.Increment(ref processorCount);
+            Interlocked.Increment(ref ProcessorCount);
         }
 
         /// <summary>
         /// Job 처리 성공 이벤트
         /// </summary>
-        public event Result success;
+        public event ResultDelegate Success;
 
         /// <summary>
         /// Job 처리 실패 이벤트
         /// </summary>
-        public event Result fail;
+        public event ResultDelegate Fail;
 
         #region Nested type: ResultEventArgs
 
@@ -243,8 +243,8 @@ namespace Netronics
         /// </summary>
         public class ResultEventArgs : EventArgs
         {
-            protected Job job;
-            protected bool success;
+            protected Job Job;
+            protected bool Success;
 
             /// <summary>
             /// Job 결과 이벤트 인자 생성
@@ -253,26 +253,26 @@ namespace Netronics
             /// <param name="success">성공여부</param>
             public ResultEventArgs(Job job, bool success)
             {
-                this.job = job;
-                this.success = success;
+                Job = job;
+                Success = success;
             }
 
             /// <summary>
             /// 처리된 Job를 구하는 메서드
             /// </summary>
             /// <returns>처리된 Job</returns>
-            public Job getJob()
+            public Job GetJob()
             {
-                return job;
+                return Job;
             }
 
             /// <summary>
             /// 성공여부를 리턴하는 메서드
             /// </summary>
             /// <returns>성공여부</returns>
-            public bool getSuccess()
+            public bool GetSuccess()
             {
-                return success;
+                return Success;
             }
         }
 

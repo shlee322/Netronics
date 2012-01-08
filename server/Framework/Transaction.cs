@@ -5,42 +5,42 @@ namespace Netronics
 {
     public class Transaction
     {
-        private LinkedList<Item> list = new LinkedList<Item>();
-        private long nextTransactionID;
+        private LinkedList<Item> _list = new LinkedList<Item>();
+        private long _nextTransactionId;
 
-        public string createTransaction(Job job)
+        public string CreateTransaction(Job job)
         {
-            var item = new Item(Convert.ToString(nextTransactionID++), job);
+            var item = new Item(Convert.ToString(_nextTransactionId++), job);
             lock (this)
             {
-                list.AddLast(item);
+                _list.AddLast(item);
             }
-            return item.getTransactionID();
+            return item.GetTransactionId();
         }
 
-        public Job getTransaction(string id)
+        public Job GetTransaction(string id)
         {
             Job job = null;
             lock (this)
             {
-                if (list == null)
+                if (_list == null)
                     return null;
 
-                LinkedListNode<Item> node = list.Find(new Item(id, null));
+                LinkedListNode<Item> node = _list.Find(new Item(id, null));
                 if (node == null)
                     return null;
-                job = node.Value.getJob();
-                list.Remove(node);
+                job = node.Value.GetJob();
+                _list.Remove(node);
             }
             return job;
         }
 
         public LinkedList<Item> Dispose()
         {
-            LinkedList<Item> item = list;
+            LinkedList<Item> item = _list;
             lock (this)
             {
-                list = null;
+                _list = null;
                 return item;
             }
         }
@@ -49,28 +49,28 @@ namespace Netronics
 
         public class Item
         {
-            private readonly string id;
-            private readonly Job job;
+            private readonly string _id;
+            private readonly Job _job;
 
             public Item(string id, Job job)
             {
-                this.id = id;
-                this.job = job;
+                this._id = id;
+                this._job = job;
             }
 
-            public string getTransactionID()
+            public string GetTransactionId()
             {
-                return id;
+                return _id;
             }
 
-            public Job getJob()
+            public Job GetJob()
             {
-                return job;
+                return _job;
             }
 
             public override int GetHashCode()
             {
-                return getTransactionID().GetHashCode();
+                return GetTransactionId().GetHashCode();
             }
 
             public override bool Equals(object i)

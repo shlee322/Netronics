@@ -5,10 +5,10 @@ namespace Netronics
 {
     public class PacketBuffer : IDisposable
     {
-        private readonly byte[] buf = new byte[1024];
-        private MemoryStream buffer = new MemoryStream();
+        private readonly byte[] _buf = new byte[1024];
+        private MemoryStream _buffer = new MemoryStream();
 
-        protected bool disposed;
+        protected bool Disposed;
 
         #region IDisposable Members
 
@@ -23,129 +23,129 @@ namespace Netronics
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!Disposed)
             {
                 if (disposing)
                 {
-                    buffer.Dispose();
+                    _buffer.Dispose();
                 }
 
-                disposed = true;
+                Disposed = true;
             }
         }
 
-        public byte[] getBytes()
+        public byte[] GetBytes()
         {
-            return buffer.ToArray();
+            return _buffer.ToArray();
         }
 
-        public long legibleBytes()
+        public long LegibleBytes()
         {
-            return buffer.Length - buffer.Position;
+            return _buffer.Length - _buffer.Position;
         }
 
-        public void beginBufferIndex()
+        public void BeginBufferIndex()
         {
-            buffer.Position = 0;
+            _buffer.Position = 0;
         }
 
-        public void endBufferIndex()
+        public void EndBufferIndex()
         {
-            MemoryStream old = buffer;
-            buffer = new MemoryStream();
+            MemoryStream old = _buffer;
+            _buffer = new MemoryStream();
 
             int len;
-            while ((len = old.Read(buf, 0, 1024)) > 0)
-                buffer.Write(buf, 0, len);
+            while ((len = old.Read(_buf, 0, 1024)) > 0)
+                _buffer.Write(_buf, 0, len);
             old.Dispose();
         }
 
-        public void resetBufferIndex()
+        public void ResetBufferIndex()
         {
-            buffer.Position = 0;
+            _buffer.Position = 0;
         }
 
-        public void write(byte[] buffer, int offset, int count)
+        public void Write(byte[] buffer, int offset, int count)
         {
-            this.buffer.Position = this.buffer.Length;
-            this.buffer.Write(buffer, offset, count);
+            this._buffer.Position = this._buffer.Length;
+            this._buffer.Write(buffer, offset, count);
         }
 
-        public void write(Stream stream)
+        public void Write(Stream stream)
         {
-            buffer.Position = buffer.Length;
-            stream.CopyTo(buffer);
+            _buffer.Position = _buffer.Length;
+            stream.CopyTo(_buffer);
         }
 
-        public void write(UInt32 value)
+        public void Write(UInt32 value)
         {
-            write(BitConverter.GetBytes(value), 0, 4);
+            Write(BitConverter.GetBytes(value), 0, 4);
         }
 
-        public int read(byte[] buffer, int offset, int count)
+        public int Read(byte[] buffer, int offset, int count)
         {
-            int len = this.buffer.Read(buffer, offset, count);
+            int len = this._buffer.Read(buffer, offset, count);
             return len;
         }
 
-        public void readBytes(byte[] buffer)
+        public void ReadBytes(byte[] buffer)
         {
-            read(buffer, 0, buffer.Length);
+            Read(buffer, 0, buffer.Length);
         }
 
-        public byte[] readBytes(int length)
+        public byte[] ReadBytes(int length)
         {
             var buffer = new byte[length];
-            readBytes(buffer);
+            ReadBytes(buffer);
             return buffer;
         }
 
-        public Int16 readInt16()
+        public Int16 ReadInt16()
         {
             var int16Data = new byte[2];
-            read(int16Data, 0, 2);
+            Read(int16Data, 0, 2);
             return BitConverter.ToInt16(int16Data, 0);
         }
 
-        public Int32 readInt32()
+        public Int32 ReadInt32()
         {
             var int32Data = new byte[4];
-            read(int32Data, 0, 4);
+            Read(int32Data, 0, 4);
             return BitConverter.ToInt32(int32Data, 0);
         }
 
-        public Int64 readInt64()
+        public Int64 ReadInt64()
         {
             var int64Data = new byte[8];
-            read(int64Data, 0, 8);
+            Read(int64Data, 0, 8);
             return BitConverter.ToInt64(int64Data, 0);
         }
 
-        public UInt16 readUInt16()
+        public UInt16 ReadUInt16()
         {
             var uint16Data = new byte[2];
-            read(uint16Data, 0, 2);
+            Read(uint16Data, 0, 2);
             return BitConverter.ToUInt16(uint16Data, 0);
         }
 
-        public UInt32 readUInt32()
+        public UInt32 ReadUInt32()
         {
             var uint32Data = new byte[4];
-            read(uint32Data, 0, 4);
+            Read(uint32Data, 0, 4);
             return BitConverter.ToUInt32(uint32Data, 0);
         }
 
-        public UInt64 readUInt64()
+        public UInt64 ReadUInt64()
         {
             var uint64Data = new byte[8];
-            read(uint64Data, 0, 8);
+            Read(uint64Data, 0, 8);
             return BitConverter.ToUInt64(uint64Data, 0);
         }
 
-        public byte readByte()
+        public byte ReadByte()
         {
             var byteData = new byte[1];
-            read(byteData, 0, 1);
+            Read(byteData, 0, 1);
             return byteData[0];
         }
     }

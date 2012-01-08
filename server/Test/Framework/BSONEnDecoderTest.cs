@@ -18,11 +18,11 @@ namespace Test
             data.test4 = new JObject();
             data.test4.a = "abcd";
 
-            var encoder = new BSONEncoder();
-            PacketBuffer buffer = encoder.encode(data);
+            var encoder = new BsonEncoder();
+            PacketBuffer buffer = encoder.Encode(data);
 
-            var decoder = new BSONDecoder();
-            dynamic data2 = decoder.decode(buffer);
+            var decoder = new BsonDecoder();
+            dynamic data2 = decoder.Decode(buffer);
             Console.WriteLine(data2);
         }
 
@@ -30,9 +30,9 @@ namespace Test
         public void BSONEnDecoderTest_legibleBytes()
         {
             var buffer = new PacketBuffer();
-            buffer.write(100);
-            var decoder = new BSONDecoder();
-            if (decoder.decode(buffer) != null)
+            buffer.Write(100);
+            var decoder = new BsonDecoder();
+            if (decoder.Decode(buffer) != null)
                 throw new Exception();
         }
 
@@ -40,10 +40,10 @@ namespace Test
         public void BSONEnDecoderTest_resetBufferIndex()
         {
             var buffer = new PacketBuffer();
-            buffer.write(100);
-            buffer.write(1);
-            var decoder = new BSONDecoder();
-            if (decoder.decode(buffer) != null)
+            buffer.Write(100);
+            buffer.Write(1);
+            var decoder = new BsonDecoder();
+            if (decoder.Decode(buffer) != null)
                 throw new Exception();
         }
     }

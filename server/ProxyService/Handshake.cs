@@ -7,8 +7,8 @@ namespace ProxyService
 	{
 		Handshake getInstance(Client client);
 		
-		PacketEncoder getPacketEncoder();
-		PacketDecoder getPacketDecoder();
+		IPacketEncoder getPacketEncoder();
+		IPacketDecoder getPacketDecoder();
 		
 		bool processingHandshake(Client client, dynamic message);
 	}

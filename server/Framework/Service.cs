@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Netronics
+﻿namespace Netronics
 {
     public interface Service
     {
-        string getServiceName();
+        string GetServiceName();
 
-        void init();
-        void start();
-        void stop();
+        void Init();
+        void Start();
+        void Stop();
 
-        bool isGroup(string name);
-        string[] getGroupArray();
-        double getLoad();
+        bool IsGroup(string name);
+        string[] GetGroupArray();
+        double GetLoad();
 
-        bool getRunning();
+        bool GetRunning();
 
-        void processingJob(Service Service, Job job);
+        void ProcessingJob(Service service, Job job);
     }
 }

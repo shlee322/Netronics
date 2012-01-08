@@ -12,65 +12,65 @@ namespace Netronics
         public static ServiceJob ping(float load)
         {
             var job = new ServiceJob();
-            job.message.s = "Netronics";
-            job.message.t = "ping";
-            job.message.l = load;
+            job.Message.s = "Netronics";
+            job.Message.t = "ping";
+            job.Message.l = load;
             return job;
         }
 
         public static ServiceJob startService(Service Service)
         {
             var job = new ServiceJob();
-            job.receiveResult = false;
-            job.message.s = "Netronics";
-            job.message.t = "startService";
-            job.message.n = Service.getServiceName();
+            job.ReceiveResult = false;
+            job.Message.s = "Netronics";
+            job.Message.t = "startService";
+            job.Message.n = Service.GetServiceName();
             return job;
         }
 
         public static ServiceJob stopService(Service Service)
         {
             var job = new ServiceJob();
-            job.receiveResult = false;
-            job.message.s = "Netronics";
-            job.message.t = "stopService";
+            job.ReceiveResult = false;
+            job.Message.s = "Netronics";
+            job.Message.t = "stopService";
             return job;
         }
 
         public static ServiceJob serviceInfo(Service Service)
         {
             var job = new ServiceJob();
-            job.receiveResult = false;
-            job.message.s = "Netronics";
-            job.message.t = "serviceInfo";
-            job.message.n = Service.getServiceName();
-            job.message.g = new JArray(Service.getGroupArray());
+            job.ReceiveResult = false;
+            job.Message.s = "Netronics";
+            job.Message.t = "serviceInfo";
+            job.Message.n = Service.GetServiceName();
+            job.Message.g = new JArray(Service.GetGroupArray());
             return job;
         }
 
         public static ServiceJob getLiveService()
         {
             var job = new ServiceJob();
-            job.message.s = "Netronics";
-            job.message.t = "getLiveService";
+            job.Message.s = "Netronics";
+            job.Message.t = "getLiveService";
             return job;
         }
 
         public static ServiceJob joinGroup(string name)
         {
             var job = new ServiceJob();
-            job.receiveResult = false;
-            job.message.type = "iolnGroup";
-            job.message.name = name;
+            job.ReceiveResult = false;
+            job.Message.type = "iolnGroup";
+            job.Message.name = name;
             return job;
         }
 
         public static ServiceJob dropGroup(string name)
         {
             var job = new ServiceJob();
-            job.receiveResult = false;
-            job.message.type = "dropGroup";
-            job.message.name = name;
+            job.ReceiveResult = false;
+            job.Message.type = "dropGroup";
+            job.Message.name = name;
             return job;
         }
     }

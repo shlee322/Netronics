@@ -12,36 +12,36 @@ namespace Netronics
 
         #endregion
 
-        private event EventHandler<DividerEventArgs> dividErevent;
+        private event EventHandler<DividerEventArgs> DividErevent;
 
-        public void processingJob(Service service, Job job)
+        public void ProcessingJob(Service service, Job job)
         {
-            dividErevent(this, new DividerEventArgs(service, job));
+            DividErevent(this, new DividerEventArgs(service, job));
         }
 
-        public void addProcessor(Divider divider, Processor processor)
+        public void AddProcessor(Divider divider, Processor processor)
         {
-            dividErevent += new DividerEvent(divider, processor).processingJob;
+            DividErevent += new DividerEvent(divider, processor).ProcessingJob;
         }
 
         #region Nested type: DividerEvent
 
         private class DividerEvent
         {
-            private readonly Divider divider;
-            private readonly Processor processor;
+            private readonly Divider _divider;
+            private readonly Processor _processor;
 
             public DividerEvent(Divider divider, Processor processor)
             {
-                this.divider = divider;
-                this.processor = processor;
+                _divider = divider;
+                _processor = processor;
             }
 
-            public void processingJob(object sender, DividerEventArgs e)
+            public void ProcessingJob(object sender, DividerEventArgs e)
             {
-                if (!divider(e))
+                if (!_divider(e))
                     return;
-                processor(e);
+                _processor(e);
             }
         }
 
@@ -51,23 +51,23 @@ namespace Netronics
 
         public class DividerEventArgs : EventArgs
         {
-            private readonly Job job;
-            private readonly Service service;
+            private readonly Job _job;
+            private readonly Service _service;
 
             public DividerEventArgs(Service service, Job job)
             {
-                this.service = service;
-                this.job = job;
+                _service = service;
+                _job = job;
             }
 
-            public Service getService()
+            public Service GetService()
             {
-                return service;
+                return _service;
             }
 
-            public Job getJob()
+            public Job GetJob()
             {
-                return job;
+                return _job;
             }
         }
 

@@ -5,39 +5,39 @@ namespace Netronics
 {
     public class PacketProcessor
     {
-        protected static Dictionary<string, LinkedList<Service>> globalServiceList;
-        protected static Service service;
+        protected static Dictionary<string, LinkedList<Service>> GlobalServiceList;
+        protected static Service _Service;
 
-        public static void init(Service service)
+        public static void Init(Service service)
         {
-            PacketProcessor.service = service;
-            initServiceList();
+            PacketProcessor._Service = service;
+            InitServiceList();
         }
 
-        protected static void initServiceList()
+        protected static void InitServiceList()
         {
-            globalServiceList = new Dictionary<string, LinkedList<Service>>();
+            GlobalServiceList = new Dictionary<string, LinkedList<Service>>();
             var myServiceType = new LinkedList<Service>();
-            myServiceType.AddFirst(service);
-            globalServiceList.Add(service.getServiceName(), myServiceType);
+            myServiceType.AddFirst(_Service);
+            GlobalServiceList.Add(_Service.GetServiceName(), myServiceType);
         }
 
-        public static string getPacketType(RemoteService service, dynamic message)
+        public static string GetPacketType(RemoteService service, dynamic message)
         {
             return message.y;
         }
 
-        public static void processingPacket(RemoteService service, dynamic message)
+        public static void ProcessingPacket(RemoteService service, dynamic message)
         {
             /*
             string ver = message.v; //버전
             string t = message.t; //트랜젝션 id
             string y = message.y; //타입 q, r
             */
-            processingQueryPacket(service, message);
+            ProcessingQueryPacket(service, message);
         }
 
-        public static dynamic createQueryPacket(string transactionID, Job job)
+        public static dynamic CreateQueryPacket(string transactionID, Job job)
         {
             dynamic packet = new JObject();
 
@@ -48,63 +48,63 @@ namespace Netronics
 
             packet.y = "q";
 
-            packet.m = job.message;
+            packet.m = job.Message;
 
             return packet;
         }
 
-        protected static void processingQueryPacket(RemoteService service, dynamic packet)
+        protected static void ProcessingQueryPacket(RemoteService service, dynamic packet)
         {
             var job = new Job(service);
-            job.message = packet.m;
+            job.Message = packet.m;
 
             if (packet.t != null) //트랜젝션 ID가 null일경우 결과 패킷을 전송하지 않아도 됨.
             {
-                job.success += delegate(Service sender, Job.ResultEventArgs e)
+                job.Success += delegate(Service sender, Job.ResultEventArgs e)
                                    {
-                                       sendJobResult(e.getJob(), true);
+                                       SendJobResult(e.GetJob(), true);
                                        job.Dispose();
                                    };
-                job.fail += delegate(Service sender, Job.ResultEventArgs e)
+                job.Fail += delegate(Service sender, Job.ResultEventArgs e)
                                 {
-                                    sendJobResult(e.getJob(), false);
+                                    SendJobResult(e.GetJob(), false);
                                     job.Dispose();
                                 };
             }
             else
             {
-                job.receiveResult = false;
+                job.ReceiveResult = false;
             }
 
-            job.setReceiver();
-            job.transaction = packet.t;
+            job.SetReceiver();
+            job.Transaction = packet.t;
 
-            PacketProcessor.service.processingJob(service, job);
+            PacketProcessor._Service.ProcessingJob(service, job);
 
-            if (!job.receiveResult)
+            if (!job.ReceiveResult)
                 job.Dispose();
         }
 
 
-        protected static void sendJobResult(Job job, bool success)
+        protected static void SendJobResult(Job job, bool success)
         {
             dynamic packet = new JObject();
             packet.v = "1";
             if (packet.t != null)
-                packet.t = job.transaction;
+                packet.t = job.Transaction;
             packet.y = "r";
             if (success)
-                packet.r = job.result;
+                packet.r = job.Result;
             else
                 packet.f = true;
 
-            if (!((RemoteService) job.getService()).sendMessage(packet))
-                job.returnResult(job.getService(), false);
+            if (!((RemoteService) job.GetService()).SendMessage(packet))
+                job.ReturnResult(job.GetService(), false);
         }
 
-        public static void processingJob(Job job)
+        public static void ProcessingJob(Job job)
         {
-            string processingGroup = job.group;
+            string processingGroup = job.Group;
 
             //이럼 속도의 문제가 좀 있을것 같음.
             //나중에 캐싱을 하던지 해보자.

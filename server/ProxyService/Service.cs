@@ -14,59 +14,59 @@ namespace ProxyService
         {
         }
 
-        public string getServiceName()
+        public string GetServiceName()
         {
             return "Proxy";
         }
 
-        public void init()
+        public void Init()
         {
-            this.divider.addProcessor(
+            this.divider.AddProcessor(
                 delegate(Netronics.AutoTypeDivider.DividerEventArgs e)
                 {
-                    return e.getJob().message.type == "test";
+                    return e.GetJob().Message.type == "test";
                 }, this.test);
         }
 
         private void test(Netronics.AutoTypeDivider.DividerEventArgs e)
         {
-            e.getJob().result.time = e.getJob().message.time;
-            e.getJob().returnResult(this);
+            e.GetJob().Result.time = e.GetJob().Message.time;
+            e.GetJob().ReturnResult(this);
             //e.getJob().getService().processingJob(this, new TestJob());
         }
 
-        public void start()
+        public void Start()
         {
             this.run = true;
         }
 
-        public void stop()
+        public void Stop()
         {
 			this.run = false;
         }
 
-        public double getLoad()
+        public double GetLoad()
         {
-            return Netronics.State.getLoad();
+            return Netronics.State.GetLoad();
         }
 
-        public string[] getGroupArray()
+        public string[] GetGroupArray()
         {
             return new string[] { };
         }
 
-        public bool isGroup(string group)
+        public bool IsGroup(string group)
         {
             return false;
         }
 
-        public void processingJob(Netronics.Service Service, Netronics.Job job)
+        public void ProcessingJob(Netronics.Service service, Netronics.Job job)
         {
-			job.addProcessor();
-            divider.processingJob(Service, job);
+			job.AddProcessor();
+            divider.ProcessingJob(service, job);
         }
 
-        public bool getRunning()
+        public bool GetRunning()
         {
             return this.run;
         }
@@ -77,8 +77,8 @@ namespace ProxyService
         public TestJob()
             : base("Test")
         {
-            this.message.test = "test";
-            this.success += new Result(TestJob_success);
+            this.Message.test = "test";
+            this.Success += new ResultDelegate(TestJob_success);
         }
 
         void TestJob_success(Netronics.Service sender, Netronics.Job.ResultEventArgs e)

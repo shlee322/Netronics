@@ -14,8 +14,8 @@ namespace BackendConsole
     class Program
     {
         static protected System.Net.Sockets.TcpClient client;
-        static protected Netronics.BSONEncoder encoder = new Netronics.BSONEncoder();
-        static protected Netronics.BSONDecoder decoder = new Netronics.BSONDecoder();
+        static protected Netronics.BsonEncoder encoder = new Netronics.BsonEncoder();
+        static protected Netronics.BsonDecoder decoder = new Netronics.BsonDecoder();
 
         static protected JsonSerializer serializer = new JsonSerializer();
 
@@ -56,7 +56,7 @@ namespace BackendConsole
                     //while (true)
                     time = DateTime.Now;
                     for(int i=0; i<10000; i++)
-                        send(encoder.encode(JObject.Parse("{\"v\":\"1\", \"t\":\"test\", \"y\":\"q\", \"m\":{\"type\":\"test\", \"time\":\"" + DateTime.Now.Ticks + "\"}}")));
+                        send(encoder.Encode(JObject.Parse("{\"v\":\"1\", \"t\":\"test\", \"y\":\"q\", \"m\":{\"type\":\"test\", \"time\":\"" + DateTime.Now.Ticks + "\"}}")));
                     
                     continue;
                 }
@@ -66,7 +66,7 @@ namespace BackendConsole
                     //while (true)
                     for (int i = 0; i < 10; i++)
                     {
-                        send(encoder.encode(JObject.Parse("{\"v\":\"1\", \"t\":\"test\", \"y\":\"q\", \"m\":{\"type\":\"test\", \"time\":\"" + DateTime.Now.Ticks + "\"}}")));
+                        send(encoder.Encode(JObject.Parse("{\"v\":\"1\", \"t\":\"test\", \"y\":\"q\", \"m\":{\"type\":\"test\", \"time\":\"" + DateTime.Now.Ticks + "\"}}")));
                         System.Threading.Thread.Sleep(0);
                     }
                     continue;
@@ -74,7 +74,7 @@ namespace BackendConsole
 
                 try
                 {
-                    send(encoder.encode(JObject.Parse(line)));
+                    send(encoder.Encode(JObject.Parse(line)));
                 }
                 catch (Exception)
                 {
@@ -86,10 +86,10 @@ namespace BackendConsole
         static void read(IAsyncResult ar)
         {
             int len = client.Client.EndReceive(ar);
-            buffer.write(socketBuffer, 0, len);
+            buffer.Write(socketBuffer, 0, len);
 
             dynamic data;
-            while ((data = decoder.decode(buffer)) != null)
+            while ((data = decoder.Decode(buffer)) != null)
             {
                 if (data.y == "r" && data.r.time != null)
                 {
@@ -114,7 +114,7 @@ namespace BackendConsole
 
         static void send(Netronics.PacketBuffer buffer)
         {
-            byte[] data = buffer.getBytes();
+            byte[] data = buffer.GetBytes();
             client.Client.BeginSendTo(data, 0, data.Length, System.Net.Sockets.SocketFlags.None, client.Client.RemoteEndPoint, new AsyncCallback(sendto), null);
             buffer.Dispose();
         }

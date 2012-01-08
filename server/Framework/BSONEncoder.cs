@@ -15,9 +15,9 @@ namespace Netronics
     ///
     /// </summary>
     /// 
-    public class BSONEncoder : PacketEncoder
+    public class BsonEncoder : IPacketEncoder
     {
-        protected JsonSerializer serializer = new JsonSerializer();
+        protected JsonSerializer Serializer = new JsonSerializer();
 
         #region PacketEncoder Members
 
@@ -28,16 +28,16 @@ namespace Netronics
         /// </summary>
         /// <param name="data">BSON Data</param>
         /// <returns>BSON 패킷 구조를 따르는 PacketBuffer</returns>
-        public PacketBuffer encode(dynamic data)
+        public PacketBuffer Encode(dynamic data)
         {
             var buffer = new PacketBuffer();
 
             var stream = new MemoryStream();
-            serializer.Serialize(new BsonWriter(stream), data);
+            Serializer.Serialize(new BsonWriter(stream), data);
             stream.Position = 0;
 
-            buffer.write((UInt32) stream.Length);
-            buffer.write(stream);
+            buffer.Write((UInt32) stream.Length);
+            buffer.Write(stream);
             stream.Dispose();
 
             return buffer;

@@ -42,9 +42,9 @@ namespace ProxyService
 		
 		private void processingHandshake()
 		{
-			PacketDecoder packetDecoder = this.handshake.getPacketDecoder();
+			IPacketDecoder packetDecoder = this.handshake.getPacketDecoder();
             dynamic packet;
-			while ((packet = packetDecoder.decode(this.getPacketBuffer())) != null)
+			while ((packet = packetDecoder.Decode(this.getPacketBuffer())) != null)
 			{
 				if(this.handshake.processingHandshake(this, packet))
 				{
@@ -71,7 +71,7 @@ namespace ProxyService
                 return;
             }
 
-            this.getPacketBuffer().write(this.socketBuffer, 0, len);
+            this.getPacketBuffer().Write(this.socketBuffer, 0, len);
 			
 			if(this.handshake != null)
 				this.processingHandshake();

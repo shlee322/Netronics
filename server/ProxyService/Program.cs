@@ -13,9 +13,9 @@ namespace ProxyService
         /// </summary>
         static void Main()
         {
-            Netronics.Netronics.service = new Service();
-            Netronics.Netronics.setFlag(Netronics.Netronics.Flag.ServicePort, 10051);
-            Netronics.Netronics.start();
+            Netronics.Netronics.Service = new Service();
+            Netronics.Netronics.SetFlag(Netronics.Netronics.Flag.ServicePort, 10051);
+            Netronics.Netronics.Start();
 
             while (true)
                 System.Threading.Thread.Sleep(500);

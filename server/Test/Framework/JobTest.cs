@@ -14,31 +14,31 @@ namespace Test
         public void JobTest1()
         {
             Job job = new Job("map");
-            job.group = "all";
-            job.take = 3;
-            job.message.test = 1;
-            job.message.test2 = "abcd";
-            job.success += new Job.Result(job_success);
-            job.fail += new Job.Result(job_fail);
+            job.Group = "all";
+            job.Take = 3;
+            job.Message.test = 1;
+            job.Message.test2 = "abcd";
+            job.Success += new Job.ResultDelegate(job_success);
+            job.Fail += new Job.ResultDelegate(job_fail);
 
-            job.setReceiver();
+            job.SetReceiver();
 
-            job.returnResult(null, true);
+            job.ReturnResult(null, true);
         }
 
         [Test()]
         public void JobTest2()
         {
             Job job = new Job("item");
-            job.group = "all";
-            job.take = 3;
-            job.message.test = 1;
-            job.message.test2 = "abcd";
-            job.success += new Job.Result(job_success);
-            job.fail += new Job.Result(job_fail);
+            job.Group = "all";
+            job.Take = 3;
+            job.Message.test = 1;
+            job.Message.test2 = "abcd";
+            job.Success += new Job.ResultDelegate(job_success);
+            job.Fail += new Job.ResultDelegate(job_fail);
 
-            job.setReceiver();
-            job.returnResult(null, false);
+            job.SetReceiver();
+            job.ReturnResult(null, false);
         }
 
         void job_fail(Service sender, Job.ResultEventArgs e)
