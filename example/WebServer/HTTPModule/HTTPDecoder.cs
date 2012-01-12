@@ -30,7 +30,7 @@ namespace HTTPModule
                 int index = header[i].IndexOf(':');
                 if(index == -1)
                     continue;
-                request.SetHeader(header[i].Substring(0, index), header[i].Substring(index)+1);
+                request.SetHeader(header[i].Substring(0, index), header[i].Substring(index+1));
             }
 
             return request;

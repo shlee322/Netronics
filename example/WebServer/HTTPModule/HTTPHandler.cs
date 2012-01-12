@@ -20,8 +20,16 @@ namespace HTTPModule
 
         public void Processing(Client client, dynamic message)
         {
+            Request request = message;
+
+            string useragent = request.GetHeader("User-Agent");
+
             Response response = new Response();
-            response.SetContent("Test");
+            if (useragent.IndexOf("MSIE", System.StringComparison.Ordinal) == -1)
+                response.SetContent("Test");
+            else
+                response.SetContent("IE 뻐큐머겅");
+
             client.Send(response);
         }
     }
