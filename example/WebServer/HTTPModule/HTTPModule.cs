@@ -9,6 +9,7 @@ namespace HTTPModule
         {
             _frontEnd = new FrontEnd();
             _frontEnd.SetHandshake(() => { return null; });
+            _frontEnd.SetProcessor(() => { return new HTTPHandler(); });
             _frontEnd.Start(8080);
         }
     }

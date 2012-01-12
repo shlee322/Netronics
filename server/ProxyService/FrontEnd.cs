@@ -14,9 +14,10 @@ namespace ProxyService
         private int _nextClientID;
         private Stack<int> _removeClientID;
 		
-        public delegate Handshake GetHandshakeInstance();
+        public delegate Receiver GetReceiverInstance();
 
-        private GetHandshakeInstance _handshakeInstance;
+        private GetReceiverInstance _handshakeInstance;
+        private GetReceiverInstance _processorInstance;
 
         private static void add(FrontEnd frontEnd)
         {
@@ -34,8 +35,8 @@ namespace ProxyService
             _removeClientID = new Stack<int>();
             _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
-            _serverSocket.BeginAccept(Accept, null);
             _serverSocket.Listen(50);
+            _serverSocket.BeginAccept(Accept, null);
         }
 
         private int GetClientID()
@@ -50,9 +51,14 @@ namespace ProxyService
             return _removeClientID.Pop();
         }
 
-		public void SetHandshake(GetHandshakeInstance handshake)
+		public void SetHandshake(GetReceiverInstance handshake)
 		{
 		    _handshakeInstance = handshake;
+		}
+
+        public void SetProcessor(GetReceiverInstance processor)
+		{
+            _processorInstance = processor;
 		}
 
         private void Accept(IAsyncResult ar)
@@ -65,7 +71,7 @@ namespace ProxyService
             }
             else
             {
-                _client[id] = new Client(id, socket, _handshakeInstance());
+                _client[id] = new Client(id, socket, _handshakeInstance(), _processorInstance());
             }
             _serverSocket.BeginAccept(Accept, null);
         }

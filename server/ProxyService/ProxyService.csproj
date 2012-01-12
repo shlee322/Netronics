@@ -55,7 +55,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service.cs" />
-    <Compile Include="Handshake.cs" />
+    <Compile Include="Receiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Netronics.csproj">

@@ -40,10 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HTTPDecoder.cs" />
+    <Compile Include="HTTPEncoder.cs" />
+    <Compile Include="HTTPHandler.cs" />
     <Compile Include="HTTPModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request.cs" />
+    <Compile Include="Response.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\server\Framework\Netronics.csproj">
+      <Project>{394898C7-12EE-478A-AD9A-7377B5DCC081}</Project>
+      <Name>Netronics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\server\ProxyService\ProxyService.csproj">
       <Project>{2F3DB3E1-47CD-4D21-9DC3-F6CE192457AD}</Project>
       <Name>ProxyService</Name>

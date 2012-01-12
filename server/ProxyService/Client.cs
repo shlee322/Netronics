@@ -11,16 +11,21 @@ namespace ProxyService
     {
         private int id;
         private Socket socket;
-		private Handshake handshake;
+        private Receiver receiver;
+        private Receiver processor;
 		
 		protected byte[] socketBuffer = new byte[512];
         protected PacketBuffer packetBuffer = new PacketBuffer();
 
-        public Client(int id, Socket socket, Handshake handshake)
+        public Client(int id, Socket socket, Receiver handshake, Receiver processor)
         {
             this.id = id;
             this.socket = socket;
-			this.handshake = handshake;
+            this.receiver = handshake;
+            this.processor = processor;
+
+            if (this.receiver == null)
+                this.receiver = this.processor;
 
             this.GetSocket().BeginReceive(socketBuffer, 0, 512, SocketFlags.None, readCallback, null);
         }
@@ -34,30 +39,43 @@ namespace ProxyService
 		{
 		}
 
+        public void EndHandshake()
+        {
+            this.receiver = this.processor;
+        }
+
+        public void Send(dynamic message)
+        {
+            PacketBuffer buffer = receiver.GetPacketEncoder().Encode(message);
+            byte[] sendBuffer = buffer.GetBytes();
+            try
+            {
+                GetSocket().BeginSendTo(sendBuffer, 0, sendBuffer.Length, SocketFlags.None, GetSocket().RemoteEndPoint,
+                                        SendPacketCallback, null);
+            }
+            catch (System.Exception)
+            {
+            }
+            buffer.Dispose();
+        }
+
+        private void SendPacketCallback(IAsyncResult ar)
+        {
+        }
 
         private PacketBuffer GetPacketBuffer()
         {
             return this.packetBuffer;
         }
 		
-		private void ProcessingHandshake()
+		private void Processing()
 		{
-			IPacketDecoder packetDecoder = handshake.GetPacketDecoder();
+            IPacketDecoder packetDecoder = receiver.GetPacketDecoder();
             dynamic packet;
-			while ((packet = packetDecoder.Decode(GetPacketBuffer())) != null)
-			{
-				if(this.handshake.ProcessingHandshake(this, packet))
-				{
-					this.handshake = null;
-					break;
-				}
-			}
+            while ((packet = packetDecoder.Decode(GetPacketBuffer())) != null)
+                this.receiver.Processing(this, packet);
 		}
-		
-		private void processingPacket()
-		{
-		}
-		
+
         protected void readCallback(IAsyncResult ar)
         {
             int len;
@@ -72,12 +90,8 @@ namespace ProxyService
             }
 
             this.GetPacketBuffer().Write(this.socketBuffer, 0, len);
-			
-			if(this.handshake != null)
-				this.ProcessingHandshake();
-			
-			if(this.handshake == null)
-				this.processingPacket();
+
+            Processing();
 			
             this.GetSocket().BeginReceive(this.socketBuffer, 0, 512, SocketFlags.None, this.readCallback, null);
         }

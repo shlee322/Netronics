@@ -3,12 +3,12 @@ using Netronics;
 
 namespace ProxyService
 {
-	public interface Handshake
+    public interface Receiver
 	{
 		IPacketEncoder GetPacketEncoder();
 		IPacketDecoder GetPacketDecoder();
 		
-		bool ProcessingHandshake(Client client, dynamic message);
+		void Processing(Client client, dynamic message);
 	}
 }
 
