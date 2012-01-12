@@ -35,6 +35,8 @@ namespace Netronics
         private static IPEndPoint _router;
         private static bool _isBroadCast;
 
+        private static UdpClient _broadCastSocket;
+
         protected static Service _Service;
         protected static Socket _Socket;
 
@@ -119,15 +121,32 @@ namespace Netronics
 
         private static void StartBroadCast()
         {
+            _broadCastSocket = new UdpClient(new IPEndPoint(_addr, 7777));
+            _broadCastSocket.BeginReceive(BroadCastReceiveCallback, null);
+
+            //브로드캐스트를 허용하면 내부망으로 자신의 서비스를 알림
+            if(_isBroadCast)
+            {
+                //이부분을 특정 주기에 한번씩 반복 하게 만들자.
+                _broadCastSocket.BeginSend(new byte[] {}, 6, new IPEndPoint(IPAddress.Broadcast, 7777),
+                                           delegate(IAsyncResult ar) { }, null);
+            }
+        }
+
+        private static void BroadCastReceiveCallback(IAsyncResult ar)
+        {
+            IPEndPoint point = null;
+            byte[] data = _broadCastSocket.EndReceive(ar, ref point);
+
         }
 
         private static void ConnectionService(IPEndPoint point)
         {
             TcpClient socket = new TcpClient();
-            socket.BeginConnect(point.Address, point.Port, RequestCallback, socket);
+            socket.BeginConnect(point.Address, point.Port, ConnectCallback, socket);
         }
 
-        private static void RequestCallback(IAsyncResult ar)
+        private static void ConnectCallback(IAsyncResult ar)
         {
             TcpClient socket = (TcpClient) ar.AsyncState;
             socket.EndConnect(ar);
