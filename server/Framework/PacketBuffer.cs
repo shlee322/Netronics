@@ -49,6 +49,11 @@ namespace Netronics
             _buffer.Position = 0;
         }
 
+        public void SetPosition(int p)
+        {
+            _buffer.Position = p;
+        }
+
         public void EndBufferIndex()
         {
             MemoryStream old = _buffer;
