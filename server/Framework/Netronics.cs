@@ -16,7 +16,9 @@ namespace Netronics
             ServiceIpAddress,
             ServicePort,
             PacketEncoder,
-            PacketDecoder
+            PacketDecoder,
+            Router,
+            BroadCast
         }
 
         #endregion
@@ -29,6 +31,9 @@ namespace Netronics
 
         private static IPacketEncoder _packetEncoder = new BsonEncoder();
         private static IPacketDecoder _packetDecoder = new BsonDecoder();
+
+        private static IPEndPoint _router;
+        private static bool _isBroadCast;
 
         protected static Service _Service;
         protected static Socket _Socket;
@@ -44,16 +49,16 @@ namespace Netronics
             switch (flag)
             {
                 case Flag.Family:
-                    if (value is AddressFamily) break;
-                    _family = (AddressFamily) value;
+                    if (value is AddressFamily)
+                        _family = (AddressFamily) value;
                     break;
                 case Flag.SocketType:
-                    if (value is SocketType) break;
-                    _socketType = (SocketType) value;
+                    if (value is SocketType)
+                        _socketType = (SocketType) value;
                     break;
                 case Flag.ProtocolType:
-                    if (value is ProtocolType) break;
-                    _protocolType = (ProtocolType) value;
+                    if (value is ProtocolType)
+                        _protocolType = (ProtocolType) value;
                     break;
                 case Flag.ServiceIpAddress:
                     if (value is IPAddress)
@@ -62,16 +67,24 @@ namespace Netronics
                         _addr = IPAddress.Parse((string) value);
                     break;
                 case Flag.ServicePort:
-                    if (value is int) break;
-                    _port = (int) value;
+                    if (value is int)
+                        _port = (int) value;
                     break;
                 case Flag.PacketEncoder:
-                    if (value is IPacketEncoder) break;
-                    _packetEncoder = (IPacketEncoder) value;
+                    if (value is IPacketEncoder)
+                        _packetEncoder = (IPacketEncoder) value;
                     break;
                 case Flag.PacketDecoder:
-                    if (value is IPacketDecoder) break;
-                    _packetDecoder = (IPacketDecoder) value;
+                    if (value is IPacketDecoder)
+                        _packetDecoder = (IPacketDecoder) value;
+                    break;
+                case Flag.Router:
+                    if (value is IPEndPoint)
+                        _router = (IPEndPoint) value;
+                    break;
+                case Flag.BroadCast:
+                    if (value is bool)
+                        _isBroadCast = (bool)value;
                     break;
             }
         }
@@ -95,8 +108,33 @@ namespace Netronics
             InitSocket();
             Service.Init();
 
-            StartSocket();
             Service.Start();
+            StartSocket();
+
+            StartBroadCast();
+
+            if (_router != null)
+                ConnectionService(_router);
+        }
+
+        private static void StartBroadCast()
+        {
+        }
+
+        private static void ConnectionService(IPEndPoint point)
+        {
+            TcpClient socket = new TcpClient();
+            socket.BeginConnect(point.Address, point.Port, RequestCallback, socket);
+        }
+
+        private static void RequestCallback(IAsyncResult ar)
+        {
+            TcpClient socket = (TcpClient) ar.AsyncState;
+            socket.EndConnect(ar);
+
+            RemoteService service = new RemoteService(socket.Client, GetPacketEncoder(), GetPacketDecoder());
+            if (Service.GetRunning())
+                service.ProcessingJob(Service, ServiceJob.ServiceInfo(Service));
         }
 
         protected static void InitSocket()
@@ -113,8 +151,9 @@ namespace Netronics
 
         protected static void AcceptCallback(IAsyncResult ar)
         {
-            new RemoteService(_Socket.EndAccept(ar), GetPacketEncoder(), GetPacketDecoder()).
-                ProcessingJob(Service, ServiceJob.ServiceInfo(Service));
+            RemoteService service = new RemoteService(_Socket.EndAccept(ar), GetPacketEncoder(), GetPacketDecoder());
+            if(Service.GetRunning())
+                service.ProcessingJob(Service, ServiceJob.ServiceInfo(Service));
             _Socket.BeginAccept(AcceptCallback, null);
         }
 

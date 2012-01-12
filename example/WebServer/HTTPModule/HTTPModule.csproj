@@ -47,6 +47,7 @@
     <ProjectReference Include="..\..\..\server\ProxyService\ProxyService.csproj">
       <Project>{2F3DB3E1-47CD-4D21-9DC3-F6CE192457AD}</Project>
       <Name>ProxyService</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
