@@ -24,7 +24,7 @@ namespace Netronics.Template.Service
         {
         }
 
-        public override void ProcessingTask(Service service, Task task)
+        public override void ProcessingTask(Task task)
         {
             //해당 서비스로 task를 전송
         }

@@ -15,8 +15,8 @@ namespace Netronics.Channel
         private IPacketEncoder _encoder;
         private IPacketDecoder _decoder;
         private IChannelHandler _handler;
-        private byte[] _originalPacketBuffer = new byte[512];
-        private PacketBuffer _packetBuffer = new PacketBuffer();
+        private readonly byte[] _originalPacketBuffer = new byte[512];
+        private readonly PacketBuffer _packetBuffer = new PacketBuffer();
 
         private Channel(Socket socket, IPacketEncoder encoder, IPacketDecoder decoder, IChannelHandler handler)
         {

@@ -6,15 +6,15 @@
 
         public virtual void Start()
         {
-            GetServiceManager().ProcessingTask(this, null);
         }
 
         public virtual void Stop()
         {
         }
 
-        public virtual void ProcessingTask(Service service, Task task)
+        public virtual void ProcessingTask(Task task)
         {
+            task.Job.ProcessingTask(this, task);
         }
 
         public virtual void SetServiceManager(ServiceManager manager)

@@ -2,9 +2,9 @@
 {
     class ServiceManager
     {
-        public void ProcessingTask(Service service, Task task)
+        public void ProcessingTask(Task task)
         {
-            new Service().ProcessingTask(service, task);
+            new Service().ProcessingTask(task);
         }
     }
 }
