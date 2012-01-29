@@ -1,4 +1,4 @@
-﻿namespace Netronics
+﻿namespace Netronics.PacketEncoder
 {
     public interface IPacketDecoder
     {

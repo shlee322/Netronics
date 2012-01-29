@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
-namespace Netronics
+namespace Netronics.PacketEncoder.Bson
 {
     /// <summary>
     /// BSON을 사용하는 Packet Decoder
@@ -33,7 +32,7 @@ namespace Netronics
             if (buffer.LegibleBytes() < 5) //버퍼길이가 5미만이면 리턴
                 return null;
 
-            UInt32 len = buffer.ReadUInt32();
+            var len = buffer.ReadUInt32();
             if (len > buffer.LegibleBytes())
             {
                 //버퍼의 길이가 실제 패킷 길이보다 모자름으로, 리셋후 리턴

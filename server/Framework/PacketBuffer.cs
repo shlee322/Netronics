@@ -72,8 +72,8 @@ namespace Netronics
 
         public void Write(byte[] buffer, int offset, int count)
         {
-            this._buffer.Position = this._buffer.Length;
-            this._buffer.Write(buffer, offset, count);
+            _buffer.Position = _buffer.Length;
+            _buffer.Write(buffer, offset, count);
         }
 
         public void Write(Stream stream)
@@ -89,7 +89,7 @@ namespace Netronics
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            int len = this._buffer.Read(buffer, offset, count);
+            int len = _buffer.Read(buffer, offset, count);
             return len;
         }
 

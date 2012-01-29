@@ -1,11 +1,51 @@
 ﻿using System;
-using System.Net;
 using System.Net.Sockets;
 
 namespace Netronics
 {
     public class Netronics
     {
+        private readonly Properties _properties;
+        private Socket _socket;
+        
+        public Netronics(Properties properties)
+        {
+            _properties = properties;
+        }
+
+        public void Start()
+        {
+            InitSocket();
+            StartSocket();
+            _properties.OnStartEvent(this, new EventArgs());
+        }
+
+        public void Stop()
+        {
+            _properties.OnStopEvent(this, new EventArgs());
+        }
+
+        private void InitSocket()
+        {
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket.Bind(_properties.IpEndPoint);
+        }
+
+        private void StartSocket()
+        {
+            _socket.Listen(50);
+            _socket.BeginAccept(AcceptCallback, null);
+        }
+
+        private void AcceptCallback(IAsyncResult ar)
+        {
+            _properties.ChannelFactory.NewChannel(this, _socket.EndAccept(ar));
+            _socket.BeginAccept(AcceptCallback, null);
+        }
+
+
+        /*
+
         #region Flag enum
 
         public enum Flag
@@ -18,15 +58,16 @@ namespace Netronics
             PacketEncoder,
             PacketDecoder,
             Router,
-            BroadCast
+            BroadCast,
+            ThreadCount
         }
 
         #endregion
 
-        private static AddressFamily _family = AddressFamily.InterNetwork;
-        private static SocketType _socketType = SocketType.Stream;
-        private static ProtocolType _protocolType = ProtocolType.Tcp;
-        private static IPAddress _addr = IPAddress.Any;
+        private static AddressFamily _family = ;
+        private static SocketType _socketType = ;
+        private static ProtocolType _protocolType = ;
+        private static IPAddress _addr;
         private static int _port;
 
         private static IPacketEncoder _packetEncoder = new BsonEncoder();
@@ -39,6 +80,8 @@ namespace Netronics
 
         protected static Service _Service;
         protected static Socket _Socket;
+
+        private static int _threadCount = 4;
 
         public static Service Service
         {
@@ -88,6 +131,10 @@ namespace Netronics
                     if (value is bool)
                         _isBroadCast = (bool)value;
                     break;
+                case Flag.ThreadCount:
+                    if (value is int)
+                        _threadCount = (int) value;
+                    break;
             }
         }
 
@@ -111,6 +158,7 @@ namespace Netronics
             Service.Init();
 
             Service.Start();
+            Scheduler.Start(_threadCount);
             StartSocket();
 
             StartBroadCast();
@@ -184,6 +232,6 @@ namespace Netronics
         public static void ProcessingJob(Job job)
         {
             PacketProcessor.ProcessingJob(job);
-        }
+        }*/
     }
 }

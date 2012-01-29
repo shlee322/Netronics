@@ -3,7 +3,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
-namespace Netronics
+namespace Netronics.PacketEncoder.Bson
 {
     /// <summary>
     /// BSON을 사용하는 Packet Encoder
