@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Channel\BasicChannelHandler.cs" />
     <Compile Include="Channel\IChannelHandler.cs" />
+    <Compile Include="Scheduler.cs" />
     <Compile Include="Template\Service\IJob.cs" />
     <Compile Include="Template\Service\ServiceManager.cs" />
     <Compile Include="Template\Service\ServiceProperties.cs" />

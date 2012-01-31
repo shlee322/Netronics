@@ -66,11 +66,21 @@ namespace Netronics.Channel
             }
             _packetBuffer.Write(_originalPacketBuffer, 0, len);
             //스케줄러에 메시지 등록 (채널, 메시지)
+            //일단 임시로 직접 처리
+            dynamic message;
+            while((message = _decoder.Decode(_packetBuffer)) != null)
+                _handler.MessageReceive(this, message);
+            //직접처리 끝
             _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
         }
 
         public void SendMessage(dynamic message)
         {
+            //스케줄러에 해야하지만, 일단 임시!
+            PacketBuffer buffer = _encoder.Encode(message);
+            byte[] o = buffer.GetBytes();
+            buffer.Dispose();
+            _socket.BeginSend(o, 0, o.Length, SocketFlags.None, ar => { }, null);
         }
     }
 }

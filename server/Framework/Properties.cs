@@ -14,12 +14,14 @@ namespace Netronics
 
         public void OnStartEvent(Netronics netronics, EventArgs eventArgs)
         {
-            StartEvent(netronics, eventArgs);
+            if(StartEvent != null)
+                StartEvent(netronics, eventArgs);
         }
 
         public void OnStopEvent(Netronics netronics, EventArgs eventArgs)
         {
-            StopEvent(netronics, eventArgs);
+            if (StopEvent != null)
+                StopEvent(netronics, eventArgs);
         }
     }
 }

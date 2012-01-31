@@ -84,7 +84,9 @@ namespace Netronics
 
         public void Write(UInt32 value)
         {
-            Write(BitConverter.GetBytes(value), 0, 4);
+            byte[] buffer = BitConverter.GetBytes(value);
+            Array.Reverse(buffer);
+            Write(buffer, 0, 4);
         }
 
         public int Read(byte[] buffer, int offset, int count)
@@ -109,6 +111,7 @@ namespace Netronics
         {
             var int16Data = new byte[2];
             Read(int16Data, 0, 2);
+            Array.Reverse(int16Data);
             return BitConverter.ToInt16(int16Data, 0);
         }
 
@@ -116,6 +119,7 @@ namespace Netronics
         {
             var int32Data = new byte[4];
             Read(int32Data, 0, 4);
+            Array.Reverse(int32Data);
             return BitConverter.ToInt32(int32Data, 0);
         }
 
@@ -123,6 +127,7 @@ namespace Netronics
         {
             var int64Data = new byte[8];
             Read(int64Data, 0, 8);
+            Array.Reverse(int64Data);
             return BitConverter.ToInt64(int64Data, 0);
         }
 
@@ -130,6 +135,7 @@ namespace Netronics
         {
             var uint16Data = new byte[2];
             Read(uint16Data, 0, 2);
+            Array.Reverse(uint16Data);
             return BitConverter.ToUInt16(uint16Data, 0);
         }
 
@@ -137,6 +143,7 @@ namespace Netronics
         {
             var uint32Data = new byte[4];
             Read(uint32Data, 0, 4);
+            Array.Reverse(uint32Data);
             return BitConverter.ToUInt32(uint32Data, 0);
         }
 
@@ -144,6 +151,7 @@ namespace Netronics
         {
             var uint64Data = new byte[8];
             Read(uint64Data, 0, 8);
+            Array.Reverse(uint64Data);
             return BitConverter.ToUInt64(uint64Data, 0);
         }
 
