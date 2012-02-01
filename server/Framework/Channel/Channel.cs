@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using Netronics.PacketEncoder;
 
@@ -61,16 +63,29 @@ namespace Netronics.Channel
             }
             catch (SocketException)
             {
-                Disconnect();
+                Scheduler.Add(Disconnect);
                 return;
             }
-            _packetBuffer.Write(_originalPacketBuffer, 0, len);
-            //스케줄러에 메시지 등록 (채널, 메시지)
-            //일단 임시로 직접 처리
-            dynamic message;
-            while((message = _decoder.Decode(_packetBuffer)) != null)
-                _handler.MessageReceive(this, message);
-            //직접처리 끝
+
+            lock (_packetBuffer)
+            {
+                _packetBuffer.Write(_originalPacketBuffer, 0, len);
+            }
+
+            Scheduler.Add(delegate
+                              {
+                                  while (true)
+                                  {
+                                      dynamic message;
+                                      lock (_packetBuffer)
+                                      {
+                                          message = _decoder.Decode(_packetBuffer);
+                                      }
+                                      if (message == null)
+                                          break;
+                                      Scheduler.Add(() => _handler.MessageReceive(this, message));
+                                  }
+                              });
             _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
         }
 

@@ -2,66 +2,87 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Netronics
 {
-    class Scheduler
+    public class Scheduler
     {
-        private static List<Thread> _threadList; 
-        private static ConcurrentQueue<Action> _messageQueue;
+        private static readonly List<Processor> ProcessorList; 
+        private static readonly ConcurrentQueue<Action> MessageQueue;
 
         static Scheduler()
         {
-            _threadList = new List<Thread>();
-            _messageQueue = new ConcurrentQueue<Action>();
+            ProcessorList = new List<Processor>();
+            MessageQueue = new ConcurrentQueue<Action>();
+
+            SetThreadCount(4);
         }
 
         public static void SetThreadCount(int count)
         {
-            lock (_threadList)
+            lock (ProcessorList)
             {
                 if (count < 0)
                     return;
-                if(_threadList.Count < count)
+                if (ProcessorList.Count < count)
                 {
-                    int newThreadCount = count - _threadList.Count;
+                    int newThreadCount = count - ProcessorList.Count;
                     for (int i = 0; i < newThreadCount; i++)
                     {
-                        var thread = new Thread(Loop);
-                        thread.Start();
-                        _threadList.Add(thread);
+                        var processor = new Processor();
+                        processor.Start();
+                        ProcessorList.Add(processor);
                     }
-                }else if(_threadList.Count > count)
+                }
+                else if (ProcessorList.Count > count)
                 {
-                    int removeThreadCount = _threadList.Count - count;
+                    int removeThreadCount = ProcessorList.Count - count;
                     for (int i = 0; i < removeThreadCount; i++)
                     {
-                        if(_threadList.Count < 1)
+                        if (ProcessorList.Count < 1)
                             break;
-                        _threadList[_threadList.Count - 1].Abort();
+                        ProcessorList[ProcessorList.Count - 1].Stop();
                     }
                 }
             }
         }
 
-        private static void Loop()
-        {
-            try
-            {
-                while(true)
-                {
-                }
-            }
-            catch (ThreadAbortException)
-            {
-            }
-        }
 
         public static void Add(Action action)
         {
             if (action == null)
                 return;
+            MessageQueue.Enqueue(action);
+        }
+
+        class Processor
+        {
+            private bool _run;
+            private Thread _thread;
+
+            public void Start()
+            {
+                _run = true;
+                _thread = new Thread(Loop);
+                _thread.Start();
+            }
+
+            public void Stop()
+            {
+                _run = false;
+            }
+
+            private void Loop()
+            {
+                while (_run)
+                {
+                    Action action;
+                    MessageQueue.TryDequeue(out action);
+                    if (action != null)
+                        action();
+                    Thread.Sleep(0);
+                }
+            }
         }
     }
 }

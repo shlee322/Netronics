@@ -1,9 +1,10 @@
 ﻿using System;
 using NUnit.Framework;
 using Netronics;
+using Netronics.PacketEncoder.Bson;
 using Newtonsoft.Json.Linq;
 
-namespace Test
+namespace Framework
 {
     [TestFixture]
     public class BSONEnDecoderTest
@@ -27,7 +28,7 @@ namespace Test
         }
 
         [Test]
-        public void BSONEnDecoderTest_legibleBytes()
+        public void BSONEnDecoderTestLegibleBytes()
         {
             var buffer = new PacketBuffer();
             buffer.Write(100);
@@ -37,7 +38,7 @@ namespace Test
         }
 
         [Test]
-        public void BSONEnDecoderTest_resetBufferIndex()
+        public void BSONEnDecoderTestResetBufferIndex()
         {
             var buffer = new PacketBuffer();
             buffer.Write(100);
