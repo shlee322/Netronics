@@ -46,7 +46,13 @@
   <ItemGroup>
     <Compile Include="Channel\BasicChannelHandler.cs" />
     <Compile Include="Channel\IChannelHandler.cs" />
+    <Compile Include="PacketEncoder\Http\HttpDecoder.cs" />
+    <Compile Include="PacketEncoder\Http\HttpEncoder.cs" />
+    <Compile Include="PacketEncoder\Http\Request.cs" />
+    <Compile Include="PacketEncoder\Http\Response.cs" />
     <Compile Include="Scheduler.cs" />
+    <Compile Include="Template\Http\HttpChannelFactory.cs" />
+    <Compile Include="Template\Http\HttpProperties.cs" />
     <Compile Include="Template\Service\IJob.cs" />
     <Compile Include="Template\Service\ServiceManager.cs" />
     <Compile Include="Template\Service\ServiceProperties.cs" />

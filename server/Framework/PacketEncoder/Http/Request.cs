@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace HTTPModule
+namespace Netronics.PacketEncoder.Http
 {
-    class Request
+    public class Request
     {
         private Dictionary<string, string> headerDictionary = new Dictionary<string, string>(); 
 

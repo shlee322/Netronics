@@ -8,7 +8,7 @@ namespace Netronics.Channel
 {
     public class Channel
     {
-        public static Channel NewChannel(Socket socket, IPacketEncoder encoder, IPacketDecoder decoder, IChannelHandler handler)
+        public static Channel CreateChannel(Socket socket, IPacketEncoder encoder, IPacketDecoder decoder, IChannelHandler handler)
         {
             return new Channel(socket, encoder, decoder, handler);
         }

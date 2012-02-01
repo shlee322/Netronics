@@ -4,6 +4,6 @@ namespace Netronics.Channel
 {
     public interface IChannelFactory
     {
-        Channel NewChannel(Netronics netronics, Socket socket);
+        Channel CreateChannel(Netronics netronics, Socket socket);
     }
 }

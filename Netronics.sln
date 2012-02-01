@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{758FDE00-E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkTest", "server\Test\Framework\FrameworkTest.csproj", "{0BF9B5F7-4189-4C6B-B758-4038C10B1D82}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServer", "example\WebServer\WebServer.csproj", "{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Netronics.vsmdi
@@ -42,11 +44,22 @@ Global
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82}.Release|x86.ActiveCfg = Release|Any CPU
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Debug|x86.ActiveCfg = Debug|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Debug|x86.Build.0 = Debug|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Release|Any CPU.ActiveCfg = Release|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Release|x86.ActiveCfg = Release|x86
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82} = {758FDE00-EAA5-4DE0-93A9-284D558D680D}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution

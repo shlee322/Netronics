@@ -5,9 +5,9 @@ namespace Netronics.Channel
 {
     class BasicChannelFactory : IChannelFactory
     {
-        public Channel NewChannel(Netronics netronics, Socket socket)
+        public Channel CreateChannel(Netronics netronics, Socket socket)
         {
-            return Channel.NewChannel(socket, new BsonEncoder(), new BsonDecoder(), new BasicChannelHandler());
+            return Channel.CreateChannel(socket, new BsonEncoder(), new BsonDecoder(), new BasicChannelHandler());
         }
     }
 }

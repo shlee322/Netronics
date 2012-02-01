@@ -13,9 +13,9 @@ namespace Netronics.Template.Service
             _manager = manager;
         }
 
-        public Channel.Channel NewChannel(Netronics netronics, Socket socket)
+        public Channel.Channel CreateChannel(Netronics netronics, Socket socket)
         {
-            return Channel.Channel.NewChannel(socket, new BsonEncoder(), new BsonDecoder(), new RemoteService(_manager));
+            return Channel.Channel.CreateChannel(socket, new BsonEncoder(), new BsonDecoder(), new RemoteService(_manager));
         }
     }
 }

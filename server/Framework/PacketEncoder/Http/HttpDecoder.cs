@@ -1,9 +1,8 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using Netronics;
-namespace HTTPModule
+﻿using System.Text.RegularExpressions;
+
+namespace Netronics.PacketEncoder.Http
 {
-    class HTTPDecoder : IPacketDecoder
+    public class HttpDecoder : IPacketDecoder
     {
         public dynamic Decode(PacketBuffer buffer)
         {
