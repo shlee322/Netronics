@@ -13,16 +13,18 @@ namespace Netronics
             _properties = properties;
         }
 
-        public void Start()
+        public Netronics Start()
         {
             InitSocket();
             StartSocket();
             _properties.OnStartEvent(this, new EventArgs());
+            return this;
         }
 
-        public void Stop()
+        public Netronics Stop()
         {
             _properties.OnStopEvent(this, new EventArgs());
+            return this;
         }
 
         private void InitSocket()
@@ -43,8 +45,9 @@ namespace Netronics
             _socket.BeginAccept(AcceptCallback, null);
         }
 
-        public void AddChannel(Channel.Channel channel)
+        public Channel.Channel AddChannel(Channel.Channel channel)
         {
+            return channel;
         }
     }
 }

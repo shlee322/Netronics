@@ -23,5 +23,11 @@ namespace Netronics
             if (StopEvent != null)
                 StopEvent(netronics, eventArgs);
         }
+
+        public Properties SetIpEndPoint(IPEndPoint endPoint)
+        {
+            IpEndPoint = endPoint;
+            return this;
+        }
     }
 }

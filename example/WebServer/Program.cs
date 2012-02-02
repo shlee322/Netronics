@@ -9,11 +9,11 @@ namespace WebServer
         private static Netronics.Netronics _netronics;
         static void Main(string[] args)
         {
-            HttpProperties properties = new HttpProperties();
-            properties.IpEndPoint = new IPEndPoint(IPAddress.Any, 8080);
-            properties.SetCreateHandler(() => { return new Handler(); });
-            _netronics = new Netronics.Netronics(properties);
-            _netronics.Start();
+            _netronics = new Netronics.Netronics(
+                ((HttpProperties)new HttpProperties()
+                .SetIpEndPoint(new IPEndPoint(IPAddress.Any, 8080)))
+                .SetCreateHandler(() => new Handler()))
+                .Start();
             Scheduler.SetThreadCount(5);
         }
     }

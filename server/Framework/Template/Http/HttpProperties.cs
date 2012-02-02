@@ -18,9 +18,10 @@ namespace Netronics.Template.HTTP
                                  });
         }
 
-        public void SetCreateHandler(Func<IChannelHandler> handler)
+        public HttpProperties SetCreateHandler(Func<IChannelHandler> handler)
         {
             _handler = handler;
+            return this;
         }
 
         public IChannelHandler CreateHandler()
