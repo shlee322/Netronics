@@ -27,13 +27,18 @@ namespace Netronics.Channel
             _decoder = decoder;
             _handler = handler;
 
-            handler.Connected(this);
-            _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
+            if(_handler != null)
+                _handler.Connected(this);
         }
 
         public void Disconnect()
         {
-            _socket.BeginDisconnect(false, ar => { }, null);
+            _socket.BeginDisconnect(false, ar =>
+                                               {
+                                                   if (_handler != null)
+                                                    _handler.Disconnected(this);
+                                                   _packetBuffer.Dispose();
+                                               }, null);
         }
 
         public Channel SetPacketEncoder(IPacketEncoder encoder)
@@ -52,6 +57,26 @@ namespace Netronics.Channel
         {
             _handler = channelHandler;
             return this;
+        }
+
+        public IChannelHandler GetChannelHandler()
+        {
+            return _handler;
+        }
+
+        public IPacketEncoder GetPacketEncoder()
+        {
+            return _encoder;
+        }
+
+        public IPacketDecoder GetPacketDecoder()
+        {
+            return _decoder;
+        }
+
+        private void BeginReceive()
+        {
+            _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
         }
 
         private void ReadCallback(IAsyncResult ar)
@@ -86,7 +111,7 @@ namespace Netronics.Channel
                                       Scheduler.Add(() => _handler.MessageReceive(this, message));
                                   }
                               });
-            _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
+            BeginReceive();
         }
 
         public void SendMessage(dynamic message)

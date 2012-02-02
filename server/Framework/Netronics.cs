@@ -15,6 +15,9 @@ namespace Netronics
 
         public Netronics Start()
         {
+            if (_properties == null)
+                return this;
+
             InitSocket();
             StartSocket();
             _properties.OnStartEvent(this, new EventArgs());
@@ -23,7 +26,8 @@ namespace Netronics
 
         public Netronics Stop()
         {
-            _properties.OnStopEvent(this, new EventArgs());
+            if (_properties != null)
+                _properties.OnStopEvent(this, new EventArgs());
             return this;
         }
 
