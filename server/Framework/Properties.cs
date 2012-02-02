@@ -6,15 +6,15 @@ namespace Netronics
 {
     public class Properties
     {
-        public IPEndPoint IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-        public IChannelFactory ChannelFactory = new BasicChannelFactory();
+        protected IPEndPoint IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        protected IChannelFactory ChannelFactory = new BasicChannelFactory();
 
-        public event EventHandler StartEvent;
-        public event EventHandler StopEvent;
+        protected event EventHandler StartEvent;
+        protected event EventHandler StopEvent;
 
         public void OnStartEvent(Netronics netronics, EventArgs eventArgs)
         {
-            if(StartEvent != null)
+            if (StartEvent != null)
                 StartEvent(netronics, eventArgs);
         }
 
@@ -28,6 +28,22 @@ namespace Netronics
         {
             IpEndPoint = endPoint;
             return this;
+        }
+
+        public Properties SetChannelFactoryOption(Action<IChannelFactory> action)
+        {
+            action(GetChannelFactory());
+            return this;
+        }
+
+        public IPEndPoint GetIPEndPoint()
+        {
+            return IpEndPoint;
+        }
+
+        public IChannelFactory GetChannelFactory()
+        {
+            return ChannelFactory;
         }
     }
 }

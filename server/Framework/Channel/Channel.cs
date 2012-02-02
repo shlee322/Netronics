@@ -29,6 +29,8 @@ namespace Netronics.Channel
 
             if(_handler != null)
                 _handler.Connected(this);
+
+            BeginReceive();
         }
 
         public void Disconnect()
@@ -118,6 +120,8 @@ namespace Netronics.Channel
         {
             //스케줄러에 해야하지만, 일단 임시!
             PacketBuffer buffer = _encoder.Encode(message);
+            if (buffer == null)
+                return;
             byte[] o = buffer.GetBytes();
             buffer.Dispose();
             _socket.BeginSend(o, 0, o.Length, SocketFlags.None, ar => { }, null);

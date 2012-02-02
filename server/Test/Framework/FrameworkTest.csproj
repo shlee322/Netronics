@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BSONEnDecoderTest.cs" />
+    <Compile Include="HttpTemplateTest.cs" />
     <Compile Include="NetronicsTest.cs" />
     <Compile Include="PacketBufferTest.cs" />
     <Compile Include="SchedulerTest.cs" />

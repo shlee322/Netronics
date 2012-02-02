@@ -12,7 +12,7 @@ namespace WebServer
             _netronics = new Netronics.Netronics(
                 ((HttpProperties)new HttpProperties()
                 .SetIpEndPoint(new IPEndPoint(IPAddress.Any, 8080)))
-                .SetCreateHandler(() => new Handler()))
+                .SetHandler(() => new Handler()))
                 .Start();
             Scheduler.SetThreadCount(5);
         }

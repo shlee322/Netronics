@@ -21,6 +21,8 @@ namespace Netronics
             InitSocket();
             StartSocket();
             _properties.OnStartEvent(this, new EventArgs());
+
+            Scheduler.Add(() => { }); //스케줄러 초기화를 위해 호출
             return this;
         }
 
@@ -34,7 +36,7 @@ namespace Netronics
         private void InitSocket()
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _socket.Bind(_properties.IpEndPoint);
+            _socket.Bind(_properties.GetIPEndPoint());
         }
 
         private void StartSocket()
@@ -45,7 +47,7 @@ namespace Netronics
 
         private void AcceptCallback(IAsyncResult ar)
         {
-            AddChannel(_properties.ChannelFactory.CreateChannel(this, _socket.EndAccept(ar)));
+            AddChannel(_properties.GetChannelFactory().CreateChannel(this, _socket.EndAccept(ar)));
             _socket.BeginAccept(AcceptCallback, null);
         }
 

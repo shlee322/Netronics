@@ -1,32 +1,23 @@
 ﻿using System;
 using System.Net;
 using Netronics.Channel;
+using Netronics.PacketEncoder.Http;
 
 namespace Netronics.Template.HTTP
 {
     public class HttpProperties : Properties
     {
-        private Func<IChannelHandler> _handler;
-
         public HttpProperties()
         {
             IpEndPoint = new IPEndPoint(IPAddress.Any, 80);
-            ChannelFactory = new HttpChannelFactory(this);
-            SetCreateHandler(() =>
-                                 {
-                                     return new BasicChannelHandler();
-                                 });
+            ((BasicChannelFactory)ChannelFactory).SetPacketEncoder(() => new HttpEncoder()).SetPacketDecoder(
+                () => new HttpDecoder());
         }
 
-        public HttpProperties SetCreateHandler(Func<IChannelHandler> handler)
+        public HttpProperties SetHandler(Func<IChannelHandler> handler)
         {
-            _handler = handler;
+            ((BasicChannelFactory) ChannelFactory).SetHandler(handler);
             return this;
-        }
-
-        public IChannelHandler CreateHandler()
-        {
-            return _handler();
         }
     }
 }
