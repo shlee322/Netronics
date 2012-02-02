@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Netronics;
 using Netronics.Template.HTTP;
 
@@ -9,11 +10,12 @@ namespace WebServer
         private static Netronics.Netronics _netronics;
         static void Main(string[] args)
         {
-            _netronics = new Netronics.Netronics(
-                ((HttpProperties)new HttpProperties()
-                .SetIpEndPoint(new IPEndPoint(IPAddress.Any, 8080)))
-                .SetHandler(() => new Handler()))
-                .Start();
+            HttpProperties properties = new HttpProperties();
+            properties.SetHandler(() => new Handler());
+            properties.SetIpEndPoint(new IPEndPoint(IPAddress.Any, 8080));
+
+            _netronics = new Netronics.Netronics(properties);
+            _netronics.Start();
             Scheduler.SetThreadCount(5);
         }
     }

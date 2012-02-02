@@ -8,13 +8,19 @@ namespace EchoServer
     {
         static void Main(string[] args)
         {
-            new Netronics.Netronics(
-                new Properties().SetIpEndPoint(new IPEndPoint(IPAddress.Any, 7777)).SetChannelFactoryOption(factory => {
-                    var basicChannelFactory = (BasicChannelFactory)factory;
-                        basicChannelFactory.SetPacketEncoder(() => new PacketEncoder())
-                                           .SetPacketDecoder(() => new PacketDecoder())
-                                           .SetHandler(() => new Handler());
-                })).Start();
+            Properties properties = new Properties();
+            properties.SetIpEndPoint(new IPEndPoint(IPAddress.Any, 7777));
+            properties.SetChannelFactoryOption(factory => SetFatoryOption((BasicChannelFactory)factory));
+
+            Netronics.Netronics netronics = new Netronics.Netronics(properties);
+            netronics.Start();
+        }
+
+        private static void SetFatoryOption(BasicChannelFactory factory)
+        {
+            factory.SetPacketEncoder(() => new PacketEncoder());
+            factory.SetPacketDecoder(() => new PacketDecoder());
+            factory.SetHandler(() => new Handler());
         }
     }
 }
