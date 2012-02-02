@@ -11,6 +11,7 @@ namespace Framework
             Netronics.Scheduler.SetThreadCount(4);
             Netronics.Scheduler.SetThreadCount(0);
             Netronics.Scheduler.SetThreadCount(-1);
+            Netronics.Scheduler.Add(null);
         }
     }
 }
