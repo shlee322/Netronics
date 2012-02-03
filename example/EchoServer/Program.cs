@@ -8,11 +8,11 @@ namespace EchoServer
     {
         static void Main(string[] args)
         {
-            Properties properties = new Properties();
+            var properties = new Properties();
             properties.SetIpEndPoint(new IPEndPoint(IPAddress.Any, 7777));
             properties.SetChannelFactoryOption(factory => SetFatoryOption((BasicChannelFactory)factory));
 
-            Netronics.Netronics netronics = new Netronics.Netronics(properties);
+            var netronics = new Netronics.Netronics(properties);
             netronics.Start();
         }
 

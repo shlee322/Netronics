@@ -22,7 +22,7 @@ namespace Netronics
             StartSocket();
             _properties.OnStartEvent(this, new EventArgs());
 
-            Scheduler.Add(() => { }); //스케줄러 초기화를 위해 호출
+            Scheduler.Add(null); //스케줄러 초기화를 위해 호출
             return this;
         }
 
