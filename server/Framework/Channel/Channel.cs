@@ -78,7 +78,15 @@ namespace Netronics.Channel
 
         private void BeginReceive()
         {
-            _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
+			try
+			{
+				_socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
+			}
+			catch(SocketException)
+			{
+				Scheduler.Add(Disconnect);
+				return;
+			}
         }
 
         private void ReadCallback(IAsyncResult ar)
