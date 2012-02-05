@@ -8,13 +8,13 @@ namespace EchoServer
         public dynamic Decode(PacketBuffer buffer)
         {
             buffer.BeginBufferIndex();
-            if (buffer.LegibleBytes() < 1)
+            if (buffer.AvailableBytes() < 1)
             {
                 buffer.ResetBufferIndex();
                 return null;
             }
 
-            var data = new byte[buffer.LegibleBytes()];
+            var data = new byte[buffer.AvailableBytes()];
             buffer.ReadBytes(data);
 
             buffer.EndBufferIndex();

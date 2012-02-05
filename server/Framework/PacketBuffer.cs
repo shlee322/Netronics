@@ -39,7 +39,7 @@ namespace Netronics
             return _buffer.ToArray();
         }
 
-        public long LegibleBytes()
+        public long AvailableBytes()
         {
             return _buffer.Length - _buffer.Position;
         }

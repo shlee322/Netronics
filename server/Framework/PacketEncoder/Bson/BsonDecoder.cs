@@ -29,11 +29,11 @@ namespace Netronics.PacketEncoder.Bson
             //버퍼 읽기 시작을 알림
             buffer.BeginBufferIndex();
 
-            if (buffer.LegibleBytes() < 5) //버퍼길이가 5미만이면 리턴
+            if (buffer.AvailableBytes() < 5) //버퍼길이가 5미만이면 리턴
                 return null;
 
             var len = buffer.ReadUInt32();
-            if (len > buffer.LegibleBytes())
+            if (len > buffer.AvailableBytes())
             {
                 //버퍼의 길이가 실제 패킷 길이보다 모자름으로, 리셋후 리턴
                 buffer.ResetBufferIndex();
