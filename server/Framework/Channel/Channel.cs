@@ -84,8 +84,6 @@ namespace Netronics.Channel
 			}
 			catch(SocketException)
 			{
-				Scheduler.Add(Disconnect);
-				return;
 			}
         }
 
@@ -132,7 +130,14 @@ namespace Netronics.Channel
                 return;
             byte[] o = buffer.GetBytes();
             buffer.Dispose();
-            _socket.BeginSend(o, 0, o.Length, SocketFlags.None, ar => { }, null);
+
+            try
+            {
+                _socket.BeginSend(o, 0, o.Length, SocketFlags.None, ar => { }, null);
+            }
+            catch (SocketException)
+            {
+            }
         }
     }
 }
