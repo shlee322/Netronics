@@ -2,7 +2,7 @@ namespace Netronics
 {
 	public interface IPacketEncryptor
 	{
-		PacketBuffer Encrypt(PacketBuffer buffer);
+		PacketBuffer Encrypt(hannel.Channel channel, PacketBuffer buffer);
 	}
 }
 
