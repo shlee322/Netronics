@@ -24,7 +24,7 @@ namespace Netronics.PacketEncoder.Bson
         /// </summary>
         /// <param name="buffer">BSON 패킷 구조를 따르는 Packet Buffer</param>
         /// <returns>BSON Data</returns>
-        public dynamic Decode(PacketBuffer buffer)
+        public dynamic Decode(hannel.Channel channel, PacketBuffer buffer)
         {
             //버퍼 읽기 시작을 알림
             buffer.BeginBufferIndex();

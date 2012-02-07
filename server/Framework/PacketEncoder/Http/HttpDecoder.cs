@@ -4,7 +4,7 @@ namespace Netronics.PacketEncoder.Http
 {
     public class HttpDecoder : IPacketDecoder
     {
-        public dynamic Decode(PacketBuffer buffer)
+        public dynamic Decode(hannel.Channel channel, PacketBuffer buffer)
         {
             buffer.BeginBufferIndex();
             string data = System.Text.Encoding.UTF8.GetString(buffer.GetBytes());
