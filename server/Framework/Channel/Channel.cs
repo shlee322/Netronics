@@ -8,40 +8,28 @@ namespace Netronics.Channel
 {
     public class Channel
     {
-        public static Channel CreateChannel(Socket socket, IPacketEncoder encoder, IPacketDecoder decoder, IChannelHandler handler)
+        public static Channel CreateChannel(Socket socket, ChannelFlag flag)
         {
-            return Channel.CreateChannel(socket, encoder, decoder, null, null, handler);
+            return Channel.CreateChannel(socket, flag);
         }
 		
-		public static Channel CreateChannel(Socket socket, IPacketEncoder encoder, IPacketDecoder decoder, IPacketEncryptor encryptor, IPacketDecryptor decryptor, IChannelHandler handler)
-        {
-            return new Channel(socket, encoder, decoder, encryptor, decryptor, handler);
-        }
-
         private Socket _socket;
-        private IPacketEncoder _encoder;
-        private IPacketDecoder _decoder;
-		private IPacketEncryptor _encryptor;
-		private IPacketDecryptor _decryptor;
-        private IChannelHandler _handler;
+		private ChannelFlag _flag;
+		
         private readonly byte[] _originalPacketBuffer = new byte[512];
         private readonly PacketBuffer _packetBuffer = new PacketBuffer();
 
-        private Channel(Socket socket, IPacketEncoder encoder, IPacketDecoder decoder, IPacketEncryptor encryptor, IPacketDecryptor decryptor, IChannelHandler handler)
+        private Channel(Socket socket, ChannelFlag flag)
         {
             _socket = socket;
-            _encoder = encoder;
-            _decoder = decoder;
-			_encryptor = encryptor;
-			_decryptor = decryptor;
-            _handler = handler;
+			_flag = flag;
 
-            if(_handler != null)
-                _handler.Connected(this);
+            if(_flag[ChannelFlag.Flag.Handler].GetType == typeof(IChannelHandler))
+                ((IChannelHandler)_flag[ChannelFlag.Flag.Handler]).Connected(this);
 
             BeginReceive();
         }
-
+		
         public void Disconnect()
         {
             _socket.BeginDisconnect(false, ar =>
@@ -50,51 +38,6 @@ namespace Netronics.Channel
                                                     _handler.Disconnected(this);
                                                    _packetBuffer.Dispose();
                                                }, null);
-        }
-
-        public Channel SetPacketEncoder(IPacketEncoder encoder)
-        {
-            _encoder = encoder;
-            return this;
-        }
-
-        public Channel SetPacketDecoder(IPacketDecoder decoder)
-        {
-            _decoder = decoder;
-            return this;
-        }
-		
-		public Channel SetPacketEncryptor(IPacketEncryptor encryptor)
-        {
-            _encryptor = encryptor;
-            return this;
-        }
-
-        public Channel SetPacketDecryptor(IPacketDecryptor decryptor)
-        {
-            _decryptor = decryptor;
-            return this;
-        }
-
-        public Channel SetChannelHandler(IChannelHandler channelHandler)
-        {
-            _handler = channelHandler;
-            return this;
-        }
-
-        public IChannelHandler GetChannelHandler()
-        {
-            return _handler;
-        }
-
-        public IPacketEncoder GetPacketEncoder()
-        {
-            return _encoder;
-        }
-
-        public IPacketDecoder GetPacketDecoder()
-        {
-            return _decoder;
         }
 
         private void BeginReceive()

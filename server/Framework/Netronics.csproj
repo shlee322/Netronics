@@ -71,6 +71,7 @@
     <Compile Include="Template\Service\Task.cs" />
     <Compile Include="PacketEncryptor\IPacketEncryptor.cs" />
     <Compile Include="PacketEncryptor\IPacketDecryptor.cs" />
+    <Compile Include="Channel\ChannelFlag.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
