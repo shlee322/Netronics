@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using Netronics.PacketEncoder;
 
@@ -84,21 +82,26 @@ namespace Netronics.Channel
                 _packetBuffer.Write(_originalPacketBuffer, 0, len);
             }
 
-            Scheduler.Add(delegate
-                              {
-                                  while (true)
-                                  {
-                                      dynamic message;
-                                      lock (_packetBuffer)
-                                      {
-                                          message = GetDecoder().Decode(this, _packetBuffer);
-                                      }
-                                      if (message == null)
-                                          break;
-                                      Scheduler.Add(() => GetHandler().MessageReceive(this, message));
-                                  }
-                              });
-            BeginReceive();
+            Scheduler.Add(Receive);
+        }
+
+        private void Receive()
+        {
+            dynamic message;
+
+            lock (_packetBuffer)
+            {
+                message = GetDecoder().Decode(this, _packetBuffer);
+            }
+
+            if (message == null)
+            {
+                BeginReceive();
+                return;
+            }
+
+            Scheduler.Add(() => GetHandler().MessageReceive(this, message));
+            Scheduler.Add(Receive);
         }
 
         public void SendMessage(dynamic message)
