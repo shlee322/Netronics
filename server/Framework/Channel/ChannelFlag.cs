@@ -4,19 +4,19 @@ namespace Netronics
 {
 	public class ChannelFlag
 	{
-		enum Flag{Encoder, Decoder, Encryptor, Decryptor, Handler}
+		public enum Flag{Encoder, Decoder, Encryptor, Decryptor, Handler}
 		
-		private Object[] _flag = new Object[sizeof(Type)];
-		
-		public Object this[int index]
+		private Object[] _flag = new Object[5];
+
+        public Object this[Flag index]
 		{
 			get
 			{
-				return _flag[index];
+				return _flag[(int)index];
 			}
 			set
 			{
-				_flag[index] = value;
+				_flag[(int)index] = value;
 			}
 		}
 	}

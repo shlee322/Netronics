@@ -42,6 +42,7 @@ namespace Netronics
                         if (ProcessorList.Count < 1)
                             break;
                         ProcessorList[ProcessorList.Count - 1].Stop();
+                        ProcessorList.RemoveAt(ProcessorList.Count - 1);
                     }
                 }
             }
@@ -76,11 +77,14 @@ namespace Netronics
             {
                 while (_run)
                 {
+                    Thread.Sleep(0);
+                    if (MessageQueue.Count == 0)
+                        continue;
+
                     Action action;
                     MessageQueue.TryDequeue(out action);
                     if (action != null)
                         action();
-                    Thread.Sleep(0);
                 }
             }
         }

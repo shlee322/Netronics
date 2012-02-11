@@ -20,10 +20,10 @@ namespace Framework
             data.test4.a = "abcd";
 
             var encoder = new BsonEncoder();
-            PacketBuffer buffer = encoder.Encode(data);
+            PacketBuffer buffer = encoder.Encode(null, data);
 
             var decoder = new BsonDecoder();
-            dynamic data2 = decoder.Decode(buffer);
+            dynamic data2 = decoder.Decode(null, buffer);
             Console.WriteLine(data2);
         }
 
@@ -33,7 +33,7 @@ namespace Framework
             var buffer = new PacketBuffer();
             buffer.Write(100);
             var decoder = new BsonDecoder();
-            if (decoder.Decode(buffer) != null)
+            if (decoder.Decode(null, buffer) != null)
                 throw new Exception();
         }
 
@@ -44,7 +44,7 @@ namespace Framework
             buffer.Write(100);
             buffer.Write(1);
             var decoder = new BsonDecoder();
-            if (decoder.Decode(buffer) != null)
+            if (decoder.Decode(null, buffer) != null)
                 throw new Exception();
         }
     }

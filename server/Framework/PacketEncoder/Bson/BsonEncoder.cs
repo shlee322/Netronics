@@ -28,7 +28,7 @@ namespace Netronics.PacketEncoder.Bson
         /// </summary>
         /// <param name="data">BSON Data</param>
         /// <returns>BSON 패킷 구조를 따르는 PacketBuffer</returns>
-        public PacketBuffer Encode(hannel.Channel channel, dynamic data)
+        public PacketBuffer Encode(Channel.Channel channel, dynamic data)
         {
             var buffer = new PacketBuffer();
 

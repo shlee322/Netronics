@@ -12,7 +12,7 @@ namespace Framework
             Scheduler.SetThreadCount(4);
             var netronics = new Netronics.Netronics(new Properties());
             netronics.Start();
-            netronics.AddChannel(Netronics.Channel.Channel.CreateChannel(null, null, null, null));
+            netronics.AddChannel(Netronics.Channel.Channel.CreateChannel(null, null));
             netronics.Stop();
             Scheduler.SetThreadCount(0);
         }

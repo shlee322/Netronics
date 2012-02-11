@@ -15,12 +15,19 @@ namespace Netronics.Channel
 
         public Channel CreateChannel(Netronics netronics, Socket socket)
         {
-            return Channel.CreateChannel(socket,
-			                             _encoder(),
-			                             _decoder(),
-			                             _encryptor != null ? _encryptor() : null,
-			                             _decryptor != null ? _decryptor() : null,
-			                             _handler());
+
+            return Channel.CreateChannel(socket, CreateFlag());
+        }
+
+        private ChannelFlag CreateFlag()
+        {
+            ChannelFlag flag = new ChannelFlag();
+            flag[ChannelFlag.Flag.Encoder] = _encoder();
+            flag[ChannelFlag.Flag.Decoder] = _decoder();
+            flag[ChannelFlag.Flag.Encryptor] = _encryptor != null ? _encryptor() : null;
+            flag[ChannelFlag.Flag.Decryptor] = _decryptor != null ? _decryptor() : null;
+            flag[ChannelFlag.Flag.Handler] = _handler();
+            return flag;
         }
 
         public BasicChannelFactory SetPacketEncoder(Func<IPacketEncoder> func)
@@ -38,14 +45,14 @@ namespace Netronics.Channel
 		public BasicChannelFactory SetPacketEncryptor(Func<IPacketEncryptor> func)
 		{
 			_encryptor = func;
+            return this;
 		}
 		
 		public BasicChannelFactory SetPacketDecryptor(Func<IPacketDecryptor> func)
 		{
 			_decryptor = func;
+            return this;
 		}
-		
-		
 
         public BasicChannelFactory SetHandler(Func<IChannelHandler> func)
         {

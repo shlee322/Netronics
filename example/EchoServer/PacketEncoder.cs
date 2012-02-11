@@ -1,11 +1,12 @@
 ﻿using Netronics;
+using Netronics.Channel;
 using Netronics.PacketEncoder;
 
 namespace EchoServer
 {
     class PacketEncoder : IPacketEncoder
     {
-        public PacketBuffer Encode(dynamic data)
+        public PacketBuffer Encode(Channel channel, dynamic data)
         {
             if (data.GetType() != typeof(byte[]))
                 return null;

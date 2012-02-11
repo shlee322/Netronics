@@ -2,7 +2,7 @@
 {
     public class HttpEncoder : IPacketEncoder
     {
-        public PacketBuffer Encode(hannel.Channel channel, dynamic message)
+        public PacketBuffer Encode(Channel.Channel channel, dynamic message)
         {
             PacketBuffer buffer = new PacketBuffer();
 

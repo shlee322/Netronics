@@ -15,7 +15,16 @@ namespace Netronics.Template.Service
 
         public Channel.Channel CreateChannel(Netronics netronics, Socket socket)
         {
-            return Channel.Channel.CreateChannel(socket, new BsonEncoder(), new BsonDecoder(), new RemoteService(_manager));
+            return Channel.Channel.CreateChannel(socket, CreateFlag());
+        }
+
+        private ChannelFlag CreateFlag()
+        {
+            ChannelFlag flag = new ChannelFlag();
+            flag[ChannelFlag.Flag.Encoder] = new BsonEncoder();
+            flag[ChannelFlag.Flag.Decoder] = new BsonDecoder();
+            flag[ChannelFlag.Flag.Handler] = new RemoteService(_manager);
+            return flag;
         }
     }
 }

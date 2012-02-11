@@ -24,18 +24,33 @@ namespace Netronics.Channel
             _socket = socket;
 			_flag = flag;
 
-            if(_flag[ChannelFlag.Flag.Handler].GetType == typeof(IChannelHandler))
-                ((IChannelHandler)_flag[ChannelFlag.Flag.Handler]).Connected(this);
+            if (GetHandler() != null)
+                GetHandler().Connected(this);
 
             BeginReceive();
+        }
+
+        private IChannelHandler GetHandler()
+        {
+            return (IChannelHandler)_flag[ChannelFlag.Flag.Handler];
+        }
+
+        private IPacketEncoder GetEncoder()
+        {
+            return (IPacketEncoder)_flag[ChannelFlag.Flag.Encoder];
+        }
+
+        private IPacketDecoder GetDecoder()
+        {
+            return (IPacketDecoder)_flag[ChannelFlag.Flag.Decoder];
         }
 		
         public void Disconnect()
         {
             _socket.BeginDisconnect(false, ar =>
                                                {
-                                                   if (_handler != null)
-                                                    _handler.Disconnected(this);
+                                                   if (GetHandler() != null)
+                                                       GetHandler().Disconnected(this);
                                                    _packetBuffer.Dispose();
                                                }, null);
         }
@@ -76,11 +91,11 @@ namespace Netronics.Channel
                                       dynamic message;
                                       lock (_packetBuffer)
                                       {
-                                          message = _decoder.Decode(_packetBuffer);
+                                          message = GetDecoder().Decode(this, _packetBuffer);
                                       }
                                       if (message == null)
                                           break;
-                                      Scheduler.Add(() => _handler.MessageReceive(this, message));
+                                      Scheduler.Add(() => GetHandler().MessageReceive(this, message));
                                   }
                               });
             BeginReceive();
@@ -89,7 +104,8 @@ namespace Netronics.Channel
         public void SendMessage(dynamic message)
         {
             //스케줄러에 해야하지만, 일단 임시!
-            PacketBuffer buffer = _encoder.Encode(message);
+            PacketBuffer buffer = GetEncoder().Encode(this, message);
+            
             if (buffer == null)
                 return;
             byte[] o = buffer.GetBytes();
