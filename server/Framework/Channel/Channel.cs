@@ -8,7 +8,7 @@ namespace Netronics.Channel
     {
         public static Channel CreateChannel(Socket socket, ChannelFlag flag)
         {
-            return Channel.CreateChannel(socket, flag);
+            return CreateChannel(socket, flag);
         }
 		
         private Socket _socket;
@@ -42,6 +42,11 @@ namespace Netronics.Channel
         {
             return (IPacketDecoder)_flag[ChannelFlag.Flag.Decoder];
         }
+
+        private bool GetParallel()
+        {
+            return (bool) _flag[ChannelFlag.Flag.Parallel];
+        }
 		
         public void Disconnect()
         {
@@ -61,6 +66,7 @@ namespace Netronics.Channel
 			}
 			catch(SocketException)
 			{
+			    Disconnect();
 			}
         }
 
@@ -77,10 +83,7 @@ namespace Netronics.Channel
                 return;
             }
 
-            lock (_packetBuffer)
-            {
-                _packetBuffer.Write(_originalPacketBuffer, 0, len);
-            }
+            _packetBuffer.Write(_originalPacketBuffer, 0, len);
 
             Scheduler.Add(Receive);
         }
@@ -100,13 +103,23 @@ namespace Netronics.Channel
                 return;
             }
 
-            Scheduler.Add(() => GetHandler().MessageReceive(this, message));
-            Scheduler.Add(Receive);
+            if (GetParallel())
+            {
+                Scheduler.Add(() => GetHandler().MessageReceive(this, message));
+                Scheduler.Add(Receive);
+            }
+            else
+            {
+                Scheduler.Add(() =>
+                                  {
+                                      GetHandler().MessageReceive(this, message);
+                                      Scheduler.Add(Receive);
+                                  });
+            }
         }
 
         public void SendMessage(dynamic message)
         {
-            //스케줄러에 해야하지만, 일단 임시!
             PacketBuffer buffer = GetEncoder().Encode(this, message);
             
             if (buffer == null)
