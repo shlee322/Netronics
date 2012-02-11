@@ -8,7 +8,7 @@ namespace Netronics.Channel
     {
         public static Channel CreateChannel(Socket socket, ChannelFlag flag)
         {
-            return CreateChannel(socket, flag);
+            return new Channel(socket, flag);
         }
 		
         private Socket _socket;
@@ -45,7 +45,7 @@ namespace Netronics.Channel
 
         private bool GetParallel()
         {
-            return (bool) _flag[ChannelFlag.Flag.Parallel];
+            return (bool)_flag[ChannelFlag.Flag.Parallel];
         }
 		
         public void Disconnect()
