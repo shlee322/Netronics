@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
-using Netronics.PacketEncoder;
+using Netronics.Protocol;
 
 namespace Netronics.Channel
 {
@@ -11,8 +11,8 @@ namespace Netronics.Channel
             return new Channel(socket, flag);
         }
 		
-        private Socket _socket;
-		private ChannelFlag _flag;
+        private readonly Socket _socket;
+		private readonly ChannelFlag _flag;
 		
         private readonly byte[] _originalPacketBuffer = new byte[512];
         private readonly PacketBuffer _packetBuffer = new PacketBuffer();
@@ -28,19 +28,15 @@ namespace Netronics.Channel
             BeginReceive();
         }
 
+        private IProtocol GetProtocol()
+        {
+            var protocol = (IProtocol) _flag[ChannelFlag.Flag.Protocol];
+            return protocol.GetHandShake() ?? protocol;
+        }
+
         private IChannelHandler GetHandler()
         {
             return (IChannelHandler)_flag[ChannelFlag.Flag.Handler];
-        }
-
-        private IPacketEncoder GetEncoder()
-        {
-            return (IPacketEncoder)_flag[ChannelFlag.Flag.Encoder];
-        }
-
-        private IPacketDecoder GetDecoder()
-        {
-            return (IPacketDecoder)_flag[ChannelFlag.Flag.Decoder];
         }
 
         private bool GetParallel()
@@ -94,7 +90,7 @@ namespace Netronics.Channel
 
             lock (_packetBuffer)
             {
-                message = GetDecoder().Decode(this, _packetBuffer);
+                message = GetProtocol().GetDecoder().Decode(this, _packetBuffer);
             }
 
             if (message == null)
@@ -120,7 +116,7 @@ namespace Netronics.Channel
 
         public void SendMessage(dynamic message)
         {
-            PacketBuffer buffer = GetEncoder().Encode(this, message);
+            PacketBuffer buffer = GetProtocol().GetEncoder().Encode(this, message);
             
             if (buffer == null)
                 return;
