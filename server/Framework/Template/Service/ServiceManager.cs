@@ -1,6 +1,6 @@
 ﻿namespace Netronics.Template.Service
 {
-    class ServiceManager
+    internal class ServiceManager
     {
         public void ProcessingTask(Task task)
         {

@@ -6,8 +6,8 @@ namespace Netronics
 {
     public class Properties
     {
-        protected IPEndPoint IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
         protected IChannelFactory ChannelFactory = new BasicChannelFactory();
+        protected IPEndPoint IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
         protected event EventHandler StartEvent;
         protected event EventHandler StopEvent;

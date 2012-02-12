@@ -17,7 +17,7 @@ namespace Netronics.PacketEncoder.Bson
     {
         protected JsonSerializer Serializer = new JsonSerializer();
 
-        #region PacketDecoder Members
+        #region IPacketDecoder Members
 
         /// <summary>
         /// BSON 패킷 구조를 따르는 PacketBuffer을 BSON Data로 변환 시키는 메서드
@@ -32,7 +32,7 @@ namespace Netronics.PacketEncoder.Bson
             if (buffer.AvailableBytes() < 5) //버퍼길이가 5미만이면 리턴
                 return null;
 
-            var len = buffer.ReadUInt32();
+            uint len = buffer.ReadUInt32();
             if (len > buffer.AvailableBytes())
             {
                 //버퍼의 길이가 실제 패킷 길이보다 모자름으로, 리셋후 리턴

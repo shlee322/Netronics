@@ -4,7 +4,7 @@ namespace Netronics.PacketEncoder.Http
 {
     public class Request
     {
-        private Dictionary<string, string> headerDictionary = new Dictionary<string, string>(); 
+        private readonly Dictionary<string, string> headerDictionary = new Dictionary<string, string>();
 
         public void SetHeader(string key, string value)
         {

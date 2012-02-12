@@ -19,7 +19,7 @@ namespace Netronics.PacketEncoder.Bson
     {
         protected JsonSerializer Serializer = new JsonSerializer();
 
-        #region PacketEncoder Members
+        #region IPacketEncoder Members
 
         /// <summary>
         /// BSON Encode 함수

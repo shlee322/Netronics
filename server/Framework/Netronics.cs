@@ -7,7 +7,7 @@ namespace Netronics
     {
         private readonly Properties _properties;
         private Socket _socket;
-        
+
         public Netronics(Properties properties)
         {
             _properties = properties;

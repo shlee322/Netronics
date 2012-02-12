@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using Netronics.Channel;
-using Netronics.PacketEncoder.Http;
 
 namespace Netronics.Template.HTTP
 {
@@ -10,8 +9,8 @@ namespace Netronics.Template.HTTP
         public HttpProperties()
         {
             IpEndPoint = new IPEndPoint(IPAddress.Any, 80);
-            ((BasicChannelFactory)ChannelFactory).SetPacketEncoder(() => new HttpEncoder()).SetPacketDecoder(
-                () => new HttpDecoder());
+            //((BasicChannelFactory)ChannelFactory).SetPacketEncoder(() => new HttpEncoder()).SetPacketDecoder(
+            //    () => new HttpDecoder());
         }
 
         public HttpProperties SetHandler(Func<IChannelHandler> handler)

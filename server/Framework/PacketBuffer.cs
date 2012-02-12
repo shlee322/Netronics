@@ -6,9 +6,9 @@ namespace Netronics
     public class PacketBuffer : IDisposable
     {
         private readonly byte[] _buf = new byte[1024];
-        private MemoryStream _buffer = new MemoryStream();
 
         protected bool Disposed;
+        private MemoryStream _buffer = new MemoryStream();
 
         #region IDisposable Members
 

@@ -6,26 +6,26 @@ namespace Netronics.Channel
 {
     public class Channel
     {
-        public static Channel CreateChannel(Socket socket, ChannelFlag flag)
-        {
-            return new Channel(socket, flag);
-        }
-		
-        private readonly Socket _socket;
-		private readonly ChannelFlag _flag;
-		
+        private readonly ChannelFlag _flag;
+
         private readonly byte[] _originalPacketBuffer = new byte[512];
         private readonly PacketBuffer _packetBuffer = new PacketBuffer();
+        private readonly Socket _socket;
 
         private Channel(Socket socket, ChannelFlag flag)
         {
             _socket = socket;
-			_flag = flag;
+            _flag = flag;
 
             if (GetHandler() != null)
                 GetHandler().Connected(this);
 
             BeginReceive();
+        }
+
+        public static Channel CreateChannel(Socket socket, ChannelFlag flag)
+        {
+            return new Channel(socket, flag);
         }
 
         private IProtocol GetProtocol()
@@ -36,14 +36,14 @@ namespace Netronics.Channel
 
         private IChannelHandler GetHandler()
         {
-            return (IChannelHandler)_flag[ChannelFlag.Flag.Handler];
+            return (IChannelHandler) _flag[ChannelFlag.Flag.Handler];
         }
 
         private bool GetParallel()
         {
-            return (bool)_flag[ChannelFlag.Flag.Parallel];
+            return (bool) _flag[ChannelFlag.Flag.Parallel];
         }
-		
+
         public void Disconnect()
         {
             _socket.BeginDisconnect(false, ar =>
@@ -56,14 +56,14 @@ namespace Netronics.Channel
 
         private void BeginReceive()
         {
-			try
-			{
-				_socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
-			}
-			catch(SocketException)
-			{
-			    Disconnect();
-			}
+            try
+            {
+                _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
+            }
+            catch (SocketException)
+            {
+                Disconnect();
+            }
         }
 
         private void ReadCallback(IAsyncResult ar)
@@ -117,7 +117,7 @@ namespace Netronics.Channel
         public void SendMessage(dynamic message)
         {
             PacketBuffer buffer = GetProtocol().GetEncoder().Encode(this, message);
-            
+
             if (buffer == null)
                 return;
             byte[] o = buffer.GetBytes();

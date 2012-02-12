@@ -1,6 +1,6 @@
 ﻿namespace Netronics.Template.Service
 {
-    interface IJob
+    internal interface IJob
     {
         /// <summary>
         /// Job를 처리할 수 있는 서비스의 이름

@@ -1,28 +1,31 @@
 ﻿using System.Net.Sockets;
 using Netronics.Channel;
-using Netronics.PacketEncoder.Bson;
 
 namespace Netronics.Template.Service
 {
-    class ServiceChannelFactory : IChannelFactory
+    internal class ServiceChannelFactory : IChannelFactory
     {
-        private ServiceManager _manager;
+        private readonly ServiceManager _manager;
 
         public ServiceChannelFactory(ServiceManager manager)
         {
             _manager = manager;
         }
 
+        #region IChannelFactory Members
+
         public Channel.Channel CreateChannel(Netronics netronics, Socket socket)
         {
             return Channel.Channel.CreateChannel(socket, CreateFlag());
         }
 
+        #endregion
+
         private ChannelFlag CreateFlag()
         {
-            ChannelFlag flag = new ChannelFlag();
-            flag[ChannelFlag.Flag.Encoder] = new BsonEncoder();
-            flag[ChannelFlag.Flag.Decoder] = new BsonDecoder();
+            var flag = new ChannelFlag();
+            //flag[ChannelFlag.Flag.Encoder] = new BsonEncoder();
+            //flag[ChannelFlag.Flag.Decoder] = new BsonDecoder();
             flag[ChannelFlag.Flag.Handler] = new RemoteService(_manager);
             return flag;
         }

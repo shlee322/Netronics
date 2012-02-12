@@ -1,11 +1,11 @@
 ﻿namespace Netronics.Template.Service
 {
-    class Task
+    internal class Task
     {
-        public Service Service;
-        public IJob Job;
         public string Group;
+        public IJob Job;
         public dynamic Message;
         public dynamic Result;
+        public Service Service;
     }
 }

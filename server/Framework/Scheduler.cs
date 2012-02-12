@@ -7,7 +7,7 @@ namespace Netronics
 {
     public class Scheduler
     {
-        private static readonly List<Processor> ProcessorList; 
+        private static readonly List<Processor> ProcessorList;
         private static readonly ConcurrentQueue<Action> MessageQueue;
 
         static Scheduler()
@@ -56,7 +56,9 @@ namespace Netronics
             MessageQueue.Enqueue(action);
         }
 
-        class Processor
+        #region Nested type: Processor
+
+        private class Processor
         {
             private bool _run;
             private Thread _thread;
@@ -88,5 +90,7 @@ namespace Netronics
                 }
             }
         }
+
+        #endregion
     }
 }
