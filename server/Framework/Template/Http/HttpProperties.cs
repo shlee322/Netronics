@@ -9,13 +9,13 @@ namespace Netronics.Template.HTTP
         public HttpProperties()
         {
             IpEndPoint = new IPEndPoint(IPAddress.Any, 80);
-            //((BasicChannelFactory)ChannelFactory).SetPacketEncoder(() => new HttpEncoder()).SetPacketDecoder(
+            //((ChannelFactory)ChannelFactory).SetPacketEncoder(() => new HttpEncoder()).SetPacketDecoder(
             //    () => new HttpDecoder());
         }
 
         public HttpProperties SetHandler(Func<IChannelHandler> handler)
         {
-            ((BasicChannelFactory) ChannelFactory).SetHandler(handler);
+            ((ChannelFactory) ChannelFactory).SetHandler(handler);
             return this;
         }
     }

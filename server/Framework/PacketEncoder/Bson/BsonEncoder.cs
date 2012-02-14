@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Netronics.Channel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
@@ -28,7 +29,7 @@ namespace Netronics.PacketEncoder.Bson
         /// </summary>
         /// <param name="data">BSON Data</param>
         /// <returns>BSON 패킷 구조를 따르는 PacketBuffer</returns>
-        public PacketBuffer Encode(Channel.Channel channel, dynamic data)
+        public PacketBuffer Encode(IChannel channel, dynamic data)
         {
             var buffer = new PacketBuffer();
 

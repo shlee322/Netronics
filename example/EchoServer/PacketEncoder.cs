@@ -6,7 +6,7 @@ namespace EchoServer
 {
     class PacketEncoder : IPacketEncoder
     {
-        public PacketBuffer Encode(Channel channel, dynamic data)
+        public PacketBuffer Encode(IChannel channel, dynamic data)
         {
             if (data.GetType() != typeof(byte[]))
                 return null;

@@ -10,13 +10,13 @@ namespace EchoServer
         {
             var properties = new Properties();
             properties.SetIpEndPoint(new IPEndPoint(IPAddress.Any, 7777));
-            properties.SetChannelFactoryOption(factory => SetFatoryOption((BasicChannelFactory)factory));
+            properties.SetChannelFactoryOption(factory => SetFatoryOption((ChannelFactory)factory));
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
         }
 
-        private static void SetFatoryOption(BasicChannelFactory factory)
+        private static void SetFatoryOption(ChannelFactory factory)
         {
             factory.SetPacketEncoder(() => new PacketEncoder());
             factory.SetPacketDecoder(() => new PacketDecoder());

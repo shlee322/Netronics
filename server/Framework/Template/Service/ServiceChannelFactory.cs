@@ -14,9 +14,9 @@ namespace Netronics.Template.Service
 
         #region IChannelFactory Members
 
-        public Channel.Channel CreateChannel(Netronics netronics, Socket socket)
+        public IChannel CreateChannel(Netronics netronics, Socket socket)
         {
-            return Channel.Channel.CreateChannel(socket, CreateFlag());
+            return SocketChannel.CreateChannel(socket, CreateFlag());
         }
 
         #endregion

@@ -2,8 +2,8 @@
 {
     public interface IChannelHandler
     {
-        void Connected(Channel channel);
-        void Disconnected(Channel channel);
-        void MessageReceive(Channel channel, dynamic message);
+        void Connected(IChannel channel);
+        void Disconnected(IChannel channel);
+        void MessageReceive(IChannel channel, dynamic message);
     }
 }

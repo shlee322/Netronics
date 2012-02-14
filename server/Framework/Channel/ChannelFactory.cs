@@ -4,16 +4,16 @@ using Netronics.Protocol;
 
 namespace Netronics.Channel
 {
-    public class BasicChannelFactory : IChannelFactory
+    public class ChannelFactory : IChannelFactory
     {
-        private Func<IChannelHandler> _handler = () => new BasicChannelHandler();
+        private Func<IChannelHandler> _handler = () => new ChannelHandler();
         private Func<IProtocol> _procotol = () => null;
 
         #region IChannelFactory Members
 
-        public Channel CreateChannel(Netronics netronics, Socket socket)
+        public IChannel CreateChannel(Netronics netronics, Socket socket)
         {
-            return Channel.CreateChannel(socket, CreateFlag());
+            return SocketChannel.CreateChannel(socket, CreateFlag());
         }
 
         #endregion
@@ -27,13 +27,13 @@ namespace Netronics.Channel
         }
 
 
-        public BasicChannelFactory SetProtocol(Func<IProtocol> func)
+        public ChannelFactory SetProtocol(Func<IProtocol> func)
         {
             _procotol = func;
             return this;
         }
 
-        public BasicChannelFactory SetHandler(Func<IChannelHandler> func)
+        public ChannelFactory SetHandler(Func<IChannelHandler> func)
         {
             _handler = func;
             return this;

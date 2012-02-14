@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using Netronics.Channel;
 
 namespace Netronics.PacketEncoder.Http
 {
@@ -8,7 +9,7 @@ namespace Netronics.PacketEncoder.Http
     {
         #region IPacketDecoder Members
 
-        public dynamic Decode(Channel.Channel channel, PacketBuffer buffer)
+        public dynamic Decode(IChannel channel, PacketBuffer buffer)
         {
             buffer.BeginBufferIndex();
             string data = Encoding.UTF8.GetString(buffer.GetBytes());

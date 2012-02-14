@@ -4,7 +4,7 @@ namespace Netronics.Template.Service
 {
     internal sealed class RemoteService : Service, IChannelHandler
     {
-        private Channel.Channel _channel;
+        private IChannel _channel;
 
         public RemoteService(ServiceManager manager)
         {
@@ -13,16 +13,16 @@ namespace Netronics.Template.Service
 
         #region IChannelHandler Members
 
-        public void Connected(Channel.Channel channel)
+        public void Connected(IChannel channel)
         {
             _channel = channel;
         }
 
-        public void Disconnected(Channel.Channel channel)
+        public void Disconnected(IChannel channel)
         {
         }
 
-        public void MessageReceive(Channel.Channel channel, dynamic message)
+        public void MessageReceive(IChannel channel, dynamic message)
         {
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Netronics.Channel;
 
 namespace Netronics.PacketEncoder.Http
 {
@@ -6,7 +7,7 @@ namespace Netronics.PacketEncoder.Http
     {
         #region IPacketEncoder Members
 
-        public PacketBuffer Encode(Channel.Channel channel, dynamic message)
+        public PacketBuffer Encode(IChannel channel, dynamic message)
         {
             var buffer = new PacketBuffer();
 

@@ -39,13 +39,15 @@
     <Reference Include="System.Xml" />
     <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\json.net\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\Speerit\Server\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Channel\BasicChannelHandler.cs" />
+    <Compile Include="Channel\ChannelHandler.cs" />
+    <Compile Include="Channel\IChannel.cs" />
     <Compile Include="Channel\IChannelHandler.cs" />
     <Compile Include="HandShake\IHandShake.cs" />
+    <Compile Include="IProperties.cs" />
     <Compile Include="PacketEncoder\Http\HttpDecoder.cs" />
     <Compile Include="PacketEncoder\Http\HttpEncoder.cs" />
     <Compile Include="PacketEncoder\Http\Request.cs" />
@@ -61,8 +63,8 @@
     <Compile Include="Template\Service\ServiceChannelFactory.cs" />
     <Compile Include="PacketEncoder\Bson\BsonDecoder.cs" />
     <Compile Include="PacketEncoder\Bson\BsonEncoder.cs" />
-    <Compile Include="Channel\BasicChannelFactory.cs" />
-    <Compile Include="Channel\Channel.cs" />
+    <Compile Include="Channel\ChannelFactory.cs" />
+    <Compile Include="Channel\SocketChannel.cs" />
     <Compile Include="Channel\IChannelFactory.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Netronics.cs" />

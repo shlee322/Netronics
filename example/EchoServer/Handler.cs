@@ -5,15 +5,15 @@ namespace EchoServer
 {
     class Handler : IChannelHandler
     {
-        public void Connected(Channel channel)
+        public void Connected(IChannel channel)
         {
         }
 
-        public void Disconnected(Channel channel)
+        public void Disconnected(IChannel channel)
         {
         }
 
-        public void MessageReceive(Channel channel, dynamic message)
+        public void MessageReceive(IChannel channel, dynamic message)
         {
             channel.SendMessage(message);
         }

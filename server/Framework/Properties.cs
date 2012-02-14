@@ -4,9 +4,9 @@ using Netronics.Channel;
 
 namespace Netronics
 {
-    public class Properties
+    public class Properties : IProperties
     {
-        protected IChannelFactory ChannelFactory = new BasicChannelFactory();
+        protected IChannelFactory ChannelFactory = new ChannelFactory();
         protected IPEndPoint IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
         protected event EventHandler StartEvent;

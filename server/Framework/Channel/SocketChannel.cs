@@ -4,7 +4,7 @@ using Netronics.Protocol;
 
 namespace Netronics.Channel
 {
-    public class Channel
+    public class SocketChannel : IChannel
     {
         private readonly ChannelFlag _flag;
 
@@ -12,20 +12,15 @@ namespace Netronics.Channel
         private readonly PacketBuffer _packetBuffer = new PacketBuffer();
         private readonly Socket _socket;
 
-        private Channel(Socket socket, ChannelFlag flag)
+        private SocketChannel(Socket socket, ChannelFlag flag)
         {
             _socket = socket;
             _flag = flag;
-
-            if (GetHandler() != null)
-                GetHandler().Connected(this);
-
-            BeginReceive();
         }
 
-        public static Channel CreateChannel(Socket socket, ChannelFlag flag)
+        public static SocketChannel CreateChannel(Socket socket, ChannelFlag flag)
         {
-            return new Channel(socket, flag);
+            return new SocketChannel(socket, flag);
         }
 
         private IProtocol GetProtocol()
@@ -42,6 +37,14 @@ namespace Netronics.Channel
         private bool GetParallel()
         {
             return (bool) _flag[ChannelFlag.Flag.Parallel];
+        }
+
+        public void Connect()
+        {
+            if (GetHandler() != null)
+                GetHandler().Connected(this);
+
+            BeginReceive();
         }
 
         public void Disconnect()

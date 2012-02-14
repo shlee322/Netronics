@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Net.Sockets;
+using Netronics.Channel;
 
 namespace Netronics
 {
     public class Netronics
     {
-        private readonly Properties _properties;
+        private readonly IProperties _properties;
         private Socket _socket;
 
-        public Netronics(Properties properties)
+        public Netronics(IProperties properties)
         {
             _properties = properties;
         }
@@ -51,7 +52,7 @@ namespace Netronics
             _socket.BeginAccept(AcceptCallback, null);
         }
 
-        public Channel.Channel AddChannel(Channel.Channel channel)
+        public IChannel AddChannel(IChannel channel)
         {
             return channel;
         }

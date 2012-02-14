@@ -1,4 +1,6 @@
-﻿namespace Netronics.PacketEncoder
+﻿using Netronics.Channel;
+
+namespace Netronics.PacketEncoder
 {
     public interface IPacketEncoder
     {
@@ -7,6 +9,6 @@
         /// </summary>
         /// <param name="data">패킷 메시지 객체</param>
         /// <returns>PacketBuffer</returns>
-        PacketBuffer Encode(Channel.Channel channel, dynamic data);
+        PacketBuffer Encode(IChannel channel, dynamic data);
     }
 }

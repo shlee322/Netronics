@@ -1,7 +1,9 @@
+using Netronics.Channel;
+
 namespace Netronics
 {
     public interface IPacketDecryptor
     {
-        PacketBuffer Decrypt(Channel.Channel channel, PacketBuffer buffer);
+        PacketBuffer Decrypt(IChannel channel, PacketBuffer buffer);
     }
 }
