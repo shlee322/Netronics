@@ -18,15 +18,6 @@ namespace Netronics.Channel
 
         #endregion
 
-        private ChannelFlag CreateFlag()
-        {
-            var flag = new ChannelFlag();
-            flag[ChannelFlag.Flag.Protocol] = _procotol();
-            flag[ChannelFlag.Flag.Handler] = _handler();
-            return flag;
-        }
-
-
         public ChannelFactory SetProtocol(Func<IProtocol> func)
         {
             _procotol = func;
