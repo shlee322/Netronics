@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Netronics;
-using Netronics.PacketEncoder.Bson;
+using Netronics.Protocol.PacketEncoder.Bson;
 using Newtonsoft.Json.Linq;
 
 namespace Framework

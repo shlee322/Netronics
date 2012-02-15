@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Netronics.Channel;
 
-namespace Netronics.PacketEncoder.Http
+namespace Netronics.Protocol.PacketEncoder.Http
 {
     public class HttpDecoder : IPacketDecoder
     {

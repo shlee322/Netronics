@@ -1,6 +1,6 @@
 ﻿using Netronics.Channel;
 
-namespace Netronics.PacketEncoder
+namespace Netronics.Protocol.PacketEncoder
 {
     public interface IPacketDecoder
     {

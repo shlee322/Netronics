@@ -46,12 +46,15 @@
     <Compile Include="Channel\ChannelHandler.cs" />
     <Compile Include="Channel\IChannel.cs" />
     <Compile Include="Channel\IChannelHandler.cs" />
-    <Compile Include="HandShake\IHandShake.cs" />
+    <Compile Include="Channel\IKeepHandlerChannel.cs" />
+    <Compile Include="Channel\IKeepParallelChannel.cs" />
+    <Compile Include="Channel\IKeepProtocolChannel.cs" />
+    <Compile Include="Protocol\HandShake\IHandShake.cs" />
     <Compile Include="IProperties.cs" />
-    <Compile Include="PacketEncoder\Http\HttpDecoder.cs" />
-    <Compile Include="PacketEncoder\Http\HttpEncoder.cs" />
-    <Compile Include="PacketEncoder\Http\Request.cs" />
-    <Compile Include="PacketEncoder\Http\Response.cs" />
+    <Compile Include="Protocol\PacketEncoder\Http\HttpDecoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\Http\HttpEncoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />
+    <Compile Include="Protocol\PacketEncoder\Http\Response.cs" />
     <Compile Include="Protocol\IProtocol.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
@@ -61,20 +64,20 @@
     <Compile Include="Template\Service\RemoteService.cs" />
     <Compile Include="Template\Service\Service.cs" />
     <Compile Include="Template\Service\ServiceChannelFactory.cs" />
-    <Compile Include="PacketEncoder\Bson\BsonDecoder.cs" />
-    <Compile Include="PacketEncoder\Bson\BsonEncoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\Bson\BsonDecoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\Bson\BsonEncoder.cs" />
     <Compile Include="Channel\ChannelFactory.cs" />
     <Compile Include="Channel\SocketChannel.cs" />
     <Compile Include="Channel\IChannelFactory.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Netronics.cs" />
     <Compile Include="PacketBuffer.cs" />
-    <Compile Include="PacketEncoder\IPacketDecoder.cs" />
-    <Compile Include="PacketEncoder\IPacketEncoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\IPacketDecoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\IPacketEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Template\Service\Task.cs" />
-    <Compile Include="PacketEncryptor\IPacketEncryptor.cs" />
-    <Compile Include="PacketEncryptor\IPacketDecryptor.cs" />
+    <Compile Include="Protocol\PacketEncryptor\IPacketEncryptor.cs" />
+    <Compile Include="Protocol\PacketEncryptor\IPacketDecryptor.cs" />
     <Compile Include="Channel\ChannelFlag.cs" />
   </ItemGroup>
   <ItemGroup />

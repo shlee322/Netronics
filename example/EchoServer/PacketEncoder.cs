@@ -1,6 +1,7 @@
 ﻿using Netronics;
 using Netronics.Channel;
 using Netronics.PacketEncoder;
+using Netronics.Protocol.PacketEncoder;
 
 namespace EchoServer
 {

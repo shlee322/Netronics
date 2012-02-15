@@ -1,4 +1,4 @@
-﻿namespace Netronics.PacketEncoder.Http
+﻿namespace Netronics.Protocol.PacketEncoder.Http
 {
     public class Response
     {

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Netronics.Channel;
 
-namespace Netronics.PacketEncoder.Http
+namespace Netronics.Protocol.PacketEncoder.Http
 {
     public class HttpEncoder : IPacketEncoder
     {

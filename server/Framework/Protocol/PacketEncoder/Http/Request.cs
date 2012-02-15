@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Netronics.PacketEncoder.Http
+namespace Netronics.Protocol.PacketEncoder.Http
 {
     public class Request
     {

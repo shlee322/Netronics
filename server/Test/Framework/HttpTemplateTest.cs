@@ -2,7 +2,7 @@
 using System.Net;
 using NUnit.Framework;
 using Netronics.Channel;
-using Netronics.PacketEncoder.Http;
+using Netronics.Protocol.PacketEncoder.Http;
 using Netronics.Template.HTTP;
 
 namespace Framework

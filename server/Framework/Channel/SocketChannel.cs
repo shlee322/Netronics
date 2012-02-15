@@ -4,42 +4,60 @@ using Netronics.Protocol;
 
 namespace Netronics.Channel
 {
-    public class SocketChannel : IChannel
+    public class SocketChannel : IChannel, IKeepProtocolChannel, IKeepHandlerChannel, IKeepParallelChannel
     {
-        private readonly ChannelFlag _flag;
+        public static SocketChannel CreateChannel(Socket socket)
+        {
+            return new SocketChannel(socket);
+        }
 
         private readonly byte[] _originalPacketBuffer = new byte[512];
         private readonly PacketBuffer _packetBuffer = new PacketBuffer();
         private readonly Socket _socket;
 
-        private SocketChannel(Socket socket, ChannelFlag flag)
+        private IProtocol _protocol;
+        private IChannelHandler _handler;
+        private bool _parallel;
+
+        private SocketChannel(Socket socket)
         {
             _socket = socket;
-            _flag = flag;
         }
 
-        public static SocketChannel CreateChannel(Socket socket, ChannelFlag flag)
+        public virtual IProtocol SetProtocol(IProtocol protocol)
         {
-            return new SocketChannel(socket, flag);
+            _protocol = protocol;
+            return protocol;
         }
 
-        private IProtocol GetProtocol()
+        protected virtual IProtocol GetProtocol()
         {
-            var protocol = (IProtocol) _flag[ChannelFlag.Flag.Protocol];
-            return protocol.GetHandShake() ?? protocol;
+            return _protocol;
         }
 
-        private IChannelHandler GetHandler()
+        public virtual IChannelHandler SetHandler(IChannelHandler handler)
         {
-            return (IChannelHandler) _flag[ChannelFlag.Flag.Handler];
+            _handler = handler;
+            return handler;
         }
 
-        private bool GetParallel()
+        protected virtual IChannelHandler GetHandler()
         {
-            return (bool) _flag[ChannelFlag.Flag.Parallel];
+            return _handler;
         }
 
-        public void Connect()
+        public bool SetParallel(bool parallel)
+        {
+            _parallel = parallel;
+            return parallel;
+        }
+
+        protected virtual bool GetParallel()
+        {
+            return _parallel;
+        }
+
+        public virtual void Connect()
         {
             if (GetHandler() != null)
                 GetHandler().Connected(this);
@@ -47,7 +65,7 @@ namespace Netronics.Channel
             BeginReceive();
         }
 
-        public void Disconnect()
+        public virtual void Disconnect()
         {
             _socket.BeginDisconnect(false, ar =>
                                                {
@@ -128,7 +146,7 @@ namespace Netronics.Channel
 
             try
             {
-                _socket.BeginSend(o, 0, o.Length, SocketFlags.None, ar => { }, null);
+                _socket.BeginSend(o, 0, o.Length, SocketFlags.None, ar => _socket.EndSend(ar), null);
             }
             catch (SocketException)
             {

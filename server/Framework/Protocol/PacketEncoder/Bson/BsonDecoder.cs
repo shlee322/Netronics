@@ -3,7 +3,7 @@ using Netronics.Channel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
-namespace Netronics.PacketEncoder.Bson
+namespace Netronics.Protocol.PacketEncoder.Bson
 {
     /// <summary>
     /// BSON을 사용하는 Packet Decoder

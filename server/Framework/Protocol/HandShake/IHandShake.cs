@@ -1,7 +1,6 @@
 ﻿using Netronics.Channel;
-using Netronics.Protocol;
 
-namespace Netronics.HandShake
+namespace Netronics.Protocol.HandShake
 {
     public interface IHandShake : IProtocol, IChannelHandler
     {

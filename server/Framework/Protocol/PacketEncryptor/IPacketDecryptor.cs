@@ -1,6 +1,6 @@
 using Netronics.Channel;
 
-namespace Netronics
+namespace Netronics.Protocol.PacketEncryptor
 {
     public interface IPacketDecryptor
     {
