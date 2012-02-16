@@ -20,6 +20,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <CodeAnalysisRuleSet>ExtendedDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,8 +52,10 @@
     <Compile Include="Channel\IKeepHandlerChannel.cs" />
     <Compile Include="Channel\IKeepParallelChannel.cs" />
     <Compile Include="Channel\IKeepProtocolChannel.cs" />
+    <Compile Include="Protocol\HandShake\HandShakeHandler.cs" />
     <Compile Include="Protocol\HandShake\IHandShake.cs" />
     <Compile Include="IProperties.cs" />
+    <Compile Include="Protocol\HandShake\IStep.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpEncoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />

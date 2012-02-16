@@ -48,7 +48,7 @@ namespace Netronics
 
         private void AcceptCallback(IAsyncResult ar)
         {
-            AddChannel(_properties.GetChannelFactory().CreateChannel(this, _socket.EndAccept(ar)));
+            AddChannel(_properties.GetChannelFactory().CreateChannel(this, _socket.EndAccept(ar))).Connect();
             _socket.BeginAccept(AcceptCallback, null);
         }
 
