@@ -2,7 +2,7 @@
 
 namespace Netronics.Channel
 {
-    interface IKeepProtocolChannel
+    interface IKeepProtocolChannel : IChannel
     {
         IProtocol SetProtocol(IProtocol protocol);
     }

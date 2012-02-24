@@ -1,6 +1,6 @@
 ﻿namespace Netronics.Channel
 {
-    interface IKeepParallelChannel
+    interface IKeepParallelChannel : IChannel
     {
         bool SetParallel(bool parallel);
     }

@@ -10,6 +10,5 @@ namespace Netronics.Protocol
         IPacketDecryptor GetDecryptor();
         IPacketEncoder GetEncoder();
         IPacketDecoder GetDecoder();
-        IHandShake GetHandShake();
     }
 }

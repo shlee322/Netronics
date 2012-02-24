@@ -146,7 +146,18 @@ namespace Netronics.Channel
 
             try
             {
-                _socket.BeginSend(o, 0, o.Length, SocketFlags.None, ar => _socket.EndSend(ar), null);
+                _socket.BeginSend(o, 0, o.Length, SocketFlags.None, SendCallback, null);
+            }
+            catch (SocketException)
+            {
+            }
+        }
+
+        private void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                _socket.EndSend(ar);
             }
             catch (SocketException)
             {

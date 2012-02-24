@@ -1,4 +1,4 @@
-﻿namespace Netronics.Template.Service
+﻿namespace Netronics.Template.Service.Service
 {
     internal class Service
     {
@@ -12,9 +12,9 @@
         {
         }
 
-        public virtual void ProcessingTask(Task task)
+        public virtual void ProcessingTask(Task.Task task)
         {
-            task.Job.ProcessingTask(this, task);
+            //task.Job.ProcessingTask(this, task);
         }
 
         public virtual void SetServiceManager(ServiceManager manager)

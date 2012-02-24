@@ -1,6 +1,6 @@
 ﻿using Netronics.Channel;
 
-namespace Netronics.Template.Service
+namespace Netronics.Template.Service.Service
 {
     internal sealed class RemoteService : Service, IChannelHandler
     {
@@ -28,7 +28,7 @@ namespace Netronics.Template.Service
 
         #endregion
 
-        public override void ProcessingTask(Task task)
+        public override void ProcessingTask(Task.Task task)
         {
             //해당 서비스로 task를 전송
         }

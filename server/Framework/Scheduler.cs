@@ -80,9 +80,6 @@ namespace Netronics
                 while (_run)
                 {
                     Thread.Sleep(0);
-                    if (MessageQueue.Count == 0)
-                        continue;
-
                     Action action;
                     MessageQueue.TryDequeue(out action);
                     if (action != null)

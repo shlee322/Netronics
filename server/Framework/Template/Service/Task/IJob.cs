@@ -26,6 +26,6 @@
         /// </summary>
         /// <param name="localService">Task를 받는 Service</param>
         /// <param name="task">Task</param>
-        void ProcessingTask(Service localService, Task task);
+        void ProcessingTask(Service localService, Task.Task task);
     }
 }

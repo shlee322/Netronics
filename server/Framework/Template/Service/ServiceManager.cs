@@ -1,10 +1,19 @@
-﻿namespace Netronics.Template.Service
+﻿using System;
+using Netronics.Template.Service.Service;
+
+namespace Netronics.Template.Service
 {
     internal class ServiceManager
     {
-        public void ProcessingTask(Task task)
+        private LocalService _localService;
+
+        public ServiceManager(LocalService localService)
         {
-            new Service().ProcessingTask(task);
+            _localService = localService;
+        }
+
+        public void ProcessingTask(Task.Task task)
+        {
         }
     }
 }

@@ -5,8 +5,8 @@ namespace Netronics.Protocol.HandShake
 {
     interface IStep : IPacketEncoder, IPacketDecoder
     {
-        void Start(HandShakeHandler handShakeHandler, IChannel channel);
-        void End(HandShakeHandler handShakeHandler, IChannel channel);
-        void MessageReceive(HandShakeHandler handShakeHandler, IChannel channel, dynamic message);
+        void Start(HandShake handShakeHandler, IChannel channel);
+        void End(HandShake handShakeHandler, IChannel channel);
+        void MessageReceive(HandShake handShakeHandler, IChannel channel, dynamic message);
     }
 }
