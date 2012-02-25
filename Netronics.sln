@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServer", "example\WebSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoServer", "example\EchoServer\EchoServer.csproj", "{306B6AFF-198F-486F-B513-CCEB26B65676}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BroadcastServer", "example\BroadcastServer\BroadcastServer.csproj", "{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServer", "example\ChatServer\ChatServer.csproj", "{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Netronics.vsmdi
@@ -66,6 +70,26 @@ Global
 		{306B6AFF-198F-486F-B513-CCEB26B65676}.Release|Mixed Platforms.Build.0 = Release|x86
 		{306B6AFF-198F-486F-B513-CCEB26B65676}.Release|x86.ActiveCfg = Release|x86
 		{306B6AFF-198F-486F-B513-CCEB26B65676}.Release|x86.Build.0 = Release|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Debug|x86.ActiveCfg = Debug|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Debug|x86.Build.0 = Debug|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Release|Any CPU.ActiveCfg = Release|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Release|Mixed Platforms.Build.0 = Release|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Release|x86.ActiveCfg = Release|x86
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8}.Release|x86.Build.0 = Release|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Debug|x86.ActiveCfg = Debug|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Debug|x86.Build.0 = Debug|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Release|Any CPU.ActiveCfg = Release|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Release|x86.ActiveCfg = Release|x86
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +97,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0710BA5A-132E-4A6E-9F11-0E491C19A5D2} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{306B6AFF-198F-486F-B513-CCEB26B65676} = {2885301C-7770-4865-A67E-C3349455D0C8}
+		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8} = {2885301C-7770-4865-A67E-C3349455D0C8}
+		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82} = {758FDE00-EAA5-4DE0-93A9-284D558D680D}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution

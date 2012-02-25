@@ -1,6 +1,6 @@
 ﻿namespace Netronics.Template.Service.Service
 {
-    internal class Service
+    public class Service
     {
         private ServiceManager _manager;
 

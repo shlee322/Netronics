@@ -1,12 +1,14 @@
 ﻿using System.Net;
-using Netronics.Channel;
 using Netronics;
+using Netronics.Channel;
 using Netronics.Protocol;
 
-namespace EchoServer
+namespace BroadcastServer
 {
     class Program
     {
+        private static Handler Handler = new Handler();
+
         static void Main(string[] args)
         {
             var properties = new Properties();
@@ -19,8 +21,9 @@ namespace EchoServer
 
         private static void SetFatoryOption(ChannelFactory factory)
         {
-            factory.SetProtocol(() => new ModifiableProtocol(encoder: new PacketEncoder(), decoder: new PacketDecoder()));
-            factory.SetHandler(() => new Handler());
+            PacketEncoder encoder = new PacketEncoder();
+            factory.SetProtocol(() => new ModifiableProtocol(encoder: encoder, decoder: encoder));
+            factory.SetHandler(() => Handler);
         }
     }
 }

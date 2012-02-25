@@ -1,5 +1,4 @@
-﻿using Netronics.Template.Service;
-using Netronics.Template.Service.Task;
+﻿using Netronics.Template.Service.Task;
 
 namespace Framework.Service
 {

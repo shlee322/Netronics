@@ -4,7 +4,7 @@ using Netronics.Template.Service.Task;
 
 namespace Netronics.Template.Service.Service
 {
-    class LocalService : Service
+    public class LocalService : Service
     {
         private readonly Dictionary<Type, Action<Task.Task>> _processorList = new Dictionary<Type, Action<Task.Task>>();
  

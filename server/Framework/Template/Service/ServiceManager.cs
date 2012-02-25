@@ -3,7 +3,7 @@ using Netronics.Template.Service.Service;
 
 namespace Netronics.Template.Service
 {
-    internal class ServiceManager
+    public class ServiceManager
     {
         private LocalService _localService;
 

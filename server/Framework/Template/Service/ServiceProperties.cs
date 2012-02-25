@@ -1,6 +1,6 @@
 ﻿namespace Netronics.Template.Service
 {
-    internal class ServiceProperties : Properties
+    public class ServiceProperties : Properties
     {
         public ServiceProperties(Service.LocalService service)
         {

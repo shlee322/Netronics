@@ -46,7 +46,8 @@
     <Compile Include="SchedulerTest.cs" />
     <Compile Include="Service\TestMessage.cs" />
     <Compile Include="Service\TestProcessor.cs" />
-    <Compile Include="Service\TestTask.cs" />
+    <Compile Include="Service\TestServer.cs" />
+    <Compile Include="Service\TestService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

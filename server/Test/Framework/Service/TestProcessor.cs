@@ -2,7 +2,7 @@
 {
     class TestProcessor
     {
-        public void aaaa()
+        public static void aaaa(Netronics.Template.Service.Task.Task task)
         {
         }
     }

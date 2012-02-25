@@ -19,6 +19,8 @@ namespace Netronics.Channel.Channel
         private IChannelHandler _handler;
         private bool _parallel;
 
+        private object _tag;
+
         private SocketChannel(Socket socket)
         {
             _socket = socket;
@@ -73,6 +75,11 @@ namespace Netronics.Channel.Channel
                                                        GetHandler().Disconnected(this);
                                                    _packetBuffer.Dispose();
                                                }, null);
+        }
+
+        public override string ToString()
+        {
+            return _socket.RemoteEndPoint.ToString();
         }
 
         private void BeginReceive()
@@ -151,6 +158,17 @@ namespace Netronics.Channel.Channel
             catch (SocketException)
             {
             }
+        }
+
+        public object SetTag(object tag)
+        {
+            _tag = tag;
+            return _tag;
+        }
+
+        public object GetTag()
+        {
+            return _tag;
         }
 
         private void SendCallback(IAsyncResult ar)
