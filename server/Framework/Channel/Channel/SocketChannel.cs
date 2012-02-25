@@ -2,9 +2,9 @@
 using System.Net.Sockets;
 using Netronics.Protocol;
 
-namespace Netronics.Channel
+namespace Netronics.Channel.Channel
 {
-    public class SocketChannel : IChannel, IKeepProtocolChannel, IKeepHandlerChannel, IKeepParallelChannel
+    public class SocketChannel : IKeepProtocolChannel, IKeepHandlerChannel, IKeepParallelChannel
     {
         public static SocketChannel CreateChannel(Socket socket)
         {
@@ -30,7 +30,7 @@ namespace Netronics.Channel
             return protocol;
         }
 
-        protected virtual IProtocol GetProtocol()
+        public virtual IProtocol GetProtocol()
         {
             return _protocol;
         }
@@ -41,7 +41,7 @@ namespace Netronics.Channel
             return handler;
         }
 
-        protected virtual IChannelHandler GetHandler()
+        public virtual IChannelHandler GetHandler()
         {
             return _handler;
         }

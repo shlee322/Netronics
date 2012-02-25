@@ -1,4 +1,4 @@
-﻿namespace Netronics.Channel
+﻿namespace Netronics.Channel.Channel
 {
     interface IKeepParallelChannel : IChannel
     {

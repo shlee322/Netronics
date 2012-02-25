@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Netronics.Channel;
+using Netronics.Channel.Channel;
 
 namespace Netronics.Protocol.PacketEncoder.Http
 {

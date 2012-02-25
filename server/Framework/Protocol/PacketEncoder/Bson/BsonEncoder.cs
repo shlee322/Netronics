@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Netronics.Channel;
+using Netronics.Channel.Channel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 

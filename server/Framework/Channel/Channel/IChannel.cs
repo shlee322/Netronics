@@ -1,4 +1,4 @@
-namespace Netronics.Channel
+namespace Netronics.Channel.Channel
 {
     /// <summary>
     /// <see cref="Netronics"/>의 핵심 인터페이스이며 다른 클라이언트와 통신할 수 있는 통로이다.

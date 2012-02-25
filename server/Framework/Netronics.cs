@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using Netronics.Channel;
+using Netronics.Channel.Channel;
 
 namespace Netronics
 {

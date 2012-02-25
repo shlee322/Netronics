@@ -24,8 +24,20 @@ namespace Netronics.Protocol
             return _encryptor;
         }
 
+        public IPacketEncryptor SetEncryptor(IPacketEncryptor encryptor)
+        {
+            _encryptor = encryptor;
+            return _encryptor;
+        }
+
         public IPacketDecryptor GetDecryptor()
         {
+            return _decryptor;
+        }
+
+        public IPacketDecryptor SetDecryptor(IPacketDecryptor decryptor)
+        {
+            _decryptor = decryptor;
             return _decryptor;
         }
 
@@ -34,8 +46,20 @@ namespace Netronics.Protocol
             return _encoder;
         }
 
+        public IPacketEncoder SetEncoder(IPacketEncoder encoder)
+        {
+            _encoder = encoder;
+            return _encoder;
+        }
+
         public IPacketDecoder GetDecoder()
         {
+            return _decoder;
+        }
+
+        public IPacketDecoder SetDecoder(IPacketDecoder decoder)
+        {
+            _decoder = decoder;
             return _decoder;
         }
     }

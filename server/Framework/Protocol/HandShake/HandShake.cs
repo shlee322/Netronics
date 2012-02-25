@@ -1,4 +1,6 @@
-﻿using Netronics.Channel;
+﻿using System;
+using Netronics.Channel;
+using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncryptor;
 
@@ -19,9 +21,16 @@ namespace Netronics.Protocol.HandShake
 
         private HandShake(IChannel channel, IStep step, IProtocol encryptor)
         {
+            if(!(channel is IKeepProtocolChannel))
+                throw new InvalidCastException("HandShake에 사용하는 Channel은 IKeepProtocolChannel을 상속하는 클래스여야 합니다.");
+            if (!(channel is IKeepHandlerChannel))
+                throw new InvalidCastException("HandShake에 사용하는 Channel은 IKeepHandlerChannel을 상속하는 클래스여야 합니다.");
+
             _channel = channel;
             _step = step;
             _encryptor = encryptor;
+            _protocol = ((IKeepProtocolChannel) channel).GetProtocol();
+            _handler = ((IKeepHandlerChannel) channel).GetHandler();
 
             ((IKeepProtocolChannel) channel).SetProtocol(this);
             ((IKeepHandlerChannel) channel).SetHandler(this);
@@ -82,6 +91,9 @@ namespace Netronics.Protocol.HandShake
         public void EndHandShake()
         {
             _step.End(this, _channel);
+            ((IKeepProtocolChannel)_channel).SetProtocol(_protocol);
+            ((IKeepHandlerChannel)_channel).SetHandler(_handler);
+            _handler.Connected(_channel);
         }
     }
 }

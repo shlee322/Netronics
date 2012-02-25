@@ -1,10 +1,16 @@
-﻿namespace Netronics.Channel
+﻿namespace Netronics.Channel.Channel
 {
     /// <summary>
     /// <see cref="IChannelHandler"/>를 가지고 있는 <see cref="IChannel"/>
     /// </summary>
     interface IKeepHandlerChannel : IChannel
     {
+        /// <summary>
+        /// <see cref="IChannel"/>에서 사용하는 <see cref="IChannelHandler"/>을 받아옴
+        /// </summary>
+        /// <returns><see cref="IChannel"/>에서 사용하는 <see cref="IChannelHandler"/></returns>
+        IChannelHandler GetHandler();
+
         /// <summary>
         /// <see cref="IChannel"/>에서 사용할 <see cref="IChannelHandler"/>를 설정
         /// </summary>

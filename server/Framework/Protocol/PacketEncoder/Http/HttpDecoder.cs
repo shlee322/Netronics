@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using Netronics.Channel;
+using Netronics.Channel.Channel;
 
 namespace Netronics.Protocol.PacketEncoder.Http
 {

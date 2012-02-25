@@ -1,4 +1,6 @@
-﻿namespace Netronics.Channel
+﻿using Netronics.Channel.Channel;
+
+namespace Netronics.Channel
 {
     internal class ChannelHandler : IChannelHandler
     {

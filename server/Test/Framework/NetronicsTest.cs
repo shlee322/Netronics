@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Netronics;
+using Netronics.Channel.Channel;
 
 namespace Framework
 {
@@ -12,7 +13,7 @@ namespace Framework
             Scheduler.SetThreadCount(4);
             var netronics = new Netronics.Netronics(new Properties());
             netronics.Start();
-            netronics.AddChannel(Netronics.Channel.SocketChannel.CreateChannel(null));
+            netronics.AddChannel(SocketChannel.CreateChannel(null));
             netronics.Stop();
             Scheduler.SetThreadCount(0);
         }

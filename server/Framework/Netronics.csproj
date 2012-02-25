@@ -47,11 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Channel\ChannelHandler.cs" />
-    <Compile Include="Channel\IChannel.cs" />
+    <Compile Include="Channel\Channel\IChannel.cs" />
     <Compile Include="Channel\IChannelHandler.cs" />
-    <Compile Include="Channel\IKeepHandlerChannel.cs" />
-    <Compile Include="Channel\IKeepParallelChannel.cs" />
-    <Compile Include="Channel\IKeepProtocolChannel.cs" />
+    <Compile Include="Channel\Channel\IKeepHandlerChannel.cs" />
+    <Compile Include="Channel\Channel\IKeepParallelChannel.cs" />
+    <Compile Include="Channel\Channel\IKeepProtocolChannel.cs" />
     <Compile Include="Protocol\HandShake\HandShake.cs" />
     <Compile Include="IProperties.cs" />
     <Compile Include="Protocol\HandShake\IStep.cs" />
@@ -63,7 +63,6 @@
     <Compile Include="Protocol\IProtocol.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
-    <Compile Include="Template\Service\Task\IJob.cs" />
     <Compile Include="Template\Service\Service\LocalService.cs" />
     <Compile Include="Template\Service\Task\Message.cs" />
     <Compile Include="Template\Service\ServiceManager.cs" />
@@ -74,7 +73,7 @@
     <Compile Include="Protocol\PacketEncoder\Bson\BsonDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonEncoder.cs" />
     <Compile Include="Channel\ChannelFactory.cs" />
-    <Compile Include="Channel\SocketChannel.cs" />
+    <Compile Include="Channel\Channel\SocketChannel.cs" />
     <Compile Include="Channel\IChannelFactory.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Netronics.cs" />
