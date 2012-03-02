@@ -39,7 +39,7 @@ namespace Netronics.Channel.Channel
             return _protocol;
         }
 
-        public virtual IChannelHandler SetHandler(ServiceManager handler)
+        public virtual IChannelHandler SetHandler(IChannelHandler handler)
         {
             _handler = handler;
             return handler;

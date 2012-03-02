@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
-using Netronics.Template.Service.Packet;
 using Netronics.Template.Service.Service;
 
 namespace Netronics.Template.Service

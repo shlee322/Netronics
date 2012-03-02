@@ -19,7 +19,7 @@ namespace Netronics.Template.Service
         {
             SocketChannel channel = SocketChannel.CreateChannel(socket);
             channel.SetParallel(true);
-            channel.SetProtocol(Packet.Protocol.GetInstance());
+            channel.SetProtocol(Protocol.Protocol.GetInstance());
             channel.SetHandler(_manager);
             return channel;
         }

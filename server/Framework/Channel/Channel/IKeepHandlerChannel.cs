@@ -18,6 +18,6 @@ namespace Netronics.Channel.Channel
         /// </summary>
         /// <param name="handler"><see cref="IChannel"/>에서 사용할 <see cref="IChannelHandler"/></param>
         /// <returns>입력값을 그대로 리턴</returns>
-        IChannelHandler SetHandler(ServiceManager handler);
+        IChannelHandler SetHandler(IChannelHandler handler);
     }
 }
