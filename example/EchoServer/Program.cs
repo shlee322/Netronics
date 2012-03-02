@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading;
 using Netronics.Channel;
 using Netronics;
 using Netronics.Protocol;
@@ -7,6 +8,8 @@ namespace EchoServer
 {
     class Program
     {
+        private static readonly AutoResetEvent ExitEvent = new AutoResetEvent(false);
+
         static void Main(string[] args)
         {
             var properties = new Properties();
@@ -15,6 +18,8 @@ namespace EchoServer
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
+
+            ExitEvent.WaitOne();
         }
 
         private static void SetFatoryOption(ChannelFactory factory)

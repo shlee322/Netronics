@@ -2,6 +2,9 @@
 
 namespace Netronics.Template.Service.Task
 {
+    /// <summary>
+    /// 서비스끼리의 통신은 서비스ID부여를 제외한 모두 Task를 통해서 진행된다.
+    /// </summary>
     public class Task
     {
         private Object _msg;

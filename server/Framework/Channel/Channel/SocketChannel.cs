@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Threading;
 using Netronics.Protocol;
+using Netronics.Template.Service;
 
 namespace Netronics.Channel.Channel
 {
@@ -37,7 +39,7 @@ namespace Netronics.Channel.Channel
             return _protocol;
         }
 
-        public virtual IChannelHandler SetHandler(IChannelHandler handler)
+        public virtual IChannelHandler SetHandler(ServiceManager handler)
         {
             _handler = handler;
             return handler;
@@ -103,13 +105,13 @@ namespace Netronics.Channel.Channel
             }
             catch (SocketException)
             {
-                Scheduler.Add(Disconnect);
+                ThreadPool.QueueUserWorkItem((o) => Disconnect());
                 return;
             }
 
             _packetBuffer.Write(_originalPacketBuffer, 0, len);
 
-            Scheduler.Add(Receive);
+            ThreadPool.QueueUserWorkItem((o) => Receive());
         }
 
         private void Receive()
@@ -129,15 +131,15 @@ namespace Netronics.Channel.Channel
 
             if (GetParallel())
             {
-                Scheduler.Add(() => GetHandler().MessageReceive(this, message));
-                Scheduler.Add(Receive);
+                ThreadPool.QueueUserWorkItem((o) => GetHandler().MessageReceive(this, message));
+                ThreadPool.QueueUserWorkItem((o) => Receive());
             }
             else
             {
-                Scheduler.Add(() =>
+                ThreadPool.QueueUserWorkItem((o) =>
                                   {
                                       GetHandler().MessageReceive(this, message);
-                                      Scheduler.Add(Receive);
+                                      ThreadPool.QueueUserWorkItem((s) => Receive());
                                   });
             }
         }

@@ -1,12 +1,15 @@
 ﻿using System.Net;
+using System.Threading;
 using Netronics;
+using Netronics.Channel;
 using Netronics.Protocol;
 
 namespace ChatServer
 {
     class Program
     {
-        private static Handler Handler = new Handler();
+        private static readonly AutoResetEvent ExitEvent = new AutoResetEvent(false);
+        private static readonly Handler Handler = new Handler();
 
         static void Main(string[] args)
         {
@@ -16,6 +19,8 @@ namespace ChatServer
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
+
+            ExitEvent.WaitOne();
         }
 
         private static void SetFatoryOption(ChannelFactory factory)

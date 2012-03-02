@@ -17,7 +17,11 @@ namespace Netronics.Template.Service
 
         public IChannel CreateChannel(Netronics netronics, Socket socket)
         {
-            return SocketChannel.CreateChannel(socket);
+            SocketChannel channel = SocketChannel.CreateChannel(socket);
+            channel.SetParallel(true);
+            channel.SetProtocol(Packet.Protocol.GetInstance());
+            channel.SetHandler(_manager);
+            return channel;
         }
 
         #endregion
