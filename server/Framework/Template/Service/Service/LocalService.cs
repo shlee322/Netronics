@@ -11,21 +11,25 @@ namespace Netronics.Template.Service.Service
             public Type MessageType;
             public Action<Task.Task> Action;
         }
-        private readonly byte[] _id;
+        private readonly int _id;
         private readonly Dictionary<string, Processor> _processorList = new Dictionary<string, Processor>();
+        private readonly Dictionary<string, Type> _resultObjectList = new Dictionary<string, Type>();
  
-        public LocalService(byte[] id)
+        public LocalService(int id)
         {
-            if(id.Length != 4)
-                throw new Exception("ID 길이가 잘못되었습니다.");
             _id = id;
         }
 
-        public byte[] GetID()
+        public override int GetID()
         {
             return _id;
         }
-        
+
+        public override void ProcessingTask(Task.Task task)
+        {
+            GetProcessor(task.GetMessage().GetType().FullName).Action(task);
+        }
+
         public void AddProcessor(Type type, Action<Task.Task> processor)
         {
             GetProcessorMessage(type);
@@ -35,9 +39,19 @@ namespace Netronics.Template.Service.Service
             _processorList.Add(p.MessageType.FullName, p);
         }
 
+        public void AddResultObject(Type type)
+        {
+            _resultObjectList.Add(type.FullName, type);
+        }
+
         public Processor GetProcessor(string messageType)
         {
             return _processorList[messageType];
+        }
+
+        public Type GetResultObjectType(string typeName)
+        {
+            return _resultObjectList[typeName];
         }
 
         private Message GetProcessorMessage(Type type)

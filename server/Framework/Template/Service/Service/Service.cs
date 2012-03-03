@@ -26,5 +26,10 @@
         {
             return _manager;
         }
+
+        public virtual int GetID()
+        {
+            return 0;
+        }
     }
 }

@@ -1,11 +1,11 @@
 ﻿namespace Netronics.Template.Service.Protocol
 {
-    public class Request
+    class Result
     {
-        public bool Result;
+        public bool Success;
         public int Sender;
         public int Receiver;
         public ulong Transaction;
-        public object Message;
+        public object ResultObject;
     }
 }

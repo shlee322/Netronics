@@ -28,8 +28,8 @@ namespace Netronics.Template.Service.Protocol
     /// </summary>
     class PacketEncoder : IPacketEncoder, IPacketDecoder
     {
-        private JsonSerializer _serializer = new JsonSerializer();
-        private ServiceManager _manager;
+        private readonly JsonSerializer _serializer = new JsonSerializer();
+        private readonly ServiceManager _manager;
 
         public PacketEncoder(ServiceManager manager)
         {
@@ -40,8 +40,38 @@ namespace Netronics.Template.Service.Protocol
         {
             if (data is Request)
                 return RequestEncode(data);
+            if (data is Result)
+                return ResultEncode(data);
             if (data is IDInfo)
                 return IDInfoEncode(data);
+            return null;
+        }
+
+        private object GetObject(byte type, PacketBuffer buffer)
+        {
+            if (type == 0x00 || type == 0x01)
+            {
+                var request = RequestDecode(buffer);
+                if (request == null)
+                    return null;
+                request.Result = (type == 0x00);
+                return request;
+            }
+
+            if (type == 0x02 || type == 0x03)
+            {
+                var result = ResultDecode(buffer);
+                if (result == null)
+                    return null;
+                result.Success = (type == 0x02);
+                return result;
+            }
+            
+            if (type == 0x04)
+            {
+                return IDInfoDecode(buffer);
+            }
+
             return null;
         }
 
@@ -52,42 +82,23 @@ namespace Netronics.Template.Service.Protocol
             if (buffer.AvailableBytes() < 1)
                 return null;
 
-            byte type = buffer.ReadByte();
-
-            if(type==0x00 || type == 0x01)
+            var o = GetObject(buffer.ReadByte(), buffer);
+            if(o == null)
             {
-                var request = RequestDecode(buffer);
-                if (request == null)
-                {
-                    buffer.ResetBufferIndex();
-                    return null;
-                }
-                buffer.EndBufferIndex();
-                return request;
-            }
-
-            if(type==0x04)
-            {
-                var info = IDInfoDecode(buffer);
-                if(info==null)
-                {
-                    buffer.ResetBufferIndex();
-                    return null;
-                }
-                buffer.EndBufferIndex();
-                return info;
+                buffer.ResetBufferIndex();
+                return null;
             }
 
             buffer.EndBufferIndex();
-            return null;
+            return o;
         }
 
         private PacketBuffer RequestEncode(Request data)
         {
             var buffer = new PacketBuffer();
-            buffer.Write(new byte[] { 0 }, 0, 1);
-            buffer.Write(data.Sender, 0, 4);
-            buffer.Write(data.Receiver, 0, 4);
+            buffer.Write(new byte[] { data.Result ? (byte)0 : (byte)1 }, 0, 1);
+            buffer.Write(data.Sender);
+            buffer.Write(data.Receiver);
             buffer.Write(data.Transaction);
             byte[] msg = System.Text.Encoding.UTF8.GetBytes(data.Message.GetType().FullName);
             buffer.Write((ushort)msg.Length);
@@ -107,8 +118,8 @@ namespace Netronics.Template.Service.Protocol
                 return null;
             var request = new Request
                               {
-                                  Sender = buffer.ReadBytes(4),
-                                  Receiver = buffer.ReadBytes(4),
+                                  Sender = buffer.ReadInt32(),
+                                  Receiver = buffer.ReadInt32(),
                                   Transaction = buffer.ReadUInt64()
                               };
 
@@ -125,18 +136,61 @@ namespace Netronics.Template.Service.Protocol
             return request;
         }
 
+
+        private PacketBuffer ResultEncode(Result data)
+        {
+            var buffer = new PacketBuffer();
+            buffer.Write(new byte[] { data.Success ? (byte)2 : (byte)3 }, 0, 1);
+            buffer.Write(data.Sender);
+            buffer.Write(data.Receiver);
+            buffer.Write(data.Transaction);
+            byte[] msg = System.Text.Encoding.UTF8.GetBytes(data.ResultObject.GetType().FullName);
+            buffer.Write((ushort)msg.Length);
+            buffer.Write(msg, 0, msg.Length);
+            MemoryStream ms = new MemoryStream();
+            BsonWriter writer = new BsonWriter(ms);
+            _serializer.Serialize(writer, data.ResultObject);
+            byte[] msgData = ms.ToArray();
+            buffer.Write((uint)msgData.Length);
+            buffer.Write(msgData, 0, msgData.Length);
+            return buffer;
+        }
+
+        private Result ResultDecode(PacketBuffer buffer)
+        {
+            if (buffer.AvailableBytes() < 24)
+                return null;
+            var result = new Result
+            {
+                Sender = buffer.ReadInt32(),
+                Receiver = buffer.ReadInt32(),
+                Transaction = buffer.ReadUInt64()
+            };
+
+            ushort msgLen = buffer.ReadUInt16();
+            if (buffer.AvailableBytes() < msgLen)
+                return null;
+            Type messageType = _manager.GetResultObjectType(System.Text.Encoding.UTF8.GetString(buffer.ReadBytes(msgLen)));
+            uint dataLen = buffer.ReadUInt32();
+            if (buffer.AvailableBytes() < dataLen)
+                return null;
+            MemoryStream ms = new MemoryStream(buffer.ReadBytes((int)dataLen));
+            BsonReader reader = new BsonReader(ms);
+            result.ResultObject = _serializer.Deserialize(reader, messageType);
+            return result;
+        }
+
         private static PacketBuffer IDInfoEncode(IDInfo info)
         {
-
             var buffer = new PacketBuffer();
             buffer.Write(new byte[]{4},0,1);
-            buffer.Write(info.ID,0,4);
+            buffer.Write(info.ID);
             return buffer;
         }
 
         private static IDInfo IDInfoDecode(PacketBuffer buffer)
         {
-            return buffer.AvailableBytes() < 4 ? null : new IDInfo { ID = buffer.ReadBytes(4) };
+            return buffer.AvailableBytes() < 4 ? null : new IDInfo { ID = buffer.ReadInt32() };
         }
     }
 }

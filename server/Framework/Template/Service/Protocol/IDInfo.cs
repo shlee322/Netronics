@@ -2,6 +2,6 @@
 {
     class IDInfo
     {
-        public byte[] ID;
+        public int ID;
     }
 }

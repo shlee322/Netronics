@@ -5,7 +5,7 @@ namespace Framework.Service
     [Message("testService", 3)]
     class TestMessage
     {
-        public string name;
-        public int test;
+        public string Name;
+        public long Test;
     }
 }

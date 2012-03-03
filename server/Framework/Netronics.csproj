@@ -67,6 +67,7 @@
     <Compile Include="Template\Service\Protocol\PacketEncoder.cs" />
     <Compile Include="Template\Service\Protocol\Protocol.cs" />
     <Compile Include="Template\Service\Protocol\Request.cs" />
+    <Compile Include="Template\Service\Protocol\Result.cs" />
     <Compile Include="Template\Service\Service\LocalService.cs" />
     <Compile Include="Template\Service\Task\Message.cs" />
     <Compile Include="Template\Service\ServiceManager.cs" />
