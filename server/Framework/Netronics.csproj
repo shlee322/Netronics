@@ -63,8 +63,10 @@
     <Compile Include="Protocol\IProtocol.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
+    <Compile Include="Template\Service\Protocol\IDInfo.cs" />
     <Compile Include="Template\Service\Protocol\PacketEncoder.cs" />
     <Compile Include="Template\Service\Protocol\Protocol.cs" />
+    <Compile Include="Template\Service\Protocol\Request.cs" />
     <Compile Include="Template\Service\Service\LocalService.cs" />
     <Compile Include="Template\Service\Task\Message.cs" />
     <Compile Include="Template\Service\ServiceManager.cs" />

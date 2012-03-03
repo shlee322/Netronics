@@ -6,12 +6,11 @@ namespace Netronics.Template.Service.Protocol
 {
     class Protocol : IProtocol
     {
-        private static readonly Protocol Instance = new Protocol();
-        private static readonly PacketEncoder Encoder = new PacketEncoder();
+        private readonly PacketEncoder _encoder;
 
-        public static Protocol GetInstance()
+        public Protocol(ServiceManager manager)
         {
-            return Instance;
+            _encoder = new PacketEncoder(manager);
         }
 
         public IPacketEncryptor GetEncryptor()
@@ -26,12 +25,12 @@ namespace Netronics.Template.Service.Protocol
 
         public IPacketEncoder GetEncoder()
         {
-            return Encoder;
+            return _encoder;
         }
 
         public IPacketDecoder GetDecoder()
         {
-            return Encoder;
+            return _encoder;
         }
     }
 }

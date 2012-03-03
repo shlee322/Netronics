@@ -12,6 +12,14 @@ namespace Netronics
         protected event EventHandler StartEvent;
         protected event EventHandler StopEvent;
 
+        public static Properties CreateProperties(IPEndPoint ipEndPoint, ChannelFactory factory)
+        {
+            var properties = new Properties();
+            properties.SetIpEndPoint(ipEndPoint);
+            properties.ChannelFactory = factory;
+            return properties;
+        }
+
         public void OnStartEvent(Netronics netronics, EventArgs eventArgs)
         {
             if (StartEvent != null)

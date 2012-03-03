@@ -1,4 +1,5 @@
 ﻿using System;
+using Netronics.Template.Service.Protocol;
 
 namespace Netronics.Template.Service.Task
 {
@@ -14,6 +15,12 @@ namespace Netronics.Template.Service.Task
         public static Task CreateTask(Object msg, Action<Task> success = null, Action<Task> fail = null)
         {
             return new Task(msg, success, fail);
+        }
+
+        public static Task GetTask(Request request)
+        {
+            var task = new Task(request.Message, task1 => { }, task1 => { }); //성공 실패시 여기서 보내야할까?
+            return task;
         }
 
         private Task(Object msg, Action<Task> success, Action<Task> fail)

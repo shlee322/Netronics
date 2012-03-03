@@ -7,10 +7,12 @@ namespace Netronics.Template.Service
     internal class ServiceChannelFactory : IChannelFactory
     {
         private readonly ServiceManager _manager;
+        private readonly Protocol.Protocol _protocol;
 
         public ServiceChannelFactory(ServiceManager manager)
         {
             _manager = manager;
+            _protocol = new Protocol.Protocol(_manager);
         }
 
         #region IChannelFactory Members
@@ -19,7 +21,7 @@ namespace Netronics.Template.Service
         {
             SocketChannel channel = SocketChannel.CreateChannel(socket);
             channel.SetParallel(true);
-            channel.SetProtocol(Protocol.Protocol.GetInstance());
+            channel.SetProtocol(_protocol);
             channel.SetHandler(_manager);
             return channel;
         }

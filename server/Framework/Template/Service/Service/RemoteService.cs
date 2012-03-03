@@ -1,9 +1,10 @@
 ﻿using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Netronics.Template.Service.Protocol;
 
 namespace Netronics.Template.Service.Service
 {
-    internal sealed class RemoteService : Service, IChannelHandler
+    internal sealed class RemoteService : Service
     {
         private IChannel _channel;
 
@@ -11,23 +12,6 @@ namespace Netronics.Template.Service.Service
         {
             SetServiceManager(manager);
         }
-
-        #region IChannelHandler Members
-
-        public void Connected(IChannel channel)
-        {
-            _channel = channel;
-        }
-
-        public void Disconnected(IChannel channel)
-        {
-        }
-
-        public void MessageReceive(IChannel channel, dynamic message)
-        {
-        }
-
-        #endregion
 
         public override void ProcessingTask(Task.Task task)
         {

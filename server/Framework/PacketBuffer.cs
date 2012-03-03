@@ -81,8 +81,33 @@ namespace Netronics
             _buffer.Position = _buffer.Length;
             stream.CopyTo(_buffer);
         }
-
+        public void Write(UInt16 value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Array.Reverse(buffer);
+            Write(buffer, 0, 2);
+        }
         public void Write(UInt32 value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Array.Reverse(buffer);
+            Write(buffer, 0, 4);
+        }
+        public void Write(UInt64 value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Array.Reverse(buffer);
+            Write(buffer, 0, 8);
+        }
+
+        public void Write(byte value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Array.Reverse(buffer);
+            Write(buffer, 0, 1);
+        }
+
+        public void Write(Int32 value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
             Array.Reverse(buffer);
