@@ -14,7 +14,6 @@
 
         public virtual void ProcessingTask(Task.Task task)
         {
-            //task.Job.ProcessingTask(this, task);
         }
 
         public virtual void SetServiceManager(ServiceManager manager)
@@ -27,9 +26,19 @@
             return _manager;
         }
 
+        public virtual bool IsRunning()
+        {
+            return false;
+        }
+
         public virtual int GetID()
         {
             return 0;
+        }
+
+        public virtual string GetServiceType()
+        {
+            return "";
         }
     }
 }

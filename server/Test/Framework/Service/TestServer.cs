@@ -18,7 +18,7 @@ namespace Framework.Service
         [Test]
         public void Test1()
         {
-            var service = new LocalService(1);
+            var service = new LocalService(1, "Test");
             service.AddProcessor(typeof(TestMessage), TestProcessor.aaaa);
 
             Properties properties = new Netronics.Template.Service.ServiceProperties(service);
@@ -27,7 +27,7 @@ namespace Framework.Service
             netronics.Start();
 
 
-            var service2 = new LocalService(2);
+            var service2 = new LocalService(2, "Proxy");
             service2.AddResultObject(typeof(TestResult));
             service2.AddProcessor(typeof(TestMessage), TestProcessor.aaaa);
 
@@ -42,8 +42,8 @@ namespace Framework.Service
 
             Thread.Sleep(500);
 
-            for (int i = 0; i < 50; i++)
-                service2.GetServiceManager().GetService(1).ProcessingTask(Task.CreateTask(new TestMessage { Name = (i != 49 ? "test" : "" ), Test = DateTime.Now.Ticks }, Test1Result));
+            //for (int i = 0; i < 50; i++)
+            //    service2.GetServiceManager().GetService(1).ProcessingTask(Task.CreateTask(new TestMessage { Name = (i != 49 ? "test" : "" ), Test = DateTime.Now.Ticks }, Test1Result));
 
             ExitEvent.WaitOne();
         }
@@ -53,8 +53,8 @@ namespace Framework.Service
             var result = message as TestResult;
             if (result != null) Console.WriteLine(result.Msg);
             Console.WriteLine(DateTime.Now.Ticks);
-            if (result.Msg == "")
-                ExitEvent.Set();
+            //if (result.Msg == "")
+            //    ExitEvent.Set();
         }
     }
 }
