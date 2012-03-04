@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
@@ -25,6 +26,17 @@ namespace Netronics.Template.Service
 
         public void ProcessingTask(Task.Task task)
         {
+            //나중에 꼭 캐싱등이 필요할것 같다.. 로드 같은것까지 전부 따질려면 ㅠㅠ;
+            Task.Message message = _localService.GetProcessorMessage(task.GetMessage().GetType());
+            long count = message.GetTake();
+            _serviceLock.EnterReadLock();
+            foreach (var service in _services.Where(service => service.Value.IsRunning()).Where(service => service.Value.GetServiceType() == message.GetTargetService() || message.GetTargetService() == "All"))
+            {
+                service.Value.ProcessingTask(task);
+                if (Interlocked.Decrement(ref count) == 0)
+                    break;
+            }
+            _serviceLock.ExitReadLock();
         }
 
         public LocalService GetLocalService()

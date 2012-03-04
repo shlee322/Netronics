@@ -70,7 +70,7 @@ namespace Netronics.Template.Service.Service
             return _resultObjectList[typeName];
         }
 
-        private Task.Message GetProcessorMessage(Type type)
+        public Task.Message GetProcessorMessage(Type type)
         {
             object[] o = type.GetCustomAttributes(typeof(Task.Message), true);
             if (o.Length == 0)
