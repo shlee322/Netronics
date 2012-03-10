@@ -1,4 +1,6 @@
-﻿namespace Netronics.Template.Service.Service
+﻿using System.Net;
+
+namespace Netronics.Template.Service.Service
 {
     public class Service
     {

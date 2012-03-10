@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
@@ -16,6 +17,11 @@ namespace Netronics.Template.Service
         private readonly LocalService _localService;
         private readonly Dictionary<int, Service.Service> _services = new Dictionary<int, Service.Service>();
         private readonly ReaderWriterLockSlim _serviceLock = new ReaderWriterLockSlim();
+
+        private Broadcast _broadcast;
+
+        private readonly ReaderWriterLockSlim _endPointListLock = new ReaderWriterLockSlim();
+        private readonly List<IPEndPoint> _endPointList = new List<IPEndPoint>();  
 
         public ServiceManager(LocalService localService)
         {
@@ -95,11 +101,23 @@ namespace Netronics.Template.Service
 
         public void Connected(IChannel channel)
         {
+            if (channel is SocketChannel)
+            {
+                _endPointListLock.EnterWriteLock();
+                _endPointList.Add((IPEndPoint)((SocketChannel)channel).GetSocket().RemoteEndPoint);
+                _endPointListLock.ExitWriteLock();
+            }
             channel.SendMessage(new IDInfo { ID = _localService.GetID()});
         }
 
         public void Disconnected(IChannel channel)
         {
+            if (channel is SocketChannel)
+            {
+                _endPointListLock.EnterWriteLock();
+                _endPointList.Remove((IPEndPoint)((SocketChannel)channel).GetSocket().RemoteEndPoint);
+                _endPointListLock.ExitWriteLock();
+            }
         }
 
         public void MessageReceive(IChannel channel, dynamic message)
@@ -134,12 +152,41 @@ namespace Netronics.Template.Service
             {
                 ((RemoteService)service).SetChannel(channel);
             }
+            if(service != null)
+                channel.SetTag(service);
         }
 
         private void ProcessingRequest(IChannel channel, Request request)
         {
             if(request.Receiver == _localService.GetID())
                 _localService.GetProcessor(request.Message.GetType().FullName).Action(Task.Task.GetTask(channel, request));
+        }
+
+        public bool ExistEndPoint(IPEndPoint serviceIPEndPoint)
+        {
+            _endPointListLock.EnterReadLock();
+            bool ex = _endPointList.Exists(point => point == serviceIPEndPoint);
+            _endPointListLock.ExitReadLock();
+            return ex;
+        }
+
+        public void Start(Netronics netronics)
+        {
+            GetLocalService().Start();
+            _broadcast = new Broadcast(this, netronics);
+        }
+
+        public void Stop()
+        {
+            GetLocalService().Stop();
+        }
+
+        public bool ExistServiceAddress(Service.Service service, IPAddress address)
+        {
+            _endPointListLock.EnterReadLock();
+            bool exist = _endPointList.Exists(point => point.Address.Equals(address));
+            _endPointListLock.ExitReadLock();
+            return exist;
         }
     }
 }

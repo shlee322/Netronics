@@ -37,6 +37,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Debug\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.0.8.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Release\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,8 +48,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Channel\ChannelHandler.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="Protocol\IProtocol.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
+    <Compile Include="Template\Service\Broadcast.cs" />
     <Compile Include="Template\Service\Message\GetInfoMessage.cs" />
     <Compile Include="Template\Service\Message\GetInfoResult.cs" />
     <Compile Include="Template\Service\Protocol\IDInfo.cs" />

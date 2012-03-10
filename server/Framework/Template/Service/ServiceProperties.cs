@@ -6,8 +6,8 @@
         {
             var manager = new ServiceManager(service);
             ChannelFactory = new ServiceChannelFactory(manager);
-            StartEvent += (sender, args) => service.Start();
-            StopEvent += (sender, args) => service.Stop();
+            StartEvent += (sender, args) => manager.Start((Netronics)sender);
+            StopEvent += (sender, args) => manager.Stop();
         }
     }
 }

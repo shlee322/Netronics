@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
@@ -46,6 +47,11 @@ namespace Netronics
             _socket.BeginAccept(AcceptCallback, null);
         }
 
+        public IPEndPoint GetEndIPPoint()
+        {
+            return (IPEndPoint) _socket.LocalEndPoint;
+        }
+
         private void AcceptCallback(IAsyncResult ar)
         {
             AddChannel(_properties.GetChannelFactory().CreateChannel(this, _socket.EndAccept(ar))).Connect();
@@ -55,6 +61,11 @@ namespace Netronics
         public IChannel AddChannel(IChannel channel)
         {
             return channel;
+        }
+
+        public IChannel AddSocket(Socket socket)
+        {
+            return AddChannel(_properties.GetChannelFactory().CreateChannel(this, socket));
         }
     }
 }

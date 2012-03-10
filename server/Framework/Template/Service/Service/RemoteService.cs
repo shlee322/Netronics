@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Net;
 using System.Threading;
 using Netronics.Channel;
 using Netronics.Channel.Channel;

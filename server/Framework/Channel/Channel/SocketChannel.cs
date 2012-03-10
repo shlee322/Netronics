@@ -28,6 +28,11 @@ namespace Netronics.Channel.Channel
             _socket = socket;
         }
 
+        public Socket GetSocket()
+        {
+            return _socket;
+        }
+
         public virtual IProtocol SetProtocol(IProtocol protocol)
         {
             _protocol = protocol;

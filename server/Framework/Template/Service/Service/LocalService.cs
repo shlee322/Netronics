@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 using Netronics.Template.Service.Message;
 using Netronics.Template.Service.Task;
 
@@ -16,7 +19,7 @@ namespace Netronics.Template.Service.Service
         private readonly Dictionary<string, Processor> _processorList = new Dictionary<string, Processor>();
         private readonly Dictionary<string, Type> _resultObjectList = new Dictionary<string, Type>();
         private readonly string _type;
- 
+
         public LocalService(int id, string type)
         {
             _id = id;
@@ -24,6 +27,10 @@ namespace Netronics.Template.Service.Service
 
             AddProcessor(typeof(GetInfoMessage), GetInfo);
             AddResultObject(typeof(GetInfoResult));
+        }
+
+        public override void Start()
+        {
         }
 
         public override int GetID()
