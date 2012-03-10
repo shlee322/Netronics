@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // 어셈블리의 일반 정보는 다음 특성 집합을 통해 제어됩니다.
 // 어셈블리와 관련된 정보를 수정하려면
 // 이 특성 값을 변경하십시오.
-[assembly: AssemblyTitle("Netronics Core")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Netronics Framework")]
+[assembly: AssemblyDescription("https://github.com/shlee322/Netronics")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Lee SangHyuck")]
+[assembly: AssemblyCompany("SangHyuck, Lee")]
 [assembly: AssemblyProduct("Netronics")]
-[assembly: AssemblyCopyright("Copyright © Lee SangHyuck 2011")]
+[assembly: AssemblyCopyright("Copyright © SangHyuck, Lee 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      빌드 번호
 //      수정 버전
 //
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.1.0.0")]
+[assembly: AssemblyFileVersion("0.1.0.0")]
