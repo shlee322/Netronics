@@ -76,42 +76,75 @@ namespace Netronics
             _buffer.Write(buffer, offset, count);
         }
 
-        public void Write(Stream stream)
+        public void Write(object value)
+        {
+            if(value is Stream)
+                WriteStream((Stream)value);
+            else if(value is UInt16)
+                WriteUInt16((UInt16)value);
+            else if(value is UInt32)
+                WriteUInt32((UInt32)value);
+            else if(value is UInt64)
+                WriteUInt64((UInt64)value);
+            else if(value is byte)
+                WriteByte((byte)value);
+            else if (value is Int16)
+                WriteInt16((Int16)value);
+            else if(value is Int32)
+                WriteInt32((Int32)value);
+            else if (value is Int64)
+                WriteInt64((Int64)value);
+        }
+
+        public void WriteStream(Stream stream)
         {
             _buffer.Position = _buffer.Length;
             stream.CopyTo(_buffer);
         }
-        public void Write(UInt16 value)
+        public void WriteUInt16(UInt16 value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
             Array.Reverse(buffer);
             Write(buffer, 0, 2);
         }
-        public void Write(UInt32 value)
+        public void WriteUInt32(UInt32 value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
             Array.Reverse(buffer);
             Write(buffer, 0, 4);
         }
-        public void Write(UInt64 value)
+        public void WriteUInt64(UInt64 value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
             Array.Reverse(buffer);
             Write(buffer, 0, 8);
         }
 
-        public void Write(byte value)
+        public void WriteByte(byte value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
-            Array.Reverse(buffer);
             Write(buffer, 0, 1);
         }
 
-        public void Write(Int32 value)
+        public void WriteInt16(Int16 value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Array.Reverse(buffer);
+            Write(buffer, 0, 2);
+        }
+
+        public void WriteInt32(Int32 value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
             Array.Reverse(buffer);
             Write(buffer, 0, 4);
+        }
+
+        public void WriteInt64(Int64 value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            Array.Reverse(buffer);
+            Write(buffer, 0, 8);
         }
 
         public int Read(byte[] buffer, int offset, int count)

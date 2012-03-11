@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SangHyuck, Lee")]
 [assembly: AssemblyProduct("Netronics")]
-[assembly: AssemblyCopyright("Copyright © SangHyuck, Lee 2012")]
+[assembly: AssemblyCopyright("Copyright © SangHyuck Lee 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      빌드 번호
 //      수정 버전
 //
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.1.0.1")]
+[assembly: AssemblyFileVersion("0.1.0.1")]
