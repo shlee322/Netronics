@@ -1,22 +1,42 @@
 ﻿using System;
 using System.Net;
 using Netronics.Channel;
+using Netronics.Protocol;
+using Netronics.Protocol.PacketEncoder;
+using Netronics.Protocol.PacketEncoder.Http;
+using Netronics.Protocol.PacketEncryptor;
 
 namespace Netronics.Template.HTTP
 {
-    public class HttpProperties : Properties
+    public class HttpProperties : Properties, IProtocol
     {
-        public HttpProperties()
+        private static readonly HttpEncoder Encoder = new HttpEncoder();
+        private static readonly HttpDecoder Decoder = new HttpDecoder();
+
+        public HttpProperties(Func<IChannelHandler> handler, int port = 80)
         {
-            IpEndPoint = new IPEndPoint(IPAddress.Any, 80);
-            //((ChannelFactory)ChannelFactory).SetPacketEncoder(() => new HttpEncoder()).SetPacketDecoder(
-            //    () => new HttpDecoder());
+            IpEndPoint = new IPEndPoint(IPAddress.Any, port);
+            ((ChannelFactory) ChannelFactory).SetProtocol(()=>this).SetHandler(handler);
         }
 
-        public HttpProperties SetHandler(Func<IChannelHandler> handler)
+        public IPacketEncryptor GetEncryptor()
         {
-            ((ChannelFactory) ChannelFactory).SetHandler(handler);
-            return this;
+            return null;
+        }
+
+        public IPacketDecryptor GetDecryptor()
+        {
+            return null;
+        }
+
+        public IPacketEncoder GetEncoder()
+        {
+            return Encoder;
+        }
+
+        public IPacketDecoder GetDecoder()
+        {
+            return Decoder;
         }
     }
 }

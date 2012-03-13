@@ -34,6 +34,11 @@ namespace Netronics
             }
         }
 
+        public Stream GetStream()
+        {
+            return _buffer;
+        }
+
         public byte[] GetBytes()
         {
             return _buffer.ToArray();
