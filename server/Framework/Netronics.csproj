@@ -68,6 +68,8 @@
     <Compile Include="Scheduler.cs" />
     <Compile Include="Template\Http\HttpHandler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
+    <Compile Include="Template\Http\IUriHandler.cs" />
+    <Compile Include="Template\Http\StaticUriHandler.cs" />
     <Compile Include="Template\Service\Broadcast.cs" />
     <Compile Include="Template\Service\Message\GetInfoMessage.cs" />
     <Compile Include="Template\Service\Message\GetInfoResult.cs" />

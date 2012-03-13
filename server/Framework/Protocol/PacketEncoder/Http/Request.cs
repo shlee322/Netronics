@@ -6,8 +6,8 @@ namespace Netronics.Protocol.PacketEncoder.Http
     public class Request
     {
         private string _method;
-        private string _url;
-        private string _version;
+        private string _path;
+        private string _protocol;
         private readonly Dictionary<string, string> headerDictionary = new Dictionary<string, string>();
 
         public static Request GetRequest(TextReader reader)
@@ -19,9 +19,23 @@ namespace Netronics.Protocol.PacketEncoder.Http
             if (s1 == -1 || s2 == -1)
                 return null;
             request._method = h.Substring(0, s1);
-            request._url = h.Substring(s1 + 1, s2 - s1 - 1);
-            request._version = h.Substring(s2+1);
-            while(true)
+            string uri = h.Substring(s1 + 1, s2 - s1 - 1);
+            s1 = uri.IndexOf("?", System.StringComparison.Ordinal);
+            request._path = s1 == -1 ? uri : uri.Substring(0, s1);
+            if(s1 != -1)
+            {
+                //인자 설정
+            }
+
+            request._protocol = h.Substring(s2 + 1);
+
+            return GetHeaders(request, reader);
+        }
+
+        private static Request GetHeaders(Request request, TextReader reader)
+        {
+            string h;
+            while (true)
             {
                 h = reader.ReadLine();
                 if (h == null)
@@ -49,6 +63,21 @@ namespace Netronics.Protocol.PacketEncoder.Http
         public string GetHeader(string key)
         {
             return headerDictionary[key];
+        }
+
+        public string GetMethod()
+        {
+            return _method;
+        }
+
+        public string GetPath()
+        {
+            return _path;
+        }
+
+        public string GetProtocol()
+        {
+            return _protocol;
         }
     }
 }
