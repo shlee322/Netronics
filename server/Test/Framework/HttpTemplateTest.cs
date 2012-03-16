@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Threading;
 using NUnit.Framework;
@@ -27,11 +28,11 @@ namespace Framework
         public void Test2()
         {
             var handler = new HttpHandler();
-            handler.AddStatic("/file/(*)","./www/file/{0}");
+            handler.AddStatic("/file/(*)","./www/file/{0}");/*
             handler.AddDynamic("/test.web", requestData =>
                                                 {
                                                     return new Response();
-                                                });
+                                                });*/
 
             var netronics = new Netronics.Netronics(new HttpProperties(() => handler, 8888));
             netronics.Start();
@@ -48,13 +49,15 @@ namespace Framework
             handler.AddStatic("/$", "./www/index.html");
             handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
 
-            handler.AddDynamic("/test.web", requestData =>
-            {
-                return new Response();
-            });
+            handler.AddDynamic("/test.web", TestAction);
             var netronics = new Netronics.Netronics(new HttpProperties(() => handler, 8888));
             netronics.Start();
             ExitEvent.WaitOne();
+        }
+
+        private void TestAction(Request request, Response response)
+        {
+            response.SetContent(DateTime.Now.ToString(CultureInfo.InvariantCulture));
         }
 
         class TestHandler : IChannelHandler

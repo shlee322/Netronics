@@ -1,19 +1,20 @@
-﻿using System.IO;
+﻿using System;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder.Http;
 
 namespace Netronics.Template.Http
 {
-    class StaticUriHandler : IUriHandler
+    class DynamicUriHandler : IUriHandler
     {
         private readonly Regex _rx;
-        private readonly string _path;
+        private readonly Action<Request, Response, string[]> _action;
 
-        public StaticUriHandler(string uri, string path)
+        public DynamicUriHandler(string uri, Action<Request, Response, string[]> action)
         {
             _rx = new Regex(uri);
-            _path = path;
+            _action = action;
         }
 
         public string GetUri()
@@ -28,11 +29,8 @@ namespace Netronics.Template.Http
 
         public void Handle(IChannel channel, Request request)
         {
-            var response = new Response();
-            var reader =
-                new StreamReader(new FileStream(string.Format(_path, _rx.Split(request.GetPath())), FileMode.Open, FileAccess.Read));
-            response.SetContent(reader.ReadToEnd());
-            reader.Close();
+            Response response = new Response();
+            _action(request, response, _rx.Split(request.GetPath()));
             channel.SendMessage(response);
         }
     }
