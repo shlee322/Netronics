@@ -4,6 +4,28 @@ By using this framework, easily can develop server.
 
 In addition, using the Template can simply implement the services such as http.
 
+## Simple Web Server Example
+```csharp
+public static readonly AutoResetEvent ExitEvent = new AutoResetEvent(false);
+
+static void Main(string[] args)
+{
+    var handler = new HttpHandler();
+    handler.AddStatic("/$", "./www/index.html");
+    handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
+
+    handler.AddDynamic("/test.web", TestAction);
+    var netronics = new Netronics.Netronics(new HttpProperties(() => handler));
+    netronics.Start();
+    ExitEvent.WaitOne();
+}
+
+private static void TestAction(Request request, Response response)
+{
+    response.SetContent(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+}
+```
+
 ## Simple Echo Server Example
 ```csharp
 // Server Starting Point
