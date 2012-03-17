@@ -8,7 +8,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private string _method;
         private string _path;
         private string _protocol;
-        private readonly Dictionary<string, string> headerDictionary = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _headerDictionary = new Dictionary<string, string>();
 
         public static Request GetRequest(TextReader reader)
         {
@@ -59,12 +59,12 @@ namespace Netronics.Protocol.PacketEncoder.Http
                 return;
             string key = s.Substring(0, valueStartIndex);
             string value = s.Substring(valueStartIndex + 2, s.Length - valueStartIndex - 2);
-            headerDictionary.Add(key, value);
+            _headerDictionary.Add(key, value);
         }
 
         public string GetHeader(string key)
         {
-            return headerDictionary[key];
+            return _headerDictionary[key];
         }
 
         public string GetMethod()
