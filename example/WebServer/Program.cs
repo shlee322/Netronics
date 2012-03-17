@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Threading;
 using Netronics;
@@ -17,14 +18,16 @@ namespace WebServer
             var handler = new HttpHandler();
             handler.AddStatic("/$", "./www/index.html");
             handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
-            /*
-            handler.AddDynamic("/test.web", requestData =>
-            {
-                return new Response();
-            });*/
-            var netronics = new Netronics.Netronics(new HttpProperties(() => handler, 8888));
+
+            handler.AddDynamic("/test.web", TestAction);
+            var netronics = new Netronics.Netronics(new HttpProperties(() => handler, 7777));
             netronics.Start();
             ExitEvent.WaitOne();
+        }
+
+        private static void TestAction(Request request, Response response)
+        {
+            response.SetContent(DateTime.Now.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

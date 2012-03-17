@@ -21,6 +21,11 @@ namespace Netronics
 
         #endregion
 
+        public bool IsDisposed()
+        {
+            return Disposed;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!Disposed)

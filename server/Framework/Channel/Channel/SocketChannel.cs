@@ -80,7 +80,10 @@ namespace Netronics.Channel.Channel
                                                {
                                                    if (GetHandler() != null)
                                                        GetHandler().Disconnected(this);
-                                                   _packetBuffer.Dispose();
+                                                   lock (_packetBuffer)
+                                                   {
+                                                       _packetBuffer.Dispose();
+                                                   }
                                                }, null);
         }
 
@@ -114,7 +117,12 @@ namespace Netronics.Channel.Channel
                 return;
             }
 
-            _packetBuffer.Write(_originalPacketBuffer, 0, len);
+            lock (_packetBuffer)
+            {
+                if (_packetBuffer.IsDisposed())
+                    return;
+                _packetBuffer.Write(_originalPacketBuffer, 0, len);
+            }
 
             ThreadPool.QueueUserWorkItem((o) => Receive());
         }
@@ -125,6 +133,8 @@ namespace Netronics.Channel.Channel
 
             lock (_packetBuffer)
             {
+                if (_packetBuffer.IsDisposed())
+                    return;
                 message = GetProtocol().GetDecoder().Decode(this, _packetBuffer);
             }
 

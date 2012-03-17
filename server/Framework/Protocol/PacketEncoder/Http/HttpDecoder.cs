@@ -21,6 +21,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
                 buffer.ResetBufferIndex();
                 return null;
             }
+            buffer.EndBufferIndex();
             return request;
         }
 

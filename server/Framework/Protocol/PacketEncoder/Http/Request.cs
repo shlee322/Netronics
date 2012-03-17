@@ -14,6 +14,8 @@ namespace Netronics.Protocol.PacketEncoder.Http
         {
             var request = new Request();
             string h = reader.ReadLine();
+            if (h == null)
+                return null;
             int s1 = h.IndexOf(" ", System.StringComparison.Ordinal);
             int s2 = h.LastIndexOf(" ", System.StringComparison.Ordinal);
             if (s1 == -1 || s2 == -1)

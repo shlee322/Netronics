@@ -250,6 +250,7 @@ namespace Netronics.Template.Http
                 response.SetContent("404 Error!");
                 channel.SendMessage(response);
             }
+            channel.Disconnect();
         }
 
         private IUriHandler GetUriHandler(IChannel channel, Request request)

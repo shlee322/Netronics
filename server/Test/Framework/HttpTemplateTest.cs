@@ -50,7 +50,7 @@ namespace Framework
             handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
 
             handler.AddDynamic("/test.web", TestAction);
-            var netronics = new Netronics.Netronics(new HttpProperties(() => handler, 8888));
+            var netronics = new Netronics.Netronics(new HttpProperties(() => handler, 7777));
             netronics.Start();
             ExitEvent.WaitOne();
         }
