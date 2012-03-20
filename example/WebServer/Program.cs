@@ -19,15 +19,11 @@ namespace WebServer
             handler.AddStatic("/$", "./www/index.html");
             handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
 
-            handler.AddDynamic("/test.web", TestAction);
+            handler.AddDynamic("/test.web", TestModule.TestController.TestMain);
+
             var netronics = new Netronics.Netronics(new HttpProperties(() => handler, 7777));
             netronics.Start();
             ExitEvent.WaitOne();
-        }
-
-        private static void TestAction(Request request, Response response)
-        {
-            response.SetContent(DateTime.Now.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

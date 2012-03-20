@@ -9,6 +9,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private string _path;
         private string _protocol;
         private readonly Dictionary<string, string> _headerDictionary = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _query = new Dictionary<string, string>();
 
         public static Request GetRequest(TextReader reader)
         {
@@ -25,13 +26,27 @@ namespace Netronics.Protocol.PacketEncoder.Http
             s1 = uri.IndexOf("?", System.StringComparison.Ordinal);
             request._path = s1 == -1 ? uri : uri.Substring(0, s1);
             if(s1 != -1)
-            {
-                //인자 설정
-            }
+                SetQuery(request, uri.Substring(s1));
 
             request._protocol = h.Substring(s2 + 1);
 
             return GetHeaders(request, reader);
+        }
+
+        private static void SetQuery(Request request, string query)
+        {
+            foreach (var q in query.Split('&'))
+            {
+                int valueStartPoint = q.IndexOf("=", System.StringComparison.Ordinal);
+                if(valueStartPoint == -1)
+                    continue;
+                request.AddQuery(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint));
+            }
+        }
+
+        private void AddQuery(string name, string value)
+        {
+            _query.Add(name, value);
         }
 
         private static Request GetHeaders(Request request, TextReader reader)
@@ -65,6 +80,11 @@ namespace Netronics.Protocol.PacketEncoder.Http
         public string GetHeader(string key)
         {
             return _headerDictionary[key];
+        }
+
+        public string GetQuery(string key)
+        {
+            return _query[key];
         }
 
         public string GetMethod()

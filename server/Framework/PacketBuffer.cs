@@ -88,22 +88,29 @@ namespace Netronics
 
         public void Write(object value)
         {
-            if(value is Stream)
+            if (value is Stream)
                 WriteStream((Stream)value);
-            else if(value is UInt16)
+            else if (value is UInt16)
                 WriteUInt16((UInt16)value);
-            else if(value is UInt32)
+            else if (value is UInt32)
                 WriteUInt32((UInt32)value);
-            else if(value is UInt64)
+            else if (value is UInt64)
                 WriteUInt64((UInt64)value);
-            else if(value is byte)
+            else if (value is byte)
                 WriteByte((byte)value);
             else if (value is Int16)
                 WriteInt16((Int16)value);
-            else if(value is Int32)
+            else if (value is Int32)
                 WriteInt32((Int32)value);
             else if (value is Int64)
                 WriteInt64((Int64)value);
+            else if (value is byte[])
+                WriteBytes((byte[]) value);
+        }
+
+        public void WriteBytes(byte[] value)
+        {
+            Write(value, 0, value.Length);
         }
 
         public void WriteStream(Stream stream)

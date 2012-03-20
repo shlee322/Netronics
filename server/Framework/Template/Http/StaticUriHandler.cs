@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder.Http;
@@ -29,10 +30,18 @@ namespace Netronics.Template.Http
         public void Handle(IChannel channel, Request request)
         {
             var response = new Response();
-            var reader =
-                new StreamReader(new FileStream(string.Format(_path, _rx.Split(request.GetPath())), FileMode.Open, FileAccess.Read));
-            response.SetContent(reader.ReadToEnd());
-            reader.Close();
+            try
+            {
+                var reader =
+                    new StreamReader(new FileStream(string.Format(_path, _rx.Split(request.GetPath())), FileMode.Open, FileAccess.Read));
+                response.SetContent(reader.ReadToEnd());
+                reader.Close();
+            }
+            catch (Exception)
+            {
+                response.Status = 404;
+            }
+
             channel.SendMessage(response);
         }
     }

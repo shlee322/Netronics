@@ -29,8 +29,17 @@ namespace Netronics.Template.Http
 
         public void Handle(IChannel channel, Request request)
         {
-            Response response = new Response();
-            _action(request, response, _rx.Split(request.GetPath()));
+            var response = new Response();
+            try
+            {
+                _action(request, response, _rx.Split(request.GetPath()));
+            }
+            catch (Exception e)
+            {
+                response.Status = 500;
+                response.SetContent(e.ToString());
+            }
+            
             channel.SendMessage(response);
         }
     }

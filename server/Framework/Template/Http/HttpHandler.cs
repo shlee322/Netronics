@@ -240,14 +240,16 @@ namespace Netronics.Template.Http
 
         public void MessageReceive(IChannel channel, dynamic message)
         {
+            //여기서 여러가지 예외 처리를!
             IUriHandler handler = GetUriHandler(channel, message);
             if (handler != null)
             {
                 handler.Handle(channel, message);
-            }else
+            }
+            else
             {
-                Response response = new Response();
-                response.SetContent("404 Error!");
+                var response = new Response();
+                response.Status = 401;
                 channel.SendMessage(response);
             }
             channel.Disconnect();

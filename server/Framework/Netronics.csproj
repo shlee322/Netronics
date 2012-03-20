@@ -56,6 +56,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Release\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.0.8.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Release\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -85,6 +89,8 @@
     <Compile Include="Template\Http\HttpHandler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
     <Compile Include="Template\Http\IUriHandler.cs" />
+    <Compile Include="Template\Http\Module\Controller.cs" />
+    <Compile Include="Template\Http\Module\Module.cs" />
     <Compile Include="Template\Http\StaticUriHandler.cs" />
     <Compile Include="Template\Service\Broadcast.cs" />
     <Compile Include="Template\Service\Message\GetInfoMessage.cs" />
