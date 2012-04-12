@@ -35,7 +35,7 @@ namespace Netronics.ConnectionPool
                 return conn;
             }
 
-            return ConnectionFuncDict[name];
+            return ConnectionFuncDict[name]();
         }
 
         public ConnectionPool(string name)
