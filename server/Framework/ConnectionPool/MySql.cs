@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
 
-namespace Netronics.DB
+namespace Netronics.ConnectionPool
 {
     public class MySql : ConnectionPool
     {

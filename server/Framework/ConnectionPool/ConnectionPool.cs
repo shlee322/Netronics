@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.Concurrent;
 
-namespace Netronics.DB
+namespace Netronics.ConnectionPool
 {
     public class ConnectionPool : IDisposable
     {
