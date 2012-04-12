@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 
 namespace Netronics.DB
 {
-    class ConnectionPool : IDisposable
+    public class ConnectionPool : IDisposable
     {
         private static Dictionary<string, Func<object>> ConnectionFuncDict = new Dictionary<string, Func<object>>();
         private static Dictionary<string, ConcurrentQueue<object>> Pool = new Dictionary<string, ConcurrentQueue<object>>();

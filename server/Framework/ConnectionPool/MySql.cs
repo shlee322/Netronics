@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 
 namespace Netronics.DB
 {
-    class MySql : ConnectionPool
+    public class MySql : ConnectionPool
     {
         private MySqlDataReader _reader;
 
