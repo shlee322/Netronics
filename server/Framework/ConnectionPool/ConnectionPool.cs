@@ -18,6 +18,7 @@ namespace Netronics.ConnectionPool
         public static void AddConnection(string name, Func<object> ConnectionFunc)
         {
             ConnectionFuncDict.Add(name, ConnectionFunc);
+            Pool.Add(name, new ConcurrentQueue<object>());
         }
 
         public static void EnqueueConnection(string name, object conn)
