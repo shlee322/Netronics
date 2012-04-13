@@ -1,10 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Net;
-using System.Threading;
-using Netronics;
-using Netronics.Protocol.PacketEncoder.Http;
-using Netronics.Template.HTTP;
+﻿using System.Threading;
 using Netronics.Template.Http;
 
 namespace WebServer
@@ -16,7 +10,7 @@ namespace WebServer
         static void Main(string[] args)
         {
             var handler = new HttpHandler();
-            handler.AddStatic("/$", "./www/index.html");
+            handler.AddStatic("^/$", "./www/index.html");
             handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
 
             handler.AddDynamic("/test.web", TestModule.TestController.TestMain);

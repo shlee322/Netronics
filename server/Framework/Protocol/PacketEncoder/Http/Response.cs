@@ -8,8 +8,8 @@ namespace Netronics.Protocol.PacketEncoder.Http
     public class Response
     {
         private int _code = 200;
-        private StringBuilder _content = new StringBuilder();
-        private string _protocol =  "1.1";
+        private object _content = new StringBuilder();
+        private string _protocol =  "1.0";
         private string _contentType = "text/html";
 
         public int Status
@@ -35,9 +35,25 @@ namespace Netronics.Protocol.PacketEncoder.Http
             _content = new StringBuilder(content);
         }
 
-        public string GetContent()
+        public void SetContent(byte[] content)
         {
-            return _content.ToString();
+            _content = new MemoryStream(content);
+        }
+
+        public void SetContent(Stream stream)
+        {
+            _content = new MemoryStream();
+            stream.CopyTo((Stream)_content);
+        }
+
+        public object GetContent()
+        {
+            return _content;
+        }
+
+        public StringBuilder GetContentStringBuilder()
+        {
+            return _content as StringBuilder;
         }
 
         public void SetTemplate(string file, object model=null, Encoding encoding = null)

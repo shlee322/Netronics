@@ -6,7 +6,7 @@ using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.Http;
 using Netronics.Protocol.PacketEncryptor;
 
-namespace Netronics.Template.HTTP
+namespace Netronics.Template.Http
 {
     public class HttpProperties : Properties, IProtocol
     {

@@ -6,7 +6,6 @@ using NUnit.Framework;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder.Http;
-using Netronics.Template.HTTP;
 using Netronics.Template.Http;
 
 namespace Framework

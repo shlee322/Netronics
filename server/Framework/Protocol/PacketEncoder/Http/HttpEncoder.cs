@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Netronics.Channel.Channel;
 
@@ -99,13 +100,20 @@ namespace Netronics.Protocol.PacketEncoder.Http
             builder.AppendLine(StatusDictionary[response.Status]);
             builder.AppendFormat("Content-Type: {0}\r\n", response.ContentType);
 
-            string content = response.GetContent();
+            
+            MemoryStream content = null;
+            if(response.GetContent() is StringBuilder)
+                content = new MemoryStream(Encoding.UTF8.GetBytes(response.GetContent().ToString()));
+            else
+                content = (MemoryStream) response.GetContent();
+            content.Position = 0;
+
             builder.AppendFormat("Content-Length: {0}\r\n\r\n", content.Length);
 
             var buffer = new PacketBuffer();
 
             buffer.WriteBytes(Encoding.UTF8.GetBytes(builder.ToString()));
-            buffer.WriteBytes(Encoding.UTF8.GetBytes(content));
+            buffer.WriteStream(content);
 
             return buffer;
         }
