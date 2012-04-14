@@ -84,6 +84,7 @@
     <Compile Include="Protocol\ModifiableProtocol.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpEncoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\Http\PostDataStream.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Response.cs" />
     <Compile Include="Protocol\IProtocol.cs" />
@@ -158,7 +159,7 @@
   <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

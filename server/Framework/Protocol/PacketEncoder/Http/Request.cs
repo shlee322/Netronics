@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Netronics.Protocol.PacketEncoder.Http
@@ -10,6 +11,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private string _protocol;
         private readonly Dictionary<string, string> _headerDictionary = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _query = new Dictionary<string, string>();
+        private object _postData;
 
         public static Request GetRequest(TextReader reader)
         {
@@ -25,8 +27,8 @@ namespace Netronics.Protocol.PacketEncoder.Http
             string uri = h.Substring(s1 + 1, s2 - s1 - 1);
             s1 = uri.IndexOf("?", System.StringComparison.Ordinal);
             request._path = s1 == -1 ? uri : uri.Substring(0, s1);
-            if(s1 != -1)
-                SetQuery(request, uri.Substring(s1));
+            if(s1 != -1 && uri.Length > s1+1)
+                SetQuery(request, uri.Substring(s1+1));
 
             request._protocol = h.Substring(s2 + 1);
 
@@ -38,9 +40,9 @@ namespace Netronics.Protocol.PacketEncoder.Http
             foreach (var q in query.Split('&'))
             {
                 int valueStartPoint = q.IndexOf("=", System.StringComparison.Ordinal);
-                if(valueStartPoint == -1)
+                if(valueStartPoint == -1 && q.Length > valueStartPoint+1)
                     continue;
-                request.AddQuery(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint));
+                request.AddQuery(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint+1));
             }
         }
 
@@ -58,10 +60,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
                 if (h == null)
                     break;
                 if (h == "")
-                {
-                    reader.ReadLine();
                     return request;
-                }
                 request.SetHeader(h);
             }
             return null;
@@ -101,5 +100,52 @@ namespace Netronics.Protocol.PacketEncoder.Http
         {
             return _protocol;
         }
+
+        public void SetPostData(Stream stream)
+        {
+            if (GetHeader("Content-Type") != "application/x-www-form-urlencoded")
+            {
+                _postData = stream;
+                return;
+            }
+            
+            var postdata = new Dictionary<string, string>();
+            var reader = new StreamReader(stream);
+            string line = "";
+            while((line = reader.ReadLine()) != null)
+            {
+                if (line == "")
+                    break;
+                foreach (string q in line.Split('&'))
+                {
+                    int valueStartPoint = q.IndexOf("=", System.StringComparison.Ordinal);
+                    if (valueStartPoint == -1 && q.Length > valueStartPoint + 1)
+                        continue;
+                    postdata.Add(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint + 1));
+                }
+            }
+            _postData = postdata;
+        }
+
+        public object GetPostData()
+        {
+            return _postData;
+        }
+
+        public string GetPostData(string name)
+        {
+            var data = _postData as Dictionary<string, string>;
+            if (data == null)
+                return null;
+            try
+            {
+                return data[name];
+            }
+            catch
+            {
+            }
+            return null;
+        }
+
     }
 }
