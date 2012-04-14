@@ -15,7 +15,7 @@ namespace WebServer
 
             handler.AddDynamic("/test.web", TestModule.TestController.TestMain);
 
-            var netronics = new Netronics.Netronics(new HttpProperties(() => handler, 7777));
+            var netronics = new Netronics.Netronics(new HttpProperties(() => handler));
             netronics.Start();
             ExitEvent.WaitOne();
         }

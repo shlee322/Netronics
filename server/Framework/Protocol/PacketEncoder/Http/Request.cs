@@ -32,7 +32,13 @@ namespace Netronics.Protocol.PacketEncoder.Http
 
             request._protocol = h.Substring(s2 + 1);
 
-            return GetHeaders(request, reader);
+            if (GetHeaders(request, reader) == null)
+                return null;
+
+            if (request.GetMethod() == "POST" && SetPostData(request, reader) == null)
+                return null;
+            
+            return request;
         }
 
         private static void SetQuery(Request request, string query)
@@ -101,30 +107,26 @@ namespace Netronics.Protocol.PacketEncoder.Http
             return _protocol;
         }
 
-        public void SetPostData(Stream stream)
+        public static Request SetPostData(Request request, TextReader reader)
         {
-            if (GetHeader("Content-Type") != "application/x-www-form-urlencoded")
+            string data = reader.ReadToEnd();
+            if (Convert.ToInt64(request.GetHeader("Content-Length")) > data.Length + 1)
+                return null;
+
+            if (request.GetHeader("Content-Type") != "application/x-www-form-urlencoded")
             {
-                _postData = stream;
-                return;
-            }
-            
-            var postdata = new Dictionary<string, string>();
-            var reader = new StreamReader(stream);
-            string line = "";
-            while((line = reader.ReadLine()) != null)
-            {
-                if (line == "")
-                    break;
-                foreach (string q in line.Split('&'))
+                var postdata = new Dictionary<string, string>();
+                foreach (string q in data.Split('&'))
                 {
                     int valueStartPoint = q.IndexOf("=", System.StringComparison.Ordinal);
                     if (valueStartPoint == -1 && q.Length > valueStartPoint + 1)
                         continue;
                     postdata.Add(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint + 1));
                 }
+                request._postData = postdata; 
             }
-            _postData = postdata;
+
+            return request;
         }
 
         public object GetPostData()

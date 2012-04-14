@@ -84,7 +84,6 @@
     <Compile Include="Protocol\ModifiableProtocol.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpEncoder.cs" />
-    <Compile Include="Protocol\PacketEncoder\Http\PostDataStream.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Response.cs" />
     <Compile Include="Protocol\IProtocol.cs" />

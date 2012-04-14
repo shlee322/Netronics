@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Netronics.Channel.Channel;
 
 namespace Netronics.Protocol.PacketEncoder.Http
@@ -17,18 +18,18 @@ namespace Netronics.Protocol.PacketEncoder.Http
                 channel.Disconnect();
                 return null;
             }
+
+            if (buffer.AvailableBytes() == 0)
+                return null;
+
             var reader = new StreamReader(buffer.GetStream());
             var request = Request.GetRequest(reader);
-            if (request == null || (request.GetMethod() == "POST" && System.Convert.ToInt32(request.GetHeader("Content-Length")) > buffer.AvailableBytes()))
+
+            if (request == null)
             {
                 buffer.ResetBufferIndex();
                 return null;
             }
-
-            if (request.GetMethod() == "POST")
-                request.SetPostData(new PostDataStream(request, buffer.GetStream()));
-            else
-                reader.ReadLine();
 
             buffer.EndBufferIndex();
             return request;
