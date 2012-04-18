@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Netronics.Protocol.PacketEncoder.Http
 {
@@ -13,9 +14,10 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private readonly Dictionary<string, string> _query = new Dictionary<string, string>();
         private object _postData;
 
-        public static Request GetRequest(TextReader reader)
+        public static Request GetRequest(StreamReader reader)
         {
             var request = new Request();
+
             string h = reader.ReadLine();
             if (h == null)
                 return null;
@@ -32,10 +34,10 @@ namespace Netronics.Protocol.PacketEncoder.Http
 
             request._protocol = h.Substring(s2 + 1);
 
-            if (GetHeaders(request, reader) == null)
+            if (!request.GetHeaders(reader))
                 return null;
 
-            if (request.GetMethod() == "POST" && SetPostData(request, reader) == null)
+            if (request.GetMethod() == "POST" && !request.SetPostData(reader))
                 return null;
             
             return request;
@@ -57,7 +59,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
             _query.Add(name, value);
         }
 
-        private static Request GetHeaders(Request request, TextReader reader)
+        private bool GetHeaders(TextReader reader)
         {
             string h;
             while (true)
@@ -66,10 +68,10 @@ namespace Netronics.Protocol.PacketEncoder.Http
                 if (h == null)
                     break;
                 if (h == "")
-                    return request;
-                request.SetHeader(h);
+                    return true;
+                SetHeader(h);
             }
-            return null;
+            return false;
         }
 
         public void SetHeader(string s)
@@ -77,14 +79,21 @@ namespace Netronics.Protocol.PacketEncoder.Http
             int valueStartIndex = s.IndexOf(": ", System.StringComparison.Ordinal);
             if (valueStartIndex == -1)
                 return;
-            string key = s.Substring(0, valueStartIndex);
+            string key = s.Substring(0, valueStartIndex).ToLower();
             string value = s.Substring(valueStartIndex + 2, s.Length - valueStartIndex - 2);
             _headerDictionary.Add(key, value);
         }
 
         public string GetHeader(string key)
         {
-            return _headerDictionary[key];
+            try
+            {
+                return _headerDictionary[key.ToLower()];
+            }
+            catch
+            {
+            }
+            return null;
         }
 
         public string GetQuery(string key)
@@ -107,26 +116,60 @@ namespace Netronics.Protocol.PacketEncoder.Http
             return _protocol;
         }
 
-        public static Request SetPostData(Request request, TextReader reader)
+        public bool SetPostData(TextReader reader)
         {
-            string data = reader.ReadToEnd();
-            if (Convert.ToInt64(request.GetHeader("Content-Length")) > data.Length + 1)
-                return null;
+            string stringData = reader.ReadToEnd();
+            if (Convert.ToInt64(GetHeader("Content-Length")) > System.Text.Encoding.UTF8.GetByteCount(stringData) + 1)
+                return false;
 
-            if (request.GetHeader("Content-Type") != "application/x-www-form-urlencoded")
+            LoadPostData(GetHeader("Content-Type"), stringData);
+            return true;
+        }
+
+        private void LoadPostData(string contentType, string stringData)
+        {
+            if (contentType == "application/x-www-form-urlencoded")
             {
                 var postdata = new Dictionary<string, string>();
-                foreach (string q in data.Split('&'))
+                foreach (string q in stringData.Split('&'))
                 {
                     int valueStartPoint = q.IndexOf("=", System.StringComparison.Ordinal);
                     if (valueStartPoint == -1 && q.Length > valueStartPoint + 1)
                         continue;
                     postdata.Add(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint + 1));
                 }
-                request._postData = postdata; 
+                _postData = postdata;
             }
+            else if (contentType.StartsWith("multipart/form-data;"))
+            {
+                string p = string.Format("--{0}\r\n", GetHeader("Content-Type").Substring(GetHeader("Content-Type").IndexOf("boundary=") + 9));
 
-            return request;
+                string[] data = Regex.Split(stringData, p);
+                for (int i = 1; i < data.Length; i++)
+                {
+                    int point = data[i].IndexOf("\r\n\r\n");
+                    StringReader reader = new StringReader(data[i].Substring(0, point));
+                    string line = null;
+                    while((line = reader.ReadLine()) != null)
+                    {
+                    }
+
+                    LoadPostData(contentType, data[i].Substring(point + 4));
+                }
+            }
+        }
+
+        private MemoryStream GetPostDataStream(TextReader reader)
+        {
+            MemoryStream postDataStream = new MemoryStream();
+            string data = reader.ReadToEnd();/*
+            int len = 0;
+            byte[] tempBuffer = new byte[1024];
+            while((len = reader.Read(tempBuffer, 0, 1024) > 0))
+            {
+                
+            }*/
+            return null;
         }
 
         public object GetPostData()
