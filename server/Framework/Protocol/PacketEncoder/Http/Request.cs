@@ -12,11 +12,12 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private string _protocol;
         private readonly Dictionary<string, string> _headerDictionary = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _query = new Dictionary<string, string>();
-        private object _postData;
+        private readonly Dictionary<string, object> _postData = new Dictionary<string, object>();
 
         public static Request GetRequest(StreamReader reader)
         {
             var request = new Request();
+            request._postData.Add("FILES", new Dictionary<string, string>());
 
             string h = reader.ReadLine();
             if (h == null)
@@ -126,19 +127,22 @@ namespace Netronics.Protocol.PacketEncoder.Http
             return true;
         }
 
-        private void LoadPostData(string contentType, string stringData)
+        private void LoadPostData(string contentType, string stringData, string name = null)
         {
-            if (contentType == "application/x-www-form-urlencoded")
+            if (contentType == null)
             {
-                var postdata = new Dictionary<string, string>();
+                if(name != null)
+                    _postData.Add(name, stringData);
+            }
+            else if (contentType == "application/x-www-form-urlencoded")
+            {
                 foreach (string q in stringData.Split('&'))
                 {
                     int valueStartPoint = q.IndexOf("=", System.StringComparison.Ordinal);
                     if (valueStartPoint == -1 && q.Length > valueStartPoint + 1)
                         continue;
-                    postdata.Add(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint + 1));
+                    _postData.Add(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint + 1));
                 }
-                _postData = postdata;
             }
             else if (contentType.StartsWith("multipart/form-data;"))
             {
@@ -148,47 +152,65 @@ namespace Netronics.Protocol.PacketEncoder.Http
                 for (int i = 1; i < data.Length; i++)
                 {
                     int point = data[i].IndexOf("\r\n\r\n");
-                    StringReader reader = new StringReader(data[i].Substring(0, point));
-                    string line = null;
+                    var reader = new StringReader(data[i].Substring(0, point));
+                    string line;
+                    string pname = null;
+                    string type = null;
                     while((line = reader.ReadLine()) != null)
                     {
+                        if(line.StartsWith("Content-Disposition: "))
+                        {
+                            pname = line.Substring(line.IndexOf("name") + 6);
+                            pname = pname.Substring(0, pname.Length - 1);
+                        }
+                        else if (line.StartsWith("Content-Type: "))
+                        {
+                            type = line.Substring(14);
+                        }
                     }
 
-                    LoadPostData(contentType, data[i].Substring(point + 4));
+                    LoadPostData(type, data[i].Substring(point + 4), pname);
                 }
+            }
+            else if (name != null)
+            {
+                string tempName = Path.GetTempFileName();
+                byte[] data = System.Text.Encoding.UTF8.GetBytes(stringData);
+                var stream = new FileStream(tempName, FileMode.OpenOrCreate, FileAccess.Write);
+                stream.Write(data, 0, data.Length);
+                stream.Close();
+                ((Dictionary<string, string>)_postData["FILES"]).Add(name, tempName);
             }
         }
 
-        private MemoryStream GetPostDataStream(TextReader reader)
+        public Dictionary<string, string> GetFiles()
         {
-            MemoryStream postDataStream = new MemoryStream();
-            string data = reader.ReadToEnd();/*
-            int len = 0;
-            byte[] tempBuffer = new byte[1024];
-            while((len = reader.Read(tempBuffer, 0, 1024) > 0))
+            return _postData["FILES"] as Dictionary<string, string>;
+        }
+
+        public object GetPostData(string name)
+        {
+            try
             {
-                
-            }*/
+                return _postData[name];
+            }
+            catch (Exception)
+            {
+            }
+
             return null;
         }
 
-        public object GetPostData()
+        public string GetPostStringData(string name)
         {
-            return _postData;
-        }
-
-        public string GetPostData(string name)
-        {
-            var data = _postData as Dictionary<string, string>;
-            if (data == null)
-                return null;
             try
             {
-                return data[name];
+                return _postData[name] as string;
             }
-            catch
+            catch (Exception)
             {
             }
+
             return null;
         }
 
