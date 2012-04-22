@@ -11,6 +11,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private object _content = new StringBuilder();
         private string _protocol =  "1.1";
         private string _contentType = "text/html";
+        private readonly StringBuilder _header = new StringBuilder();
 
         public int Status
         {
@@ -28,6 +29,11 @@ namespace Netronics.Protocol.PacketEncoder.Http
         {
             set { _contentType = value; }
             get { return _contentType; }
+        }
+
+        public StringBuilder GetHeader()
+        {
+            return _header;
         }
 
         public void SetContent(string content)

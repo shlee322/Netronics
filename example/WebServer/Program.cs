@@ -13,7 +13,8 @@ namespace WebServer
             handler.AddStatic("^/$", "./www/index.html");
             handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
 
-            handler.AddDynamic("/test.web", TestModule.TestController.TestMain);
+            handler.AddDynamic("^/test.web$", TestModule.TestController.TestMain);
+            handler.AddWebSocket("^/chat$", strings => null);
 
             var netronics = new Netronics.Netronics(new HttpProperties(() => handler));
             netronics.Start();

@@ -252,8 +252,8 @@ namespace Netronics.Template.Http
             //웹소켓 요청인가?
             if(request.GetHeader("connection") == "Upgrade")
             {
-                if(request.GetHeader("upgread") == "websocket")
-                    UpgreadWebSocket(channel, request);
+                if(request.GetHeader("upgrade") == "websocket")
+                    UpgradeWebSocket(channel, request);
                 return;
             }
             //여기서 여러가지 예외 처리를!
@@ -273,20 +273,40 @@ namespace Netronics.Template.Http
                 channel.Disconnect();
         }
 
-        private void UpgreadWebSocket(IChannel channel, Request request)
+        private void UpgradeWebSocket(IChannel channel, Request request)
         {
-            var response = new Response();
-            response.Status = 101;
+            var response = new Response {Status = 101};
 
-            var c = channel as IKeepProtocolChannel;
-            if (c == null)
+            var protocol = channel as IKeepProtocolChannel;
+            if (protocol == null)
                 return;
 
-            //일단 해당 핸들러를 찾아서 핸들러를 변경해주고
-            //그다음에 프로토콜을 웹소켓으로 변경시킨다.
+            var finder = GetWebSocketUriFinder(request);
+            if (finder == null)
+                return;
 
+            var handler = channel as IKeepHandlerChannel;
+            if (handler == null)
+                return;
 
-            //c.SetProtocol();
+            handler.SetHandler(finder.GetHandler(request.GetPath()));
+            response.GetHeader().AppendLine("Upgrade: websocket")
+                .AppendLine("Connection: Upgrade")
+                .AppendLine("Sec-WebSocket-Accept: " + GetWebSocketAcceptCode(request.GetHeader("Sec-WebSocket-Key")));
+            channel.SendMessage(response);
+            protocol.SetProtocol(WebSocketProtocol.Protocol);
+        }
+
+        private string GetWebSocketAcceptCode(string code)
+        {
+            return Convert.ToBase64String(
+                    new System.Security.Cryptography.SHA1Managed().ComputeHash(
+                        System.Text.Encoding.UTF8.GetBytes(code + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")));
+        }
+
+        private WebSocketUriFinder GetWebSocketUriFinder(Request request)
+        {
+            return _wsHandlers.FirstOrDefault(handler => handler.IsMatch(request.GetPath()));
         }
 
         private IUriHandler GetUriHandler(IChannel channel, Request request)

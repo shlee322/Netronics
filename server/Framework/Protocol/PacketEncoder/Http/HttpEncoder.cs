@@ -99,6 +99,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
             builder.Append(" ");
             builder.AppendLine(StatusDictionary[response.Status]);
             builder.AppendFormat("Content-Type: {0}\r\n", response.ContentType);
+            builder.Append(response.GetHeader());
 
             
             MemoryStream content = null;
