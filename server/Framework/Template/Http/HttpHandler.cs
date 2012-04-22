@@ -10,6 +10,7 @@ namespace Netronics.Template.Http
     public class HttpHandler : IChannelHandler
     {
         private readonly LinkedList<IUriHandler> _uriHandlers = new LinkedList<IUriHandler>();
+        private readonly LinkedList<WebSocketUriFinder> _wsHandlers = new LinkedList<WebSocketUriFinder>();
 
         public void AddStatic(string uri, string path, string host = "")
         {
@@ -230,6 +231,11 @@ namespace Netronics.Template.Http
                 args.Length < 14 ? null : args[13])));
         }
 
+        public void AddWebSocket(string uri, Func<string[], IChannelHandler> handler)
+        {
+            _wsHandlers.AddLast(new WebSocketUriFinder(uri, handler));
+        }
+
         public void Connected(IChannel channel)
         {
         }
@@ -240,6 +246,16 @@ namespace Netronics.Template.Http
 
         public void MessageReceive(IChannel channel, dynamic message)
         {
+            var request = message as Request;
+            if(request == null)
+                return;
+            //웹소켓 요청인가?
+            if(request.GetHeader("connection") == "Upgrade")
+            {
+                if(request.GetHeader("upgread") == "websocket")
+                    UpgreadWebSocket(channel, request);
+                return;
+            }
             //여기서 여러가지 예외 처리를!
             IUriHandler handler = GetUriHandler(channel, message);
             if (handler != null)
@@ -252,7 +268,25 @@ namespace Netronics.Template.Http
                 response.Status = 401;
                 channel.SendMessage(response);
             }
-            channel.Disconnect();
+
+            if(((Request)message).GetHeader("Connection") == "close")
+                channel.Disconnect();
+        }
+
+        private void UpgreadWebSocket(IChannel channel, Request request)
+        {
+            var response = new Response();
+            response.Status = 101;
+
+            var c = channel as IKeepProtocolChannel;
+            if (c == null)
+                return;
+
+            //일단 해당 핸들러를 찾아서 핸들러를 변경해주고
+            //그다음에 프로토콜을 웹소켓으로 변경시킨다.
+
+
+            //c.SetProtocol();
         }
 
         private IUriHandler GetUriHandler(IChannel channel, Request request)

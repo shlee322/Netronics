@@ -95,6 +95,8 @@
     <Compile Include="Template\Http\Module\Controller.cs" />
     <Compile Include="Template\Http\Module\Module.cs" />
     <Compile Include="Template\Http\StaticUriHandler.cs" />
+    <Compile Include="Template\Http\WebSocketProtocol.cs" />
+    <Compile Include="Template\Http\WebSocketUriFinder.cs" />
     <Compile Include="Template\Service\Broadcast.cs" />
     <Compile Include="Template\Service\Message\GetInfoMessage.cs" />
     <Compile Include="Template\Service\Message\GetInfoResult.cs" />
@@ -158,7 +160,7 @@
   <ItemGroup />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

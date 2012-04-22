@@ -9,7 +9,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
     {
         private int _code = 200;
         private object _content = new StringBuilder();
-        private string _protocol =  "1.0";
+        private string _protocol =  "1.1";
         private string _contentType = "text/html";
 
         public int Status
