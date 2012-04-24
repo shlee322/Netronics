@@ -96,7 +96,7 @@
     <Compile Include="Template\Http\Module\Module.cs" />
     <Compile Include="Template\Http\StaticUriHandler.cs" />
     <Compile Include="Template\Http\WebSocketProtocol.cs" />
-    <Compile Include="Template\Http\WebSocketUriFinder.cs" />
+    <Compile Include="Template\Http\UriFinder.cs" />
     <Compile Include="Template\Service\Broadcast.cs" />
     <Compile Include="Template\Service\Message\GetInfoMessage.cs" />
     <Compile Include="Template\Service\Message\GetInfoResult.cs" />

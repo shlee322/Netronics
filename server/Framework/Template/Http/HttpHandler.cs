@@ -4,13 +4,17 @@ using System.Linq;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Netronics.Template.Http
 {
     public class HttpHandler : IChannelHandler
     {
         private readonly LinkedList<IUriHandler> _uriHandlers = new LinkedList<IUriHandler>();
-        private readonly LinkedList<WebSocketUriFinder> _wsHandlers = new LinkedList<WebSocketUriFinder>();
+        private readonly LinkedList<UriFinder> _wsHandlers = new LinkedList<UriFinder>();
+        private readonly LinkedList<UriFinder> _jsonHandlers = new LinkedList<UriFinder>();
+        private static readonly JsonSerializer JsonSerializer = new JsonSerializer();
 
         public void AddStatic(string uri, string path, string host = "")
         {
@@ -233,7 +237,16 @@ namespace Netronics.Template.Http
 
         public void AddWebSocket(string uri, Func<string[], IChannelHandler> handler)
         {
-            _wsHandlers.AddLast(new WebSocketUriFinder(uri, handler));
+            _wsHandlers.AddLast(new UriFinder(uri, handler));
+        }
+
+        public void AddJSON(string uri, Func<string[], JObject> handler)
+        {
+            _jsonHandlers.AddLast(new UriFinder(uri, handler));
+        }
+
+        public void AddSocketIO(string uri)
+        {
         }
 
         public void Connected(IChannel channel)
@@ -249,18 +262,43 @@ namespace Netronics.Template.Http
             var request = message as Request;
             if(request == null)
                 return;
+
+            Processing(channel, request);
+
+            if (request.GetHeader("Connection") == "close")
+                channel.Disconnect();
+        }
+
+        private void Processing(IChannel channel, Request request)
+        {
             //웹소켓 요청인가?
-            if(request.GetHeader("connection") == "Upgrade")
+            if (request.GetHeader("connection") == "Upgrade")
             {
-                if(request.GetHeader("upgrade") == "websocket")
+                if (request.GetHeader("upgrade") == "websocket")
                     UpgradeWebSocket(channel, request);
                 return;
             }
+
+            //JSON
+            if (request.GetHeader("Accept").IndexOf("application/json") >= 0)
+            {
+                UriFinder finder = GetJSONUriFinder(request);
+                if (finder != null)
+                {
+                    var response = new Response();
+                    response.SetContent(finder.GetHandler(request.GetPath()).ToString());
+                    response.ContentType = "application/json";
+                    channel.SendMessage(response);
+                    return;
+                }
+            }
+
+
             //여기서 여러가지 예외 처리를!
-            IUriHandler handler = GetUriHandler(channel, message);
+            IUriHandler handler = GetUriHandler(channel, request);
             if (handler != null)
             {
-                handler.Handle(channel, message);
+                handler.Handle(channel, request);
             }
             else
             {
@@ -268,9 +306,6 @@ namespace Netronics.Template.Http
                 response.Status = 401;
                 channel.SendMessage(response);
             }
-
-            if(((Request)message).GetHeader("Connection") == "close")
-                channel.Disconnect();
         }
 
         private void UpgradeWebSocket(IChannel channel, Request request)
@@ -289,12 +324,13 @@ namespace Netronics.Template.Http
             if (handler == null)
                 return;
 
-            handler.SetHandler(finder.GetHandler(request.GetPath()));
+            handler.SetHandler((IChannelHandler)finder.GetHandler(request.GetPath()));
             response.GetHeader().AppendLine("Upgrade: websocket")
                 .AppendLine("Connection: Upgrade")
                 .AppendLine("Sec-WebSocket-Accept: " + GetWebSocketAcceptCode(request.GetHeader("Sec-WebSocket-Key")));
             channel.SendMessage(response);
             protocol.SetProtocol(WebSocketProtocol.Protocol);
+            handler.GetHandler().Connected(channel);
         }
 
         private string GetWebSocketAcceptCode(string code)
@@ -304,9 +340,14 @@ namespace Netronics.Template.Http
                         System.Text.Encoding.UTF8.GetBytes(code + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")));
         }
 
-        private WebSocketUriFinder GetWebSocketUriFinder(Request request)
+        private UriFinder GetWebSocketUriFinder(Request request)
         {
             return _wsHandlers.FirstOrDefault(handler => handler.IsMatch(request.GetPath()));
+        }
+
+        private UriFinder GetJSONUriFinder(Request request)
+        {
+            return _jsonHandlers.FirstOrDefault(handler => handler.IsMatch(request.GetPath()));
         }
 
         private IUriHandler GetUriHandler(IChannel channel, Request request)

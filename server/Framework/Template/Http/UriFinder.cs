@@ -4,12 +4,12 @@ using Netronics.Channel;
 
 namespace Netronics.Template.Http
 {
-    class WebSocketUriFinder
+    class UriFinder
     {
         private readonly Regex _rx;
-        private readonly Func<string[], IChannelHandler> _handler;
+        private readonly Func<string[], object> _handler;
 
-        public WebSocketUriFinder(string uri, Func<string[], IChannelHandler> handler)
+        public UriFinder(string uri, Func<string[], object> handler)
         {
             _rx = new Regex(uri);
             _handler = handler;
@@ -20,7 +20,7 @@ namespace Netronics.Template.Http
             return _rx.IsMatch(uri);
         }
 
-        public IChannelHandler GetHandler(string uri)
+        public object GetHandler(string uri)
         {
             return _handler(_rx.Split(uri));
         }

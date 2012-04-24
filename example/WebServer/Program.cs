@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using Netronics.Template.Http;
+using Newtonsoft.Json.Linq;
 
 namespace WebServer
 {
@@ -15,6 +16,14 @@ namespace WebServer
 
             handler.AddDynamic("^/test.web$", TestModule.TestController.TestMain);
             handler.AddWebSocket("^/chat$", strings => null);
+            handler.AddJSON("^/test.json$", strings =>
+                                                {
+                                                    dynamic json = new JObject();
+                                                    json.test = "abcd";
+                                                    json.test2 = 123;
+                                                    json.a = new JArray(strings);
+                                                    return json;
+                                                });
 
             var netronics = new Netronics.Netronics(new HttpProperties(() => handler));
             netronics.Start();
