@@ -250,25 +250,25 @@ namespace Netronics
                 return -1;
 
             int len = 0;
-            bool fined = true;
+            bool find = true;
 
             for (int x = 0; x < q.Length; x++)
             {
                 if (bytes[x] != q[x])
                 {
-                    fined = false;
+                    find = false;
                     break;
                 }
             }
 
-            if (fined)
+            if (find)
             {
-                long r = _buffer.Position - len;
+                long r = _buffer.Position - len - q.Length;
                 _buffer.Position = p;
                 return r - _buffer.Position;
             }
 
-            fined = true;
+            find = true;
 
             long temp = 0;
             while ((len = Read(bytes, q.Length, q.Length)) > 0)
@@ -280,18 +280,18 @@ namespace Netronics
                     {
                         if (bytes[i+x] != q[x])
                         {
-                            fined = false;
+                            find = false;
                             break;
                         }
                     }
 
-                    if (fined)
+                    if (find)
                     {
-                        long r = _buffer.Position - len + i;
+                        long r = _buffer.Position - len + i - q.Length;
                         _buffer.Position = p;
                         return r - _buffer.Position;
                     }
-                    fined = true;
+                    find = true;
                 }
                 if (len != q.Length)
                     break;
@@ -307,9 +307,7 @@ namespace Netronics
             long len = FindBytes(new byte[] {13, 10});
             if (len == -1)
                 return null;
-            if (len < 3)
-                return "";
-            string r = ReadString((int) len - 2);
+            string r = ReadString((int) len);
             ReadBytes(2);
             return r;
         }

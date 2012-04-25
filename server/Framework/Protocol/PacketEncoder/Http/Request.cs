@@ -144,19 +144,23 @@ namespace Netronics.Protocol.PacketEncoder.Http
                     _postData.Add(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint + 1));
                 }
             }
-            else if (contentType.StartsWith("multipart/form-data;")) //BUG
+            else if (contentType.StartsWith("multipart/form-data;"))
             {
-                byte[] p = System.Text.Encoding.UTF8.GetBytes(string.Format("--{0}\r\n", GetHeader("Content-Type").Substring(GetHeader("Content-Type").IndexOf("boundary=") + 9)));
+                byte[] p = System.Text.Encoding.UTF8.GetBytes(string.Format("\r\n--{0}", contentType.Substring(contentType.IndexOf("boundary=") + 9)));
                 long len = 0;
                 while ((len = buffer.FindBytes(p)) > -1)
                 {
                     var buf = new PacketBuffer();
                     buf.WriteBytes(buffer.ReadBytes((int)len));
+                    buffer.ReadBytes(p.Length);
                     buf.BeginBufferIndex();
+                    buf.ReadLine();
                     var hDictionary = new Dictionary<string, string>();
                     string h = "";
                     while((h = buf.ReadLine()) != "")
                     {
+                        if (h == null)
+                            break;
                         int valueStartIndex = h.IndexOf(": ", System.StringComparison.Ordinal);
                         if (valueStartIndex == -1)
                             continue;
@@ -184,13 +188,15 @@ namespace Netronics.Protocol.PacketEncoder.Http
                 }
             }
             else if (name != null)
-            {/*
+            {
                 string tempName = Path.GetTempFileName();
-                byte[] data = System.Text.Encoding.UTF8.GetBytes(stringData);
                 var stream = new FileStream(tempName, FileMode.OpenOrCreate, FileAccess.Write);
-                stream.Write(data, 0, data.Length);
+                byte[] data = new byte[1024];
+                int len;
+                while((len = buffer.Read(data, 0, 1024)) > 0)
+                    stream.Write(data, 0, len);
                 stream.Close();
-                ((Dictionary<string, string>)_postData["FILES"]).Add(name, tempName);*/
+                ((Dictionary<string, string>)_postData["FILES"]).Add(name, tempName);
             }
         }
 
