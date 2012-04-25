@@ -119,6 +119,7 @@ class PacketEncoder : IPacketEncoder, IPacketDecoder
 ```
 
 ## Download
+* **[NuGet](http://nuget.org/packages/Netronics)**
 * **[Project Site](https://github.com/shlee322/Netronics)**
 * **[Bin](https://github.com/shlee322/Netronics/downloads)**
 * Source
