@@ -14,12 +14,12 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private readonly Dictionary<string, string> _query = new Dictionary<string, string>();
         private readonly Dictionary<string, object> _postData = new Dictionary<string, object>();
 
-        public static Request GetRequest(StreamReader reader)
+        public static Request GetRequest(PacketBuffer buffer)
         {
             var request = new Request();
             request._postData.Add("FILES", new Dictionary<string, string>());
 
-            string h = reader.ReadLine();
+            string h = buffer.ReadLine();
             if (h == null)
                 return null;
             int s1 = h.IndexOf(" ", System.StringComparison.Ordinal);
@@ -35,10 +35,10 @@ namespace Netronics.Protocol.PacketEncoder.Http
 
             request._protocol = h.Substring(s2 + 1);
 
-            if (!request.GetHeaders(reader))
+            if (!request.GetHeaders(buffer))
                 return null;
 
-            if (request.GetMethod() == "POST" && !request.SetPostData(reader))
+            if (request.GetMethod() == "POST" && !request.SetPostData(buffer))
                 return null;
             
             return request;
@@ -60,7 +60,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
             _query.Add(name, value);
         }
 
-        private bool GetHeaders(TextReader reader)
+        private bool GetHeaders(PacketBuffer reader)
         {
             string h;
             while (true)
@@ -117,25 +117,25 @@ namespace Netronics.Protocol.PacketEncoder.Http
             return _protocol;
         }
 
-        public bool SetPostData(TextReader reader)
+        public bool SetPostData(PacketBuffer buffer)
         {
-            string stringData = reader.ReadToEnd();
-            if (Convert.ToInt64(GetHeader("Content-Length")) > System.Text.Encoding.UTF8.GetByteCount(stringData) + 1)
+            if (Convert.ToInt64(GetHeader("Content-Length")) > buffer.AvailableBytes() + 1)
                 return false;
 
-            LoadPostData(GetHeader("Content-Type"), stringData);
+            LoadPostData(GetHeader("Content-Type"), buffer);
             return true;
         }
 
-        private void LoadPostData(string contentType, string stringData, string name = null)
+        private void LoadPostData(string contentType, PacketBuffer buffer, string name = null)
         {
             if (contentType == null)
             {
                 if(name != null)
-                    _postData.Add(name, stringData);
+                    _postData.Add(name, buffer.ReadString((int)buffer.AvailableBytes()));
             }
             else if (contentType == "application/x-www-form-urlencoded")
             {
+                string stringData = buffer.ReadString((int) buffer.AvailableBytes());
                 foreach (string q in stringData.Split('&'))
                 {
                     int valueStartPoint = q.IndexOf("=", System.StringComparison.Ordinal);
@@ -144,42 +144,53 @@ namespace Netronics.Protocol.PacketEncoder.Http
                     _postData.Add(q.Substring(0, valueStartPoint), q.Substring(valueStartPoint + 1));
                 }
             }
-            else if (contentType.StartsWith("multipart/form-data;"))
+            else if (contentType.StartsWith("multipart/form-data;")) //BUG
             {
-                string p = string.Format("--{0}\r\n", GetHeader("Content-Type").Substring(GetHeader("Content-Type").IndexOf("boundary=") + 9));
-
-                string[] data = Regex.Split(stringData, p);
-                for (int i = 1; i < data.Length; i++)
+                byte[] p = System.Text.Encoding.UTF8.GetBytes(string.Format("--{0}\r\n", GetHeader("Content-Type").Substring(GetHeader("Content-Type").IndexOf("boundary=") + 9)));
+                long len = 0;
+                while ((len = buffer.FindBytes(p)) > -1)
                 {
-                    int point = data[i].IndexOf("\r\n\r\n");
-                    var reader = new StringReader(data[i].Substring(0, point));
-                    string line;
-                    string pname = null;
-                    string type = null;
-                    while((line = reader.ReadLine()) != null)
+                    var buf = new PacketBuffer();
+                    buf.WriteBytes(buffer.ReadBytes((int)len));
+                    buf.BeginBufferIndex();
+                    var hDictionary = new Dictionary<string, string>();
+                    string h = "";
+                    while((h = buf.ReadLine()) != "")
                     {
-                        if(line.StartsWith("Content-Disposition: "))
-                        {
-                            pname = line.Substring(line.IndexOf("name") + 6);
-                            pname = pname.Substring(0, pname.Length - 1);
-                        }
-                        else if (line.StartsWith("Content-Type: "))
-                        {
-                            type = line.Substring(14);
-                        }
+                        int valueStartIndex = h.IndexOf(": ", System.StringComparison.Ordinal);
+                        if (valueStartIndex == -1)
+                            continue;
+                        string key = h.Substring(0, valueStartIndex).ToLower();
+                        string value = h.Substring(valueStartIndex + 2, h.Length - valueStartIndex - 2);
+                        hDictionary.Add(key, value);
                     }
-
-                    LoadPostData(type, data[i].Substring(point + 4), pname);
+                    if (hDictionary.Count != 0)
+                    {
+                        string pname =
+                            hDictionary["content-disposition"].Substring(
+                                hDictionary["content-disposition"].IndexOf("name") + 6);
+                        pname = pname.Substring(0, pname.Length - 1);
+                        string type = null;
+                        try
+                        {
+                            type = hDictionary["content-type"];
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        LoadPostData(type, buf, pname);
+                    }
+                    buf.Dispose();
                 }
             }
             else if (name != null)
-            {
+            {/*
                 string tempName = Path.GetTempFileName();
                 byte[] data = System.Text.Encoding.UTF8.GetBytes(stringData);
                 var stream = new FileStream(tempName, FileMode.OpenOrCreate, FileAccess.Write);
                 stream.Write(data, 0, data.Length);
                 stream.Close();
-                ((Dictionary<string, string>)_postData["FILES"]).Add(name, tempName);
+                ((Dictionary<string, string>)_postData["FILES"]).Add(name, tempName);*/
             }
         }
 

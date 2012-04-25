@@ -166,8 +166,7 @@ namespace Netronics
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            int len = _buffer.Read(buffer, offset, count);
-            return len;
+            return _buffer.Read(buffer, offset, count);
         }
 
         public void ReadBytes(byte[] buffer)
@@ -235,6 +234,84 @@ namespace Netronics
             var byteData = new byte[1];
             Read(byteData, 0, 1);
             return byteData[0];
+        }
+
+        public string ReadString(int len)
+        {
+            return System.Text.Encoding.UTF8.GetString(ReadBytes(len));
+        }
+
+        public long FindBytes(byte[] q)
+        {
+            long p = _buffer.Position;
+
+            var bytes = new byte[q.Length*2];
+            if (Read(bytes, 0, q.Length) != q.Length)
+                return -1;
+
+            int len = 0;
+            bool fined = true;
+
+            for (int x = 0; x < q.Length; x++)
+            {
+                if (bytes[x] != q[x])
+                {
+                    fined = false;
+                    break;
+                }
+            }
+
+            if (fined)
+            {
+                long r = _buffer.Position - len;
+                _buffer.Position = p;
+                return r - _buffer.Position;
+            }
+
+            fined = true;
+
+            long temp = 0;
+            while ((len = Read(bytes, q.Length, q.Length)) > 0)
+            {
+                temp = len;
+                for (int i = 0; i <= q.Length; i++)
+                {
+                    for (int x = 0; x < q.Length; x++)
+                    {
+                        if (bytes[i+x] != q[x])
+                        {
+                            fined = false;
+                            break;
+                        }
+                    }
+
+                    if (fined)
+                    {
+                        long r = _buffer.Position - len + i;
+                        _buffer.Position = p;
+                        return r - _buffer.Position;
+                    }
+                    fined = true;
+                }
+                if (len != q.Length)
+                    break;
+                Array.Copy(bytes, q.Length, bytes, 0, q.Length);
+               
+            }
+            _buffer.Position = p;
+            return -1;
+        }
+
+        public string ReadLine()
+        {
+            long len = FindBytes(new byte[] {13, 10});
+            if (len == -1)
+                return null;
+            if (len < 3)
+                return "";
+            string r = ReadString((int) len - 2);
+            ReadBytes(2);
+            return r;
         }
     }
 }

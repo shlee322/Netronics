@@ -22,7 +22,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
             if (buffer.AvailableBytes() == 0)
                 return null;
 
-            var request = Request.GetRequest(new StreamReader(buffer.GetStream()));
+            var request = Request.GetRequest(buffer);
 
             if (request == null)
             {
