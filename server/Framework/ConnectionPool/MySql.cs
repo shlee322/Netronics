@@ -49,5 +49,10 @@ namespace Netronics.ConnectionPool
                 return _reader;
             }
         }
+
+        public MySqlCommand CreateCommand()
+        {
+            return ((MySqlConnection) _conn).CreateCommand();
+        }
     }
 }

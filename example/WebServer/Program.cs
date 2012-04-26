@@ -25,6 +25,8 @@ namespace WebServer
                                                     return json;
                                                 });
 
+            handler.AddSocketIO(new SocketIO());
+
             var netronics = new Netronics.Netronics(new HttpProperties(() => handler));
             netronics.Start();
             ExitEvent.WaitOne();

@@ -110,6 +110,8 @@ namespace Netronics.Channel.Channel
             try
             {
                 len = _socket.EndReceive(ar);
+                if (len == 0)
+                    throw new SocketException();
             }
             catch (SocketException)
             {

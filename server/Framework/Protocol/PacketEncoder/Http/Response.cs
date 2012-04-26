@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using RazorEngine;
 using Encoding = System.Text.Encoding;
@@ -9,9 +11,18 @@ namespace Netronics.Protocol.PacketEncoder.Http
     {
         private int _code = 200;
         private object _content = new StringBuilder();
-        private string _protocol =  "1.1";
+        private string _protocol =  "1.0";
         private string _contentType = "text/html";
         private readonly StringBuilder _header = new StringBuilder();
+
+        private static readonly string Server = "Netronics/" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+        public Response()
+        {
+            _header.AppendLine("Date: " + DateTime.Now.ToUniversalTime().ToString("ddd, d MMM yyyy hh:mm:ss UTC"));
+            _header.AppendLine("Server: " + Server);
+            _header.AppendLine("Accept-Ranges: bytes");
+        }
 
         public int Status
         {

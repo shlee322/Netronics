@@ -30,6 +30,7 @@ namespace Netronics.Template.Http
         public void Handle(IChannel channel, Request request)
         {
             var response = new Response();
+            response.Protocol = request.GetProtocol();
             try
             {
                 _action(request, response, _rx.Split(request.GetPath()));

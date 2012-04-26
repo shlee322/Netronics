@@ -245,8 +245,11 @@ namespace Netronics.Template.Http
             _jsonHandlers.AddLast(new UriFinder(uri, handler));
         }
 
-        public void AddSocketIO(string uri)
+        public void AddSocketIO(SocketIO socketIO, string Namespace = "socket.io")
         {
+            AddWebSocket("^/" + Namespace + "/websocket$", args => socketIO.GetWebSocket());
+            AddWebSocket("^/" + Namespace + "/flashsocket$", args => socketIO.GetFlashSocket());
+            AddDynamic("^/" + Namespace + "/xhr-polling/(.*)/(.*)$", (request, response, args) => socketIO.XhrPolling(request, response, args));
         }
 
         public void Connected(IChannel channel)
@@ -265,7 +268,7 @@ namespace Netronics.Template.Http
 
             Processing(channel, request);
 
-            if (request.GetHeader("Connection") == "close")
+            if (request.GetHeader("Connection") == null || request.GetHeader("Connection") == "close")
                 channel.Disconnect();
         }
 
@@ -280,7 +283,7 @@ namespace Netronics.Template.Http
             }
 
             //JSON
-            if (request.GetHeader("Accept").IndexOf("application/json") >= 0)
+            if (request.GetHeader("Accept") != null && request.GetHeader("Accept").IndexOf("application/json") >= 0)
             {
                 UriFinder finder = GetJSONUriFinder(request);
                 if (finder != null)
@@ -288,6 +291,7 @@ namespace Netronics.Template.Http
                     var response = new Response();
                     response.SetContent(finder.GetHandler(request.GetPath()).ToString());
                     response.ContentType = "application/json";
+                    response.Protocol = request.GetProtocol();
                     channel.SendMessage(response);
                     return;
                 }
@@ -304,13 +308,14 @@ namespace Netronics.Template.Http
             {
                 var response = new Response();
                 response.Status = 401;
+                response.Protocol = request.GetProtocol();
                 channel.SendMessage(response);
             }
         }
 
         private void UpgradeWebSocket(IChannel channel, Request request)
         {
-            var response = new Response {Status = 101};
+            var response = new Response { Status = 101, Protocol="1.1"};
 
             var protocol = channel as IKeepProtocolChannel;
             if (protocol == null)

@@ -130,8 +130,9 @@ namespace Netronics.Protocol.PacketEncoder.Http
         {
             if (contentType == null)
             {
+                string data = buffer.ReadString((int) buffer.AvailableBytes());
                 if(name != null)
-                    _postData.Add(name, buffer.ReadString((int)buffer.AvailableBytes()));
+                    _postData.Add(name, data);
             }
             else if (contentType == "application/x-www-form-urlencoded")
             {
