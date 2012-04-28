@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Channel\ChannelHandler.cs" />
+    <Compile Include="Channel\Channel\Channel.cs" />
     <Compile Include="Channel\Channel\IChannel.cs" />
     <Compile Include="Channel\IChannelHandler.cs" />
     <Compile Include="Channel\Channel\IKeepHandlerChannel.cs" />
@@ -164,7 +165,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

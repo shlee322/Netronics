@@ -6,7 +6,7 @@ using Netronics.Template.Service;
 
 namespace Netronics.Channel.Channel
 {
-    public class SocketChannel : IKeepProtocolChannel, IKeepHandlerChannel, IKeepParallelChannel
+    public class SocketChannel : Channel
     {
         public static SocketChannel CreateChannel(Socket socket)
         {
@@ -14,12 +14,7 @@ namespace Netronics.Channel.Channel
         }
 
         private readonly byte[] _originalPacketBuffer = new byte[512];
-        private readonly PacketBuffer _packetBuffer = new PacketBuffer();
         private readonly Socket _socket;
-
-        private IProtocol _protocol;
-        private IChannelHandler _handler;
-        private bool _parallel;
 
         private object _tag;
 
@@ -33,66 +28,12 @@ namespace Netronics.Channel.Channel
             return _socket;
         }
 
-        public virtual IProtocol SetProtocol(IProtocol protocol)
-        {
-            _protocol = protocol;
-            return protocol;
-        }
-
-        public virtual IProtocol GetProtocol()
-        {
-            return _protocol;
-        }
-
-        public virtual IChannelHandler SetHandler(IChannelHandler handler)
-        {
-            _handler = handler;
-            return handler;
-        }
-
-        public virtual IChannelHandler GetHandler()
-        {
-            return _handler;
-        }
-
-        public bool SetParallel(bool parallel)
-        {
-            _parallel = parallel;
-            return parallel;
-        }
-
-        protected virtual bool GetParallel()
-        {
-            return _parallel;
-        }
-
-        public virtual void Connect()
-        {
-            if (GetHandler() != null)
-                GetHandler().Connected(this);
-
-            BeginReceive();
-        }
-
-        public virtual void Disconnect()
-        {
-            _socket.BeginDisconnect(false, ar =>
-                                               {
-                                                   if (GetHandler() != null)
-                                                       GetHandler().Disconnected(this);
-                                                   lock (_packetBuffer)
-                                                   {
-                                                       _packetBuffer.Dispose();
-                                                   }
-                                               }, null);
-        }
-
         public override string ToString()
         {
             return _socket.RemoteEndPoint.ToString();
         }
 
-        private void BeginReceive()
+        protected override void BeginReceive()
         {
             try
             {
@@ -119,49 +60,21 @@ namespace Netronics.Channel.Channel
                 return;
             }
 
-            lock (_packetBuffer)
-            {
-                if (_packetBuffer.IsDisposed())
-                    return;
-                _packetBuffer.Write(_originalPacketBuffer, 0, len);
-            }
-
-            ThreadPool.QueueUserWorkItem((o) => Receive());
+            ReceivePacket(_originalPacketBuffer, len);
         }
 
-        private void Receive()
+        public override void Disconnect()
         {
-            dynamic message;
-
-            lock (_packetBuffer)
+            _socket.BeginDisconnect(false, ar =>
             {
-                if (_packetBuffer.IsDisposed())
-                    return;
-                message = GetProtocol().GetDecoder().Decode(this, _packetBuffer);
-            }
-
-            if (message == null)
-            {
-                BeginReceive();
-                return;
-            }
-
-            if (GetParallel())
-            {
-                ThreadPool.QueueUserWorkItem((o) => GetHandler().MessageReceive(this, message));
-                ThreadPool.QueueUserWorkItem((o) => Receive());
-            }
-            else
-            {
-                ThreadPool.QueueUserWorkItem((o) =>
-                                  {
-                                      GetHandler().MessageReceive(this, message);
-                                      ThreadPool.QueueUserWorkItem((s) => Receive());
-                                  });
-            }
+                if (GetHandler() != null)
+                    GetHandler().Disconnected(this);
+                Disconnected();
+            }, null);
         }
 
-        public void SendMessage(dynamic message)
+
+        public override void SendMessage(dynamic message)
         {
             PacketBuffer buffer = GetProtocol().GetEncoder().Encode(this, message);
 
@@ -179,13 +92,13 @@ namespace Netronics.Channel.Channel
             }
         }
 
-        public object SetTag(object tag)
+        public override object SetTag(object tag)
         {
             _tag = tag;
             return _tag;
         }
 
-        public object GetTag()
+        public override object GetTag()
         {
             return _tag;
         }
