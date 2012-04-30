@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -29,6 +30,9 @@ namespace Netronics.ConnectionPool
 
         public MySql(string name) : base(name)
         {
+            var mysql = _conn as MySqlConnection;
+            if(mysql != null && mysql.State == ConnectionState.Closed)
+                mysql.Open();
         }
 
         public int ExecuteNonQuery(string query)

@@ -89,7 +89,6 @@
     <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Response.cs" />
     <Compile Include="Protocol\IProtocol.cs" />
-    <Compile Include="Scheduler.cs" />
     <Compile Include="Template\Http\DynamicUriHandler.cs" />
     <Compile Include="Template\Http\HttpHandler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
