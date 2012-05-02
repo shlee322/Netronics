@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using Netronics.Channel.Channel;
 
 namespace Netronics.Protocol.PacketEncoder.Http
@@ -22,7 +23,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
             if (buffer.AvailableBytes() == 0)
                 return null;
 
-            var request = Request.GetRequest(buffer);
+            var request = Request.Parse(buffer);
 
             if (request == null)
             {
@@ -35,5 +36,6 @@ namespace Netronics.Protocol.PacketEncoder.Http
         }
 
         #endregion
+
     }
 }

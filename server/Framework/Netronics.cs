@@ -8,64 +8,64 @@ namespace Netronics
 {
     public class Netronics
     {
-        private readonly IProperties _properties;
-        private Socket _socket;
+        protected readonly IProperties Properties;
+        protected Socket Socket;
 
         public Netronics(IProperties properties)
         {
-            _properties = properties;
+            Properties = properties;
         }
 
-        public Netronics Start()
+        public virtual Netronics Start()
         {
-            if (_properties == null)
+            if (Properties == null)
                 return this;
 
             InitSocket();
             StartSocket();
-            _properties.OnStartEvent(this, new EventArgs());
+            Properties.OnStartEvent(this, new EventArgs());
 
             return this;
         }
 
-        public Netronics Stop()
+        public virtual Netronics Stop()
         {
-            if (_properties != null)
-                _properties.OnStopEvent(this, new EventArgs());
+            if (Properties != null)
+                Properties.OnStopEvent(this, new EventArgs());
             return this;
         }
 
-        private void InitSocket()
+        protected virtual void InitSocket()
         {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _socket.Bind(_properties.GetIPEndPoint());
+            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket.Bind(Properties.GetIPEndPoint());
         }
 
-        private void StartSocket()
+        protected virtual void StartSocket()
         {
-            _socket.Listen(50);
-            _socket.BeginAccept(AcceptCallback, null);
+            Socket.Listen(50);
+            Socket.BeginAccept(AcceptCallback, null);
         }
 
-        public IPEndPoint GetEndIPPoint()
+        public virtual IPEndPoint GetEndIPPoint()
         {
-            return (IPEndPoint) _socket.LocalEndPoint;
+            return (IPEndPoint) Socket.LocalEndPoint;
         }
 
-        private void AcceptCallback(IAsyncResult ar)
+        protected virtual void AcceptCallback(IAsyncResult ar)
         {
-            AddChannel(_properties.GetChannelFactory().CreateChannel(this, _socket.EndAccept(ar))).Connect();
-            _socket.BeginAccept(AcceptCallback, null);
+            AddChannel(Properties.GetChannelFactory().CreateChannel(this, Socket.EndAccept(ar))).Connect();
+            Socket.BeginAccept(AcceptCallback, null);
         }
 
-        public IChannel AddChannel(IChannel channel)
+        public virtual IChannel AddChannel(IChannel channel)
         {
             return channel;
         }
 
-        public IChannel AddSocket(Socket socket)
+        public virtual IChannel AddSocket(Socket socket)
         {
-            return AddChannel(_properties.GetChannelFactory().CreateChannel(this, socket));
+            return AddChannel(Properties.GetChannelFactory().CreateChannel(this, socket));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Netronics.Protocol.PacketEncoder.Http
@@ -14,7 +15,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private readonly Dictionary<string, string> _query = new Dictionary<string, string>();
         private readonly Dictionary<string, object> _postData = new Dictionary<string, object>();
 
-        public static Request GetRequest(PacketBuffer buffer)
+        public static Request Parse(PacketBuffer buffer)
         {
             var request = new Request();
             request._postData.Add("FILES", new Dictionary<string, string>());

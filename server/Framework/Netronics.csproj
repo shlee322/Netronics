@@ -78,6 +78,7 @@
     <Compile Include="Channel\Channel\IKeepHandlerChannel.cs" />
     <Compile Include="Channel\Channel\IKeepParallelChannel.cs" />
     <Compile Include="Channel\Channel\IKeepProtocolChannel.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="ConnectionPool\ConnectionPool.cs" />
     <Compile Include="ConnectionPool\MySql.cs" />
     <Compile Include="Protocol\HandShake\HandShake.cs" />
@@ -164,7 +165,7 @@
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -10,11 +10,11 @@ namespace Netronics.ConnectionPool
     {
         private MySqlDataReader _reader;
 
-        public static void AddConnection(string name, string server, string user_id, string password, string database, int port = 0)
+        public static void AddConnection(string name, string server, string user_id, string password, string database, int port = 3306)
         {
             AddConnection(name, () =>
                 {
-                    var connection = new MySqlConnection(string.Format("data source={0}; database={1}; user id={2}; password={3}", server, database, user_id, password));
+                    var connection = new MySqlConnection(string.Format("data source={0}; database={1}; user id={2}; password={3}; Port={4}", server, database, user_id, password, port));
                     connection.Open();
                     return connection;
                 });

@@ -63,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestModule\TestController.cs" />
     <Compile Include="TestModule\TestModel.cs" />
+    <Compile Include="WebSocketHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\server\Framework\Netronics.csproj">
