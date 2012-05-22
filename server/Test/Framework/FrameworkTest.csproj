@@ -65,9 +65,7 @@
     <Compile Include="MySqlTest.cs" />
     <Compile Include="NetronicsTest.cs" />
     <Compile Include="PacketBufferTest.cs" />
-    <Compile Include="Service\TestMessage.cs" />
-    <Compile Include="Service\TestProcessor.cs" />
-    <Compile Include="Service\TestResult.cs" />
+    <Compile Include="Service\ILoginServer.cs" />
     <Compile Include="Service\TestServer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -7,7 +7,7 @@ using Netronics.Protocol.PacketEncoder.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Netronics.Template.Http
+namespace Netronics.Template.Http.Handler
 {
     public class HttpHandler : IChannelHandler
     {

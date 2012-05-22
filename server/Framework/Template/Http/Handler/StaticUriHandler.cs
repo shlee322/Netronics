@@ -7,7 +7,7 @@ using Microsoft.SqlServer.Server;
 using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder.Http;
 
-namespace Netronics.Template.Http
+namespace Netronics.Template.Http.Handler
 {
     class StaticUriHandler : IUriHandler
     {

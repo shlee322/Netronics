@@ -1,9 +1,11 @@
 ﻿using System.Net.Sockets;
+using Netronics.Channel.Channel;
 
 namespace Netronics
 {
     public class Client : Netronics
     {
+        private IChannel _channel;
         public Client(IProperties properties) : base(properties)
         {
         }
@@ -16,7 +18,13 @@ namespace Netronics
         protected override void StartSocket()
         {
             Socket.Connect(Properties.GetIPEndPoint());
-            AddChannel(Properties.GetChannelFactory().CreateChannel(this, Socket)).Connect();
+            _channel = AddChannel(Properties.GetChannelFactory().CreateChannel(this, Socket));
+            _channel.Connect();
+        }
+
+        public IChannel GetChannel()
+        {
+            return _channel;
         }
     }
 }

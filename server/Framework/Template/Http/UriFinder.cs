@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Netronics.Channel;
 
 namespace Netronics.Template.Http
 {
