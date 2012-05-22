@@ -66,6 +66,7 @@
     <Compile Include="NetronicsTest.cs" />
     <Compile Include="PacketBufferTest.cs" />
     <Compile Include="Service\ILoginServer.cs" />
+    <Compile Include="Service\LoginServer.cs" />
     <Compile Include="Service\TestServer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

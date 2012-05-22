@@ -1,5 +1,4 @@
-﻿using System;
-using Netronics.Channel;
+﻿using Netronics.Channel;
 using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder.Http;
 

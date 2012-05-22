@@ -114,6 +114,8 @@
     <Compile Include="Protocol\PacketEncryptor\IPacketEncryptor.cs" />
     <Compile Include="Protocol\PacketEncryptor\IPacketDecryptor.cs" />
     <Compile Include="Template\Service\Entity.cs" />
+    <Compile Include="Template\Service\Service\IRole.cs" />
+    <Compile Include="Template\Service\Service\LocalService.cs" />
     <Compile Include="Template\Service\Service\Service.cs" />
     <Compile Include="Template\Service\Task.cs" />
   </ItemGroup>

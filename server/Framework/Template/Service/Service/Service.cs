@@ -2,7 +2,12 @@
 {
     public class Service
     {
-        public static Entity GetEntity()
+        public static Service GetService()
+        {
+            return null;
+        }
+
+        public virtual Entity NewEntity()
         {
             return null;
         }
