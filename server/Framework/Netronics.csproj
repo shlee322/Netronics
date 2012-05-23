@@ -90,6 +90,8 @@
     <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Response.cs" />
     <Compile Include="Protocol\IProtocol.cs" />
+    <Compile Include="Protocol\PacketEncoder\Http\WebSocketDecoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\Http\WebSocketEncoder.cs" />
     <Compile Include="Template\Http\Handler\DynamicUriHandler.cs" />
     <Compile Include="Template\Http\Handler\HttpHandler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
@@ -151,7 +153,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

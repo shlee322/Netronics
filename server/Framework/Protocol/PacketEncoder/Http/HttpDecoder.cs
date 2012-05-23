@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Net;
 using Netronics.Channel.Channel;
 
 namespace Netronics.Protocol.PacketEncoder.Http
@@ -23,9 +21,13 @@ namespace Netronics.Protocol.PacketEncoder.Http
             if (buffer.AvailableBytes() == 0)
                 return null;
 
-            var request = Request.Parse(buffer);
+            Request request;
 
-            if (request == null)
+            try
+            {
+                request = Request.Parse(buffer);
+            }
+            catch (Exception)
             {
                 buffer.ResetBufferIndex();
                 return null;

@@ -20,29 +20,35 @@ namespace Netronics.Protocol.PacketEncoder.Http
             var request = new Request();
             request._postData.Add("FILES", new Dictionary<string, string>());
 
-            string h = buffer.ReadLine();
-            if (h == null)
-                return null;
-            int s1 = h.IndexOf(" ", System.StringComparison.Ordinal);
-            int s2 = h.LastIndexOf(" ", System.StringComparison.Ordinal);
-            if (s1 == -1 || s2 == -1)
-                return null;
-            request._method = h.Substring(0, s1);
-            string uri = h.Substring(s1 + 1, s2 - s1 - 1);
-            s1 = uri.IndexOf("?", System.StringComparison.Ordinal);
-            request._path = s1 == -1 ? uri : uri.Substring(0, s1);
-            if(s1 != -1 && uri.Length > s1+1)
-                SetQuery(request, uri.Substring(s1+1));
-
-            request._protocol = h.Substring(s2 + 1);
+            request.SetFirstHeader(buffer.ReadLine());
 
             if (!request.GetHeaders(buffer))
-                return null;
+                throw new Exception("Header Error");
 
             if (request.GetMethod() == "POST" && !request.SetPostData(buffer))
-                return null;
+                throw new Exception("Header Error");
             
             return request;
+        }
+
+        private void SetFirstHeader(string line)
+        {
+            if (line == null)
+                throw new Exception("Header Error");
+
+            int s1 = line.IndexOf(" ", StringComparison.Ordinal);
+            int s2 = line.LastIndexOf(" ", StringComparison.Ordinal);
+            if (s1 == -1 || s2 == -1)
+                throw new Exception("Header Error");
+
+            _method = line.Substring(0, s1);
+            string uri = line.Substring(s1 + 1, s2 - s1 - 1);
+            s1 = uri.IndexOf("?", System.StringComparison.Ordinal);
+            _path = s1 == -1 ? uri : uri.Substring(0, s1);
+            if (s1 != -1 && uri.Length > s1 + 1)
+                SetQuery(this, uri.Substring(s1 + 1));
+
+            _protocol = line.Substring(s2 + 1);
         }
 
         private static void SetQuery(Request request, string query)
@@ -78,7 +84,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
 
         public void SetHeader(string s)
         {
-            int valueStartIndex = s.IndexOf(": ", System.StringComparison.Ordinal);
+            int valueStartIndex = s.IndexOf(": ", StringComparison.Ordinal);
             if (valueStartIndex == -1)
                 return;
             string key = s.Substring(0, valueStartIndex).ToLower();
