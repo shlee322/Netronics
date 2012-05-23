@@ -16,7 +16,7 @@ namespace WebServer
             handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
 
             handler.AddDynamic("^/test.web$", TestModule.TestController.TestMain);
-            handler.AddWebSocket("^/chat$", strings => new WebSocketHandler());
+            handler.AddWebSocket("^/echo$", strings => new WebSocketHandler());
             handler.AddJSON("^/test.json$", strings =>
                                                 {
                                                     dynamic json = new JObject();

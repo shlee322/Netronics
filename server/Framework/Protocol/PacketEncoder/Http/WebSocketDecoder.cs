@@ -1,4 +1,5 @@
-﻿using Netronics.Channel.Channel;
+﻿using System.IO;
+using Netronics.Channel.Channel;
 
 namespace Netronics.Protocol.PacketEncoder.Http
 {
@@ -7,43 +8,53 @@ namespace Netronics.Protocol.PacketEncoder.Http
         public dynamic Decode(IChannel channel, PacketBuffer buffer)
         {
             buffer.BeginBufferIndex();
-            if (buffer.AvailableBytes() < 3)
-                return null;
-            byte frameH = buffer.ReadByte();
-            byte frameP = buffer.ReadByte();
-            int len = frameP & 0x7F;
-            if (len > 0x7D)
+            var stream = new MemoryStream();
+            while (true)
             {
-                if (buffer.AvailableBytes() < 2)
+                if (buffer.AvailableBytes() < 3)
                     return null;
-                len = (len << 8) + buffer.ReadByte();
-                if ((frameP & 0x7F) == 0x7F)
+                byte frameH = buffer.ReadByte();
+                byte frameP = buffer.ReadByte();
+                int len = frameP & 0x7F;
+                if (len > 0x7D)
                 {
                     if (buffer.AvailableBytes() < 2)
                         return null;
-                    len = (len << 8) + buffer.ReadByte();
+
+                    for (var i = 0; i < 2; i++)
+                        len = (len << 8) + buffer.ReadByte();
+                    
+                    if ((frameP & 0x7F) == 0x7F)
+                    {
+                        if (buffer.AvailableBytes() < 2)
+                            return null;
+                        for (var i = 0; i < 2; i++)
+                            len = (len << 8) + buffer.ReadByte();
+                    }
                 }
-            }
 
-            if (buffer.AvailableBytes() < 4 + len)
-                return null;
+                if (buffer.AvailableBytes() < 4 + len)
+                    return null;
 
-            byte[] key = (frameP & 0x80) == 0x80 ? buffer.ReadBytes(4) : null;
+                byte[] key = (frameP & 0x80) == 0x80 ? buffer.ReadBytes(4) : null;
 
-            var data = new byte[len];
-            if (key == null)
-            {
-                data = buffer.ReadBytes(len);
-            }
-            else
-            {
-                for (int i = 0; i < len; i++)
+                byte[] data = null;
+                if (key == null)
                 {
-                    data[i] = (byte)(buffer.ReadByte() ^ key[i % 4]);
+                    data = buffer.ReadBytes(len);
                 }
+                else
+                {
+                    data = new byte[len];
+                    for (int i = 0; i < len; i++)
+                        data[i] = (byte) (buffer.ReadByte() ^ key[i%4]);
+                }
+                stream.Write(data, 0, len);
+                if((frameH & 0x80) == 128)
+                    break;
             }
             buffer.EndBufferIndex();
-            return data;
+            return stream.ToArray();
         }
     }
 }

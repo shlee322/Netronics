@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Netronics.Protocol.PacketEncoder.Http;
 
 namespace WebServer
 {
@@ -19,7 +20,7 @@ namespace WebServer
 
         public void MessageReceive(IChannel channel, dynamic message)
         {
-            channel.SendMessage(Encoding.UTF8.GetString(message));
+            channel.SendMessage(message);
         }
     }
 }
