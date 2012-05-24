@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Netronics.Channel.Channel;
 
-namespace Netronics.Protocol.PacketEncoder.Http
+namespace Netronics.Protocol.PacketEncoder.WebSocket
 {
     public class WebSocketDecoder : IPacketDecoder
     {
@@ -50,6 +50,13 @@ namespace Netronics.Protocol.PacketEncoder.Http
                         data[i] = (byte) (buffer.ReadByte() ^ key[i%4]);
                 }
                 stream.Write(data, 0, len);
+
+                if ((frameH & 0xF) == 8)
+                {
+                    buffer.EndBufferIndex();
+                    return new ConnectionClose();
+                }
+
                 if((frameH & 0x80) == 128)
                     break;
             }

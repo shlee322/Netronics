@@ -1,6 +1,8 @@
 ﻿using System.Threading;
 using Netronics.Template.Http;
 using Netronics.Template.Http.Handler;
+using Netronics.Template.Http.SocketIO;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace WebServer
@@ -13,6 +15,7 @@ namespace WebServer
         {
             var handler = new HttpHandler();
             handler.AddStatic("^/$", "./www/index.html");
+            handler.AddStatic("^/script/(.*)$", "./www/script/{1}");
             handler.AddStatic("^/file/(.*)$", "./www/test/file/{1}");
 
             handler.AddDynamic("^/test.web$", TestModule.TestController.TestMain);
@@ -25,8 +28,13 @@ namespace WebServer
                                                     json.a = new JArray(strings);
                                                     return json;
                                                 });
-
-            handler.AddSocketIO(new SocketIO());
+            var io = new SocketIO();
+            io.On("connection", socket =>
+                                 {
+                                     socket.Emit("news", new JArray(JsonConvert.DeserializeObject("{ hello: 'world' }")));
+                                     socket.On("my other event", array => System.Console.WriteLine(array.ToString()));
+                                 });
+            handler.AddSocketIO(io);
 
             var netronics = new Netronics.Netronics(new HttpProperties(() => handler));
             netronics.Start();

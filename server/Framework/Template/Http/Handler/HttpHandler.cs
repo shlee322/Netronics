@@ -21,60 +21,54 @@ namespace Netronics.Template.Http.Handler
             _uriHandlers.AddLast(new StaticUriHandler(uri, path));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response> action)
+        public void AddDynamic(string uri, Action<HttpContact> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(request, response)));
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(contact)));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string[]> action)
+        public void AddDynamic(string uri, Action<HttpContact, string[]> action)
         {
             _uriHandlers.AddLast(new DynamicUriHandler(uri, action));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
-                args.Length < 1 ? null : args[0]
-                )));
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
+                args.Length < 1 ? null : args[0])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request, 
-                response, 
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
                 args.Length < 4 ? null : args[3])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -82,11 +76,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 5 ? null : args[4])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -95,11 +88,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 6 ? null : args[5])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -109,11 +101,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 7 ? null : args[6])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -124,11 +115,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 8 ? null : args[7])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -140,11 +130,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 9 ? null : args[8])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -157,11 +146,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 10 ? null : args[9])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -175,11 +163,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 11 ? null : args[10])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -194,11 +181,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 12 ? null : args[11])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string, string, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -214,11 +200,10 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 13 ? null : args[12])));
         }
 
-        public void AddDynamic(string uri, Action<Request, Response, string, string, string, string, string, string, string, string, string, string, string, string, string, string> action)
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string, string, string, string, string, string, string, string> action)
         {
-            _uriHandlers.AddLast(new DynamicUriHandler(uri, (request, response, args) => action(
-                request,
-                response,
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
                 args.Length < 1 ? null : args[0],
                 args.Length < 2 ? null : args[1],
                 args.Length < 3 ? null : args[2],
@@ -235,6 +220,27 @@ namespace Netronics.Template.Http.Handler
                 args.Length < 14 ? null : args[13])));
         }
 
+        public void AddDynamic(string uri, Action<HttpContact, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string> action)
+        {
+            _uriHandlers.AddLast(new DynamicUriHandler(uri, (contact, args) => action(
+                contact,
+                args.Length < 1 ? null : args[0],
+                args.Length < 2 ? null : args[1],
+                args.Length < 3 ? null : args[2],
+                args.Length < 4 ? null : args[3],
+                args.Length < 5 ? null : args[4],
+                args.Length < 6 ? null : args[5],
+                args.Length < 7 ? null : args[6],
+                args.Length < 8 ? null : args[7],
+                args.Length < 9 ? null : args[8],
+                args.Length < 10 ? null : args[9],
+                args.Length < 11 ? null : args[10],
+                args.Length < 12 ? null : args[11],
+                args.Length < 13 ? null : args[12],
+                args.Length < 14 ? null : args[13],
+                args.Length < 15 ? null : args[14])));
+        }
+
         public void AddWebSocket(string uri, Func<string[], IChannelHandler> handler)
         {
             _wsHandlers.AddLast(new UriFinder(uri, handler));
@@ -245,11 +251,13 @@ namespace Netronics.Template.Http.Handler
             _jsonHandlers.AddLast(new UriFinder(uri, handler));
         }
 
-        public void AddSocketIO(SocketIO socketIO, string Namespace = "socket.io")
+        public void AddSocketIO(SocketIO.SocketIO socketIO, string Namespace = "socket.io")
         {
-            AddWebSocket("^/" + Namespace + "/websocket$", args => socketIO.GetWebSocket());
-            AddWebSocket("^/" + Namespace + "/flashsocket$", args => socketIO.GetFlashSocket());
-            AddDynamic("^/" + Namespace + "/xhr-polling/(.*)/(.*)$", (request, response, args) => socketIO.XhrPolling(request, response, args));
+            AddDynamic("^/" + Namespace + "/1/$", socketIO.Handshake);
+            AddWebSocket("^/" + Namespace + "/1/websocket/(.*)$", socketIO.GetWebSocket);
+            AddWebSocket("^/" + Namespace + "/1/flashsocket/(.*)$", socketIO.GetFlashSocket);
+            AddDynamic("^/" + Namespace + "/1/xhr-polling/(.*)$", socketIO.XhrPolling);
+            AddDynamic("^/" + Namespace + "/1/jsonp-polling/(.*)$", socketIO.JsonpPolling);
         }
 
         public void Connected(IChannel channel)
@@ -296,7 +304,6 @@ namespace Netronics.Template.Http.Handler
                     return;
                 }
             }
-
 
             //여기서 여러가지 예외 처리를!
             IUriHandler handler = GetUriHandler(channel, request);

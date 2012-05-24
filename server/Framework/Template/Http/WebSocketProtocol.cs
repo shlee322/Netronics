@@ -1,7 +1,6 @@
-﻿using Netronics.Channel.Channel;
-using Netronics.Protocol;
+﻿using Netronics.Protocol;
 using Netronics.Protocol.PacketEncoder;
-using Netronics.Protocol.PacketEncoder.Http;
+using Netronics.Protocol.PacketEncoder.WebSocket;
 using Netronics.Protocol.PacketEncryptor;
 
 namespace Netronics.Template.Http

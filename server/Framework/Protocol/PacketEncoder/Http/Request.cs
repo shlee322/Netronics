@@ -13,6 +13,7 @@ namespace Netronics.Protocol.PacketEncoder.Http
         private string _protocol;
         private readonly Dictionary<string, string> _headerDictionary = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _query = new Dictionary<string, string>();
+        private MemoryStream _lowPostData;
         private readonly Dictionary<string, object> _postData = new Dictionary<string, object>();
 
         public static Request Parse(PacketBuffer buffer)
@@ -124,10 +125,18 @@ namespace Netronics.Protocol.PacketEncoder.Http
             return _protocol;
         }
 
+        public MemoryStream GetLowPostData()
+        {
+            return _lowPostData;
+        }
+
         public bool SetPostData(PacketBuffer buffer)
         {
             if (Convert.ToInt64(GetHeader("Content-Length")) > buffer.AvailableBytes() + 1)
                 return false;
+            var buf = buffer.GetStream() as MemoryStream;
+            if(buf != null)
+                _lowPostData = new MemoryStream(buf.GetBuffer(), (int)buf.Position, (int)(buf.Length - buf.Position));
 
             LoadPostData(GetHeader("Content-Type"), buffer);
             return true;

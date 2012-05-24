@@ -1,4 +1,5 @@
 ﻿using Netronics.Protocol.PacketEncoder.Http;
+using Netronics.Template.Http;
 using Netronics.Template.Http.Module;
 
 namespace WebServer.TestModule
@@ -6,9 +7,9 @@ namespace WebServer.TestModule
     [Module]
     class TestController
     {
-        public static void TestMain(Request request, Response response)
+        public static void TestMain(HttpContact contact)
         {
-            response.SetTemplate<Request>("./www/test.cshtml", request);
+            contact.GetResponse().SetTemplate<Request>("./www/test.cshtml", contact.GetRequest());
         }
     }
 }

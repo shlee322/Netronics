@@ -2,7 +2,7 @@
 using System.IO;
 using Netronics.Channel.Channel;
 
-namespace Netronics.Protocol.PacketEncoder.Http
+namespace Netronics.Protocol.PacketEncoder.WebSocket
 {
     public class WebSocketEncoder : IPacketEncoder
     {

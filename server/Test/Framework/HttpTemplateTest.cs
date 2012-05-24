@@ -55,9 +55,9 @@ namespace Framework
             ExitEvent.WaitOne();
         }
 
-        private void TestAction(Request request, Response response)
+        private void TestAction(HttpContact contact)
         {
-            response.SetContent(DateTime.Now.ToString(CultureInfo.InvariantCulture));
+            contact.GetResponse().SetContent(DateTime.Now.ToString(CultureInfo.InvariantCulture));
         }
 
         class TestHandler : IChannelHandler

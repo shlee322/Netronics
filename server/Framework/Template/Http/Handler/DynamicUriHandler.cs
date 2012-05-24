@@ -9,9 +9,9 @@ namespace Netronics.Template.Http.Handler
     class DynamicUriHandler : IUriHandler
     {
         private readonly Regex _rx;
-        private readonly Action<Request, Response, string[]> _action;
+        private readonly Action<HttpContact, string[]> _action;
 
-        public DynamicUriHandler(string uri, Action<Request, Response, string[]> action)
+        public DynamicUriHandler(string uri, Action<HttpContact, string[]> action)
         {
             _rx = new Regex(uri);
             _action = action;
@@ -29,19 +29,22 @@ namespace Netronics.Template.Http.Handler
 
         public void Handle(IChannel channel, Request request)
         {
-            var response = new Response();
-            response.Protocol = request.GetProtocol();
+            var contact = new HttpContact(channel, request, new Response {Protocol = request.GetProtocol()});
+            if(contact.GetRequest().GetProtocol() == "HTTP/1.1")
+                contact.GetResponse().Protocol = "1.1";
+
             try
             {
-                _action(request, response, _rx.Split(request.GetPath()));
+                _action(contact, _rx.Split(request.GetPath()));
             }
             catch (Exception e)
             {
-                response.Status = 500;
-                response.SetContent(e.ToString());
+                contact.GetResponse().Status = 500;
+                contact.GetResponse().SetContent(e.ToString());
             }
-            
-            channel.SendMessage(response);
+
+            if (contact.IsAutoSendResponse)
+                channel.SendMessage(contact.GetResponse());
         }
     }
 }
