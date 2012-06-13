@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppClient", "client\cpp\CppClient\CppClient.vcxproj", "{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceManager", "server\ServiceManager\ServiceManager.csproj", "{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Netronics.vsmdi
@@ -123,6 +125,18 @@ Global
 		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|Win32.ActiveCfg = Release|Win32
 		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|Win32.Build.0 = Release|Win32
 		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|x86.ActiveCfg = Release|Win32
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Debug|Win32.ActiveCfg = Debug|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Debug|x86.ActiveCfg = Debug|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Debug|x86.Build.0 = Debug|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Release|Any CPU.ActiveCfg = Release|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Release|Mixed Platforms.Build.0 = Release|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Release|Win32.ActiveCfg = Release|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Release|x86.ActiveCfg = Release|x86
+		{581EC68E-8BC0-436A-B1D2-CD8C13F00F7B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,9 +149,9 @@ Global
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82} = {758FDE00-EAA5-4DE0-93A9-284D558D680D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_BuildVersioningStyle = None.None.None.Increment
-		BuildVersion_UpdateAssemblyVersion = True
 		BuildVersion_UpdateFileVersion = True
+		BuildVersion_UpdateAssemblyVersion = True
+		BuildVersion_BuildVersioningStyle = None.None.None.Increment
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Framework\Netronics.csproj

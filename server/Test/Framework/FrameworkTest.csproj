@@ -65,6 +65,8 @@
     <Compile Include="MySqlTest.cs" />
     <Compile Include="NetronicsTest.cs" />
     <Compile Include="PacketBufferTest.cs" />
+    <Compile Include="Service\AuthServer.cs" />
+    <Compile Include="Service\IAuthServer.cs" />
     <Compile Include="Service\ILoginServer.cs" />
     <Compile Include="Service\LoginServer.cs" />
     <Compile Include="Service\TestServer.cs" />

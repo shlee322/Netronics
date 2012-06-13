@@ -29,11 +29,12 @@ namespace WebServer
                                                     return json;
                                                 });
             var io = new SocketIO();
-            io.On("connection", socket =>
-                                 {
-                                     socket.Emit("news", new JArray(JsonConvert.DeserializeObject("{ hello: 'world' }")));
-                                     socket.On("my other event", array => System.Console.WriteLine(array.ToString()));
-                                 });
+            io.On("connection", s =>
+                                    {
+                                        var socket = s as ISocketIO;
+                                        socket.Emit("news", new JArray(JsonConvert.DeserializeObject("{ hello: 'world' }")));
+                                        socket.On("my other event", array => System.Console.WriteLine(array[0].my));
+                                    });
             handler.AddSocketIO(io);
 
             var netronics = new Netronics.Netronics(new HttpProperties(() => handler));

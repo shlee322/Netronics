@@ -19,6 +19,10 @@ namespace Netronics.Template.Service.Service
 
         public override Entity NewEntity()
         {
+            var entity = base.NewEntity();
+            if (entity != null)
+                return entity;
+
             var role = _createRoleFunc();
 
             if (!_roleType.IsInstanceOfType(role))

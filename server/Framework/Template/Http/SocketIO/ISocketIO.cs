@@ -5,7 +5,7 @@ namespace Netronics.Template.Http.SocketIO
 {
     public interface ISocketIO
     {
-        void On(string id, Action<JArray> action);
-        void Emit(string id, JArray o);
+        void On(string id, Action<dynamic> action);
+        void Emit(string id, dynamic o);
     }
 }

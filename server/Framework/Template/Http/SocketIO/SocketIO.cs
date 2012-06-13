@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using Netronics.Channel;
-using Netronics.Channel.Channel;
-using Netronics.Template.Http.Handler;
-using Newtonsoft.Json.Linq;
 
 namespace Netronics.Template.Http.SocketIO
 {
@@ -14,7 +10,7 @@ namespace Netronics.Template.Http.SocketIO
         private readonly ReaderWriterLockSlim _clientLock = new ReaderWriterLockSlim();
         private readonly Dictionary<string, Client> _clients = new Dictionary<string, Client>();
         private readonly Random _random = new Random();
-        private readonly Dictionary<string, Action<ISocketIO>> _event = new Dictionary<string, Action<ISocketIO>>();
+        private readonly Dictionary<string, Action<dynamic>> _event = new Dictionary<string, Action<dynamic>>();
 
         public IChannelHandler GetWebSocket(string[] args)
         {
@@ -103,7 +99,7 @@ namespace Netronics.Template.Http.SocketIO
         public void Handshake(HttpContact contact, string[] args)
         {
             _clientLock.EnterWriteLock();
-            var client = CreateKey(new Client(contact, _event));
+            var client = CreateKey(new Client(contact, this));
             _clientLock.ExitWriteLock();
 
             if (client == null)
@@ -116,18 +112,15 @@ namespace Netronics.Template.Http.SocketIO
             contact.GetResponse().SetContent(client.Key + ":20:15:websocket,xhr-polling");//flashsocket,htmlfile,jsonp-polling
         }
 
-        public void On(string id, Action<ISocketIO> action)
+        public void On(string id, Action<dynamic> action)
         {
             _event.Add(id, action);
         }
 
-        public void On(string id, Action<JArray> action)
+        public void Emit(string id, dynamic o)
         {
-            throw new Exception("JArray는 사용하지 못합니다.");
-        }
-
-        public void Emit(string id, JArray o)
-        {
+            if (_event.ContainsKey(id))
+                _event[id](o);
         }
     }
 }

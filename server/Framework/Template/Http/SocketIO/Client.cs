@@ -15,16 +15,16 @@ namespace Netronics.Template.Http.SocketIO
         private IChannel _channel;
         private readonly string _endPoint;
         private Timer _heartbeatTimer;
+        private ISocketIO _socketIO;
 
-        private Dictionary<string, Action<ISocketIO>> _serverEvent;
-        private Dictionary<string, Action<JArray>> _event = new Dictionary<string, Action<JArray>>();
+        private readonly Dictionary<string, Action<dynamic>> _event = new Dictionary<string, Action<dynamic>>();
 
-        public Client(HttpContact contact, Dictionary<string, Action<ISocketIO>> serverEvent)
+        public Client(HttpContact contact, ISocketIO socketIO)
         {
+            _socketIO = socketIO;
             _channel = contact.GetChannel();
             _endPoint = contact.GetRequest().GetPath();
             _endPoint = _endPoint.Substring(0, _endPoint.Length - 3);
-            _serverEvent = serverEvent;
         }
 
         public IChannel GetChannel()
@@ -49,9 +49,7 @@ namespace Netronics.Template.Http.SocketIO
             {
                 keepHandlerChannel.SetHandler(this);
             }
-
-            if (_serverEvent.ContainsKey("connection"))
-                _serverEvent["connection"](this);
+            _socketIO.Emit("connection", this);
 
             Send("1", "", _endPoint + "?server=netronics");
             if(_heartbeatTimer == null)
@@ -94,12 +92,12 @@ namespace Netronics.Template.Http.SocketIO
             _channel.SendMessage(string.Format("{0}:{1}:{2}", type, id, /*_endPoint*/"") + (data != null ? string.Format(":{0}", data) : ""));
         }
 
-        public void On(string id, Action<JArray> action)
+        public void On(string id, Action<dynamic> action)
         {
             _event.Add(id, action);
         }
 
-        public void Emit(string id, JArray o)
+        public void Emit(string id, dynamic o)
         {
             dynamic data = new JObject();
             data.name = id;

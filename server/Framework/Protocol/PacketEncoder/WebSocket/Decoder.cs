@@ -3,7 +3,7 @@ using Netronics.Channel.Channel;
 
 namespace Netronics.Protocol.PacketEncoder.WebSocket
 {
-    public class WebSocketDecoder : IPacketDecoder
+    public class Decoder : IPacketDecoder
     {
         public dynamic Decode(IChannel channel, PacketBuffer buffer)
         {
@@ -11,7 +11,7 @@ namespace Netronics.Protocol.PacketEncoder.WebSocket
             var stream = new MemoryStream();
             while (true)
             {
-                if (buffer.AvailableBytes() < 3)
+                if (buffer.AvailableBytes() < 2)
                     return null;
                 byte frameH = buffer.ReadByte();
                 byte frameP = buffer.ReadByte();
@@ -55,6 +55,16 @@ namespace Netronics.Protocol.PacketEncoder.WebSocket
                 {
                     buffer.EndBufferIndex();
                     return new ConnectionClose();
+                }
+                if ((frameH & 0xF) == 9)
+                {
+                    buffer.EndBufferIndex();
+                    return new Ping();
+                }
+                if((frameH & 0xF) == 10)
+                {
+                    buffer.EndBufferIndex();
+                    return new Pong();
                 }
 
                 if((frameH & 0x80) == 128)

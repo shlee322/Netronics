@@ -22,6 +22,11 @@ namespace Netronics.Template.Service
             _service = service;
         }
 
+        public LocalService GetLocalService()
+        {
+            return _service;
+        }
+
         public void AddReceiver(Service.Service service)
         {
         }
@@ -37,7 +42,14 @@ namespace Netronics.Template.Service
 
         public static Entity GetEntity()
         {
-            return Stack.Value.Peek();
+            try
+            {
+                return Stack.Value.Peek();
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         public object Call<T>(Func<T, object> func)

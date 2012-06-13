@@ -8,8 +8,8 @@ namespace Netronics.Template.Http
     class WebSocketProtocol : IProtocol
     {
         public static readonly WebSocketProtocol Protocol = new WebSocketProtocol();
-        private static readonly IPacketEncoder Encoder = new WebSocketEncoder();
-        private static readonly IPacketDecoder Decoder = new WebSocketDecoder();
+        private static readonly IPacketEncoder Encoder = new Encoder();
+        private static readonly IPacketDecoder Decoder = new Decoder();
 
         public IPacketEncryptor GetEncryptor()
         {

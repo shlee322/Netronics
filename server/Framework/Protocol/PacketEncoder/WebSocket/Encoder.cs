@@ -4,7 +4,7 @@ using Netronics.Channel.Channel;
 
 namespace Netronics.Protocol.PacketEncoder.WebSocket
 {
-    public class WebSocketEncoder : IPacketEncoder
+    public class Encoder : IPacketEncoder
     {
         private void InputBuffer(PacketBuffer buffer, byte type, byte[] data)
         {
@@ -30,10 +30,14 @@ namespace Netronics.Protocol.PacketEncoder.WebSocket
         public PacketBuffer Encode(IChannel channel, dynamic data)
         {
             var buffer = new PacketBuffer();
-            if(data is string)
+            if (data is string)
                 InputBuffer(buffer, 1, System.Text.Encoding.UTF8.GetBytes(data));
             else if (data is byte[])
                 InputBuffer(buffer, 2, data);
+            else if (data is Ping)
+                return null;
+            else if (data is Pong)
+                return null;
             else
                 return null;
             return buffer;

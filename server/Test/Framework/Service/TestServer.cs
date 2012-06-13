@@ -15,9 +15,13 @@ namespace Framework.Service
         [Test]
         public void Test1()
         {
-            var service = new LocalService("");
-            service.AddRole<ILoginServer>(() => new LoginServer());
-            var entity = service.NewEntity();
+            var loginService = new LocalService("");
+            loginService.AddRole<ILoginServer>(() => new LoginServer());
+            var authService = new LocalService("");
+            authService.AddRole<IAuthServer>(() => new AuthServer());
+
+
+            var entity = loginService.NewEntity();
             entity.Call<ILoginServer>(server => server.Login("test", "test"));
             //ExitEvent.WaitOne();
         }

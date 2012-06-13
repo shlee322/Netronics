@@ -91,8 +91,10 @@
     <Compile Include="Protocol\PacketEncoder\Http\Response.cs" />
     <Compile Include="Protocol\IProtocol.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\ConnectionClose.cs" />
-    <Compile Include="Protocol\PacketEncoder\WebSocket\WebSocketDecoder.cs" />
-    <Compile Include="Protocol\PacketEncoder\WebSocket\WebSocketEncoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\WebSocket\Ping.cs" />
+    <Compile Include="Protocol\PacketEncoder\WebSocket\Pong.cs" />
+    <Compile Include="Protocol\PacketEncoder\WebSocket\Decoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\WebSocket\Encoder.cs" />
     <Compile Include="Template\Http\Handler\DynamicUriHandler.cs" />
     <Compile Include="Template\Http\HttpContact.cs" />
     <Compile Include="Template\Http\Handler\HttpHandler.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="Template\Service\Entity.cs" />
     <Compile Include="Template\Service\Service\IRole.cs" />
     <Compile Include="Template\Service\Service\LocalService.cs" />
+    <Compile Include="Template\Service\Service\RemoteService.cs" />
     <Compile Include="Template\Service\Service\Service.cs" />
     <Compile Include="Template\Service\Task.cs" />
   </ItemGroup>
