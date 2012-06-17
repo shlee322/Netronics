@@ -63,6 +63,10 @@ namespace Netronics.Template.Http.SocketIO
 
             _heartbeatTimer.Dispose();
             _heartbeatTimer = null;
+
+            Send("0", "");
+
+            _socketIO.Emit("disconnect", this);
         }
 
         public void MessageReceive(IChannel channel, dynamic message)
@@ -71,11 +75,31 @@ namespace Netronics.Template.Http.SocketIO
             {
                 channel.Disconnect();
                 return;
-            }else if(message is byte[])
+            }
+            else if(message is byte[])
             {
                 string msg = System.Text.Encoding.UTF8.GetString(message);
 
-                if (msg.StartsWith("5:::"))
+                if (msg.StartsWith("0"))
+                {
+                    channel.Disconnect();
+                }
+                else if (msg.StartsWith("3:::")) //Message
+                {
+                    if (msg.Length < 5)
+                        return;
+                    if (_event.ContainsKey("message"))
+                        _event["message"](msg.Substring(4));
+                }
+                else if (msg.StartsWith("4:::")) //JSON Message
+                {
+                    if (msg.Length < 5)
+                        return;
+                    if (_event.ContainsKey("message"))
+                        _event["message"](JsonConvert.DeserializeObject(msg.Substring(4)));
+
+                }
+                else if (msg.StartsWith("5:::")) //Event
                 {
                     if (msg.Length < 5)
                         return;
