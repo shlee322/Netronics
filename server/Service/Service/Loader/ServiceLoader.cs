@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Netronics.Channel;
+using Netronics.Channel.Channel;
+using Service.Service.Manager;
 
 namespace Service.Service.Loader
 {
@@ -28,6 +31,16 @@ namespace Service.Service.Loader
             _service = _info.GetService();
 
             _manager = new ManagerProcessor(this, File.ReadAllLines(path + "/manager.ns"));
+        }
+
+        public string GetServiceName()
+        {
+            return _info.GetServiceName();
+        }
+
+        public LocalService GetService()
+        {
+            return _service;
         }
     }
 }

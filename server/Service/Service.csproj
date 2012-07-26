@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.0.8.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,10 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Manager\Handler.cs" />
-    <Compile Include="Manager\PacketEncoder.cs" />
-    <Compile Include="Manager\Packets\JoinService.cs" />
-    <Compile Include="Manager\Packets\Ping.cs" />
+    <Compile Include="Manager\Network.cs" />
+    <Compile Include="Manager\NetworkManager.cs" />
+    <Compile Include="Manager\Service.cs" />
     <Compile Include="Manager\ServiceManager.cs" />
+    <Compile Include="Manager\Services.cs" />
     <Compile Include="Service\Command.cs" />
     <Compile Include="Coroutine\Co.cs" />
     <Compile Include="Coroutine\Coroutine.cs" />
@@ -56,7 +58,8 @@
     <Compile Include="Coroutine\NonNestedYield.cs" />
     <Compile Include="Service\Entity.cs" />
     <Compile Include="Service\IServiceInfo.cs" />
-    <Compile Include="Service\Loader\ManagerProcessor.cs" />
+    <Compile Include="Service\Manager\Handler.cs" />
+    <Compile Include="Service\Manager\ManagerProcessor.cs" />
     <Compile Include="Service\LocalService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
