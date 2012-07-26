@@ -16,7 +16,7 @@ namespace Netronics.Template.Http
         public HttpProperties(Func<IChannelHandler> handler, int port = 80)
         {
             IpEndPoint = new IPEndPoint(IPAddress.Any, port);
-            ((ChannelFactory) ChannelFactory).SetProtocol(()=>this).SetHandler(handler);
+            ((ChannelPipe) ChannelPipe).SetProtocol(()=>this).SetHandler(handler);
         }
 
         public IPacketEncryptor GetEncryptor()

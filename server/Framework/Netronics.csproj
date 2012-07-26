@@ -74,6 +74,7 @@
     <Compile Include="Channel\ChannelHandler.cs" />
     <Compile Include="Channel\Channel\Channel.cs" />
     <Compile Include="Channel\Channel\IChannel.cs" />
+    <Compile Include="Channel\Channel\SslChannel.cs" />
     <Compile Include="Channel\IChannelHandler.cs" />
     <Compile Include="Channel\Channel\IKeepHandlerChannel.cs" />
     <Compile Include="Channel\Channel\IKeepParallelChannel.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Template\Http\Handler\HttpHandler.cs" />
     <Compile Include="Template\Http\HttpProperties.cs" />
     <Compile Include="Template\Http\Handler\IUriHandler.cs" />
+    <Compile Include="Template\Http\HttpsProperties.cs" />
     <Compile Include="Template\Http\Module\Controller.cs" />
     <Compile Include="Template\Http\Module\Module.cs" />
     <Compile Include="Template\Http\SocketIO\ISocketIO.cs" />
@@ -111,9 +113,9 @@
     <Compile Include="Template\Http\UriFinder.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonEncoder.cs" />
-    <Compile Include="Channel\ChannelFactory.cs" />
+    <Compile Include="Channel\ChannelPipe.cs" />
     <Compile Include="Channel\Channel\SocketChannel.cs" />
-    <Compile Include="Channel\IChannelFactory.cs" />
+    <Compile Include="Channel\IChannelPipe.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Netronics.cs" />
     <Compile Include="PacketBuffer.cs" />

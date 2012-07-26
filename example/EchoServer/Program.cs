@@ -14,7 +14,7 @@ namespace EchoServer
         {
             var properties = new Properties();
             properties.SetIpEndPoint(new IPEndPoint(IPAddress.Any, 7777));
-            properties.SetChannelFactoryOption(factory => SetFactoryOption((ChannelFactory)factory));
+            properties.SetChannelFactoryOption(factory => SetFactoryOption((ChannelPipe)factory));
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
@@ -22,10 +22,10 @@ namespace EchoServer
             ExitEvent.WaitOne();
         }
 
-        private static void SetFactoryOption(ChannelFactory factory)
+        private static void SetFactoryOption(ChannelPipe pipe)
         {
-            factory.SetProtocol(() => new ModifiableProtocol(encoder: new PacketEncoder(), decoder: new PacketDecoder()));
-            factory.SetHandler(() => new Handler());
+            pipe.SetProtocol(() => new ModifiableProtocol(encoder: new PacketEncoder(), decoder: new PacketDecoder()));
+            pipe.SetHandler(() => new Handler());
         }
     }
 }

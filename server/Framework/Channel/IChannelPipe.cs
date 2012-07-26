@@ -5,9 +5,9 @@ namespace Netronics.Channel
 {
     /// <summary>
     /// <see cref="Netronics"/>의 핵심 인터페이스인 <see cref="IChannel"/>의 생성을 담당하는 인터페이스.
-    /// <see cref="IProperties"/>의 <see cref="IProperties.GetChannelFactory"/>에 의해 <see cref="Netronics"/>로 전달됩니다.
+    /// <see cref="IProperties"/>의 <see cref="IProperties.GetChannelPipe"/>에 의해 <see cref="Netronics"/>로 전달됩니다.
     /// </summary>
-    public interface IChannelFactory
+    public interface IChannelPipe
     {
         /// <summary>
         /// 채널을 생성하는 메서드

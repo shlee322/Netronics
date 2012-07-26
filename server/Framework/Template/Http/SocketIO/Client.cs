@@ -32,6 +32,11 @@ namespace Netronics.Template.Http.SocketIO
             return _channel;
         }
 
+        public override string ToString()
+        {
+            return _channel.ToString();
+        }
+
         public void Connected(IChannel channel)
         {
             if (channel.ToString().Substring(0, channel.ToString().IndexOf(":", StringComparison.Ordinal))
@@ -61,7 +66,8 @@ namespace Netronics.Template.Http.SocketIO
             if(channel != _channel)
                 return;
 
-            _heartbeatTimer.Dispose();
+            if (_heartbeatTimer != null)
+                _heartbeatTimer.Dispose();
             _heartbeatTimer = null;
 
             Send("0", "");

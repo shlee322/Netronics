@@ -15,7 +15,7 @@ namespace ChatServer
         {
             var properties = new Properties();
             properties.SetIpEndPoint(new IPEndPoint(IPAddress.Any, 7777));
-            properties.SetChannelFactoryOption(factory => SetFactoryOption((ChannelFactory)factory));
+            properties.SetChannelFactoryOption(factory => SetFactoryOption((ChannelPipe)factory));
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
@@ -23,11 +23,11 @@ namespace ChatServer
             ExitEvent.WaitOne();
         }
 
-        private static void SetFactoryOption(ChannelFactory factory)
+        private static void SetFactoryOption(ChannelPipe pipe)
         {
             PacketEncoder encoder = new PacketEncoder();
-            factory.SetProtocol(() => new ModifiableProtocol(encoder: encoder, decoder: encoder));
-            factory.SetHandler(() => Handler);
+            pipe.SetProtocol(() => new ModifiableProtocol(encoder: encoder, decoder: encoder));
+            pipe.SetHandler(() => Handler);
         }
     }
 }

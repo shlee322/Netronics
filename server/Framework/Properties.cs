@@ -6,17 +6,17 @@ namespace Netronics
 {
     public class Properties : IProperties
     {
-        protected IChannelFactory ChannelFactory = new ChannelFactory();
+        protected IChannelPipe ChannelPipe = new ChannelPipe();
         protected IPEndPoint IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
         protected event EventHandler StartEvent;
         protected event EventHandler StopEvent;
 
-        public static Properties CreateProperties(IPEndPoint ipEndPoint, ChannelFactory factory)
+        public static Properties CreateProperties(IPEndPoint ipEndPoint, ChannelPipe pipe)
         {
             var properties = new Properties();
             properties.SetIpEndPoint(ipEndPoint);
-            properties.ChannelFactory = factory;
+            properties.ChannelPipe = pipe;
             return properties;
         }
 
@@ -38,9 +38,9 @@ namespace Netronics
             return this;
         }
 
-        public Properties SetChannelFactoryOption(Action<IChannelFactory> action)
+        public Properties SetChannelFactoryOption(Action<IChannelPipe> action)
         {
-            action(GetChannelFactory());
+            action(GetChannelPipe());
             return this;
         }
 
@@ -49,9 +49,9 @@ namespace Netronics
             return IpEndPoint;
         }
 
-        public IChannelFactory GetChannelFactory()
+        public IChannelPipe GetChannelPipe()
         {
-            return ChannelFactory;
+            return ChannelPipe;
         }
     }
 }

@@ -1,26 +1,36 @@
 ﻿using System;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading;
-using Netronics.Protocol;
-using Netronics.Template.Service;
 
 namespace Netronics.Channel.Channel
 {
-    public class SocketChannel : Channel
+    public class SslChannel : Channel
     {
-        public static SocketChannel CreateChannel(Socket socket)
+        public static SslChannel CreateChannel(Socket socket, System.Security.Cryptography.X509Certificates.X509Certificate certificate)
         {
-            return new SocketChannel(socket);
+            var channel = new SslChannel(socket);
+            channel._stream.AuthenticateAsServer(certificate);
+            return channel;
+        }
+
+        public static SslChannel CreateChannel(Socket socket, string host)
+        {
+            var channel = new SslChannel(socket);
+            channel._stream.AuthenticateAsClient(host);
+            return channel;
         }
 
         private readonly byte[] _originalPacketBuffer = new byte[512];
         private readonly Socket _socket;
+        private readonly SslStream _stream;
 
         private object _tag;
 
-        private SocketChannel(Socket socket)
+        private SslChannel(Socket socket)
         {
             _socket = socket;
+            _stream = new SslStream(new NetworkStream(socket, true));
         }
 
         public Socket GetSocket()
@@ -37,7 +47,7 @@ namespace Netronics.Channel.Channel
         {
             try
             {
-                _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
+                _stream.BeginRead(_originalPacketBuffer, 0, 512, ReadCallback, null);
             }
             catch (SocketException)
             {
@@ -49,8 +59,8 @@ namespace Netronics.Channel.Channel
         {
             int len;
             try
-            {
-                len = _socket.EndReceive(ar);
+            {   
+                len = _stream.EndRead(ar);
                 if (len == 0)
                     throw new SocketException();
             }
@@ -92,7 +102,7 @@ namespace Netronics.Channel.Channel
 
             try
             {
-                _socket.BeginSend(o, 0, o.Length, SocketFlags.None, SendCallback, null);
+                _stream.BeginWrite(o, 0, o.Length, SendCallback, null);
             }
             catch (SocketException)
             {

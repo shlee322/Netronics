@@ -54,7 +54,7 @@ namespace Netronics
 
         protected virtual void AcceptCallback(IAsyncResult ar)
         {
-            AddChannel(Properties.GetChannelFactory().CreateChannel(this, Socket.EndAccept(ar))).Connect();
+            AddChannel(Properties.GetChannelPipe().CreateChannel(this, Socket.EndAccept(ar))).Connect();
             Socket.BeginAccept(AcceptCallback, null);
         }
 
@@ -65,7 +65,7 @@ namespace Netronics
 
         public virtual IChannel AddSocket(Socket socket)
         {
-            return AddChannel(Properties.GetChannelFactory().CreateChannel(this, socket));
+            return AddChannel(Properties.GetChannelPipe().CreateChannel(this, socket));
         }
     }
 }

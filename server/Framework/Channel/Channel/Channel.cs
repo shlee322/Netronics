@@ -22,7 +22,7 @@ namespace Netronics.Channel.Channel
             return true;
         }
 
-        protected void Disconnected()
+        protected virtual void Disconnected()
         {
             lock (_packetBuffer)
             {

@@ -18,6 +18,7 @@ namespace ChatServer
 
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(data);
             PacketBuffer buffer = new PacketBuffer();
+            buffer.WriteUInt32((uint)bytes.Length);
             buffer.Write(bytes, 0, bytes.Length);
             return buffer;
         }

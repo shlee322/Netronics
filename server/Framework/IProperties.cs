@@ -9,6 +9,6 @@ namespace Netronics
         void OnStartEvent(Netronics netronics, EventArgs eventArgs);
         void OnStopEvent(Netronics netronics, EventArgs eventArgs);
         IPEndPoint GetIPEndPoint();
-        IChannelFactory GetChannelFactory();
+        IChannelPipe GetChannelPipe();
     }
 }

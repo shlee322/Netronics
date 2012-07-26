@@ -18,7 +18,7 @@ namespace Netronics
         protected override void StartSocket()
         {
             Socket.Connect(Properties.GetIPEndPoint());
-            _channel = AddChannel(Properties.GetChannelFactory().CreateChannel(this, Socket));
+            _channel = AddChannel(Properties.GetChannelPipe().CreateChannel(this, Socket));
             _channel.Connect();
         }
 
