@@ -56,7 +56,12 @@ namespace Netronics.Channel.Channel
             }
             catch (SocketException)
             {
-                ThreadPool.QueueUserWorkItem((o) => Disconnect());
+                Disconnect();
+                return;
+            }
+            catch(ObjectDisposedException)
+            {
+                Disconnect();
                 return;
             }
 
