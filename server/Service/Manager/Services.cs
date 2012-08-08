@@ -7,12 +7,23 @@ namespace Service.Manager
 {
     class Services
     {
+        private readonly string _name;
         private readonly ReaderWriterLockSlim _servicesLock = new ReaderWriterLockSlim();
         private readonly Service[] _services = new Service[100];
         private int _maxIndex = -1;
         private readonly Queue<int> _serviceQueue = new Queue<int>();
 
-        public void JoinService(IChannel channel, int id, JArray address)
+        public Services(string name)
+        {
+            _name = name;
+        }
+
+        public string GetServicesName()
+        {
+            return _name;
+        }
+
+        public Service JoinService(IChannel channel, int id, JArray address)
         {
             if (id == -1)
             {
@@ -28,7 +39,7 @@ namespace Service.Manager
                     {
                     }
                 }
-                _services[id] = new Service(id, address);
+                _services[id] = new Service(this, id, address);
                 _servicesLock.ExitWriteLock();
             }
 
@@ -37,6 +48,25 @@ namespace Service.Manager
             _servicesLock.ExitReadLock();
 
             service.AddChannel(channel);
+
+            return service;
+        }
+
+        public dynamic GetServicesNetworkInfo(Network network)
+        {
+            dynamic packet = new JObject();
+            packet.type = "network_info";
+            packet.service = GetServicesName();
+            packet.network = new JArray();
+            _servicesLock.EnterReadLock();
+            for (int i = 0; i < _services.Length; i++)
+            {
+                if(_services[i] == null)
+                    continue;
+                packet.network.Add(network.GetAddress(_services[i]));
+            }
+            _servicesLock.ExitReadLock();
+            return packet;
         }
     }
 }

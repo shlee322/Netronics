@@ -24,7 +24,7 @@ namespace Service.Manager
 
         public void MessageReceive(IChannel channel, dynamic message)
         {
-            if(message.type == "joinService")
+            if(message.type == "join_service")
                 _manager.JoinService(channel, (string)message.name, message.id == null ? -1 : (int)message.id, (JArray)message.address);
             
         }

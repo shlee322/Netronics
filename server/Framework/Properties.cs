@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using Netronics.Channel;
+using Netronics.Event;
 
 namespace Netronics
 {
@@ -9,7 +10,7 @@ namespace Netronics
         protected IChannelPipe ChannelPipe = new ChannelPipe();
         protected IPEndPoint IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
-        protected event EventHandler StartEvent;
+        protected event EventHandler<StartEventArgs> StartEvent;
         protected event EventHandler StopEvent;
 
         public static Properties CreateProperties(IPEndPoint ipEndPoint, ChannelPipe pipe)
@@ -20,7 +21,7 @@ namespace Netronics
             return properties;
         }
 
-        public void OnStartEvent(Netronics netronics, EventArgs eventArgs)
+        public void OnStartEvent(Netronics netronics, StartEventArgs eventArgs)
         {
             if (StartEvent != null)
                 StartEvent(netronics, eventArgs);

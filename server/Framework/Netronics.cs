@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Netronics.Event;
 
 namespace Netronics
 {
@@ -23,7 +24,7 @@ namespace Netronics
 
             InitSocket();
             StartSocket();
-            Properties.OnStartEvent(this, new EventArgs());
+            Properties.OnStartEvent(this, new StartEventArgs(Socket));
 
             return this;
         }
@@ -38,11 +39,11 @@ namespace Netronics
         protected virtual void InitSocket()
         {
             Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Socket.Bind(Properties.GetIPEndPoint());
         }
 
         protected virtual void StartSocket()
         {
+            Socket.Bind(Properties.GetIPEndPoint());
             Socket.Listen(50);
             Socket.BeginAccept(AcceptCallback, null);
         }

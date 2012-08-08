@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using Netronics;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Netronics.Event;
 using Netronics.Protocol;
 using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.Bson;
@@ -63,7 +64,7 @@ namespace Service.Service.Manager
             return this;
         }
 
-        public void OnStartEvent(Netronics.Netronics netronics, EventArgs eventArgs)
+        public void OnStartEvent(Netronics.Netronics netronics, StartEventArgs eventArgs)
         {
         }
 
@@ -143,7 +144,7 @@ namespace Service.Service.Manager
         public object GetJoinServicePacket()
         {
             dynamic packet = new JObject();
-            packet.type = "joinService";
+            packet.type = "join_service";
             if (_serviceId != 0)
                 packet.id = _serviceId;
             packet.name = _loader.GetServiceName();

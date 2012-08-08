@@ -1,10 +1,14 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Netronics.Protocol;
+using log4net;
 
 namespace Netronics.Channel.Channel
 {
     public class Channel : IKeepProtocolChannel, IKeepHandlerChannel, IKeepParallelChannel
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Channel)); 
+
         private readonly PacketBuffer _packetBuffer = new PacketBuffer();
         private IProtocol _protocol;
         private IChannelHandler _handler;
@@ -12,13 +16,10 @@ namespace Netronics.Channel.Channel
 
         protected bool ReceivePacket(byte[] buffer, int len)
         {
-            lock (_packetBuffer)
-            {
-                if (_packetBuffer.IsDisposed())
-                    return false;
-                _packetBuffer.Write(buffer, 0, len);
-            }
-            ThreadPool.QueueUserWorkItem((o) => Receive());
+            if (_packetBuffer.IsDisposed())
+                return false;
+            _packetBuffer.Write(buffer, 0, len);
+            Receive();
             return true;
         }
 
@@ -32,35 +33,43 @@ namespace Netronics.Channel.Channel
 
         private void Receive()
         {
-            dynamic message;
-
-            lock (_packetBuffer)
+            try
             {
-                if (_packetBuffer.IsDisposed())
-                    return;
-                message = GetProtocol().GetDecoder().Decode(this, _packetBuffer);
-            }
-
-            if (message == null)
-            {
-                BeginReceive();
-                return;
-            }
-
-            if (GetParallel())
-            {
-                ThreadPool.QueueUserWorkItem((o) => GetHandler().MessageReceive(this, message));
-                ThreadPool.QueueUserWorkItem((o) => Receive());
-            }
-            else
-            {
-                ThreadPool.QueueUserWorkItem((o) =>
+                while (true)
                 {
-                    GetHandler().MessageReceive(this, message);
-                    ThreadPool.QueueUserWorkItem((s) => Receive());
-                });
+                    dynamic message;
+
+                    if (_packetBuffer.IsDisposed())
+                        return;
+
+                    message = GetProtocol().GetDecoder().Decode(this, _packetBuffer);
+
+                    if (message == null)
+                    {
+                        BeginReceive();
+                        return;
+                    }
+
+                    ThreadPool.QueueUserWorkItem((o) =>
+                        {
+                            try
+                            {
+                                GetHandler().MessageReceive(this, message);
+                            }
+                            catch (Exception e)
+                            {
+                                Log.Error("MessageReceive Error", e);
+                            }
+                            
+                        });
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error("Decode Error", e);
             }
         }
+
         public virtual IProtocol SetProtocol(IProtocol protocol)
         {
             _protocol = protocol;
@@ -97,7 +106,16 @@ namespace Netronics.Channel.Channel
         public virtual void Connect()
         {
             if (GetHandler() != null)
-                GetHandler().Connected(this);
+            {
+                try
+                {
+                    GetHandler().Connected(this);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Connected Error", e);
+                }
+            }
 
             BeginReceive();
         }
@@ -109,6 +127,17 @@ namespace Netronics.Channel.Channel
 
         public virtual void Disconnect()
         {
+            if (GetHandler() != null)
+            {
+                try
+                {
+                    GetHandler().Disconnected(this);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Disconnected Error", e);
+                }
+            }
         }
 
         public virtual void SendMessage(dynamic message)

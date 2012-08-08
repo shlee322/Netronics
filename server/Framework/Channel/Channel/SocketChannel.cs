@@ -65,12 +65,8 @@ namespace Netronics.Channel.Channel
 
         public override void Disconnect()
         {
-            _socket.BeginDisconnect(false, ar =>
-            {
-                if (GetHandler() != null)
-                    GetHandler().Disconnected(this);
-                Disconnected();
-            }, null);
+            base.Disconnect();
+            _socket.BeginDisconnect(false, ar => Disconnected(), null);
         }
 
         protected override void Disconnected()
@@ -78,8 +74,6 @@ namespace Netronics.Channel.Channel
             base.Disconnected();
             _socket.Dispose();
         }
-
-
 
         public override void SendMessage(dynamic message)
         {

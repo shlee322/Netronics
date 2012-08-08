@@ -16,5 +16,20 @@ namespace Service.Manager
                 _networks.Add(new Network((string)row.service[0], (string)row.service[1], IPAddress.Parse((string)row.subnet).GetAddressBytes(), IPAddress.Parse((string)row.mask).GetAddressBytes()));
             }
         }
+
+        public List<Network> GetNetworks(Service service)
+        {
+            var list = new List<Network>();
+
+            foreach (Network row in _networks)
+            {
+                if(row.Check(service))
+                {
+                    list.Add(row);
+                }
+            }
+
+            return list;
+        }
     }
 }

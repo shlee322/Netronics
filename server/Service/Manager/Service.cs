@@ -7,14 +7,16 @@ namespace Service.Manager
 {
     class Service
     {
+        private readonly Services _services;
         private int _id;
         private byte[][] _address;
 
         private readonly ReaderWriterLockSlim _channelsLock = new ReaderWriterLockSlim();
         private List<IChannel> _channels = new List<IChannel>(); 
 
-        public Service(int id, IEnumerable<JToken> address)
+        public Service(Services services, int id, IEnumerable<JToken> address)
         {
+            _services = services;
             _id = id;
             var addressList = new List<byte[]>();
             foreach (var bytes in address)
@@ -27,6 +29,15 @@ namespace Service.Manager
             _channelsLock.EnterWriteLock();
             _channels.Add(channel);
             _channelsLock.ExitWriteLock();
+        }
+        public string GetServiceName()
+        {
+            return _services.GetServicesName();
+        }
+
+        public byte[][] GetAddress()
+        {
+            return _address;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading;
 using Netronics;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Netronics.Event;
 using Netronics.Protocol;
 using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.Bson;
@@ -22,7 +23,7 @@ namespace Service.Manager
         private static readonly BsonDecoder Decoder = new BsonDecoder();
 
         private readonly Netronics.Netronics _netronics;
-        private readonly ReaderWriterLockSlim _ServicesLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _servicesLock = new ReaderWriterLockSlim();
         private readonly Dictionary<string, Services> _services = new Dictionary<string, Services>();
         private NetworkManager _networkManager;
 
@@ -47,7 +48,7 @@ namespace Service.Manager
 
         #region IProperties Members
 
-        public void OnStartEvent(Netronics.Netronics netronics, EventArgs eventArgs)
+        public void OnStartEvent(Netronics.Netronics netronics, StartEventArgs eventArgs)
         {
         }
 
@@ -96,30 +97,48 @@ namespace Service.Manager
             _manager = new ServiceManager(path);
         }
 
-        public void JoinService(IChannel channel, string name, int id, JArray address)
+        private Services GetServices(string name)
         {
             Services services = null;
-            _ServicesLock.EnterReadLock();
+            _servicesLock.EnterReadLock();
             if (_services.ContainsKey(name))
                 services = _services[name];
-            _ServicesLock.ExitReadLock();
+            _servicesLock.ExitReadLock();
+            return services;
+        }
 
+        public void JoinService(IChannel channel, string name, int id, JArray address)
+        {
+            var services = GetServices(name);
             if(services == null)
             {
-                _ServicesLock.EnterWriteLock();
+                _servicesLock.EnterWriteLock();
                 if (!_services.ContainsKey(name))
                 {
-                    services = new Services();
+                    services = new Services(name);
                     _services.Add(name, services);
                 }
                 else
                 {
                     services = _services[name];
                 }
-                _ServicesLock.ExitWriteLock();
+                _servicesLock.ExitWriteLock();
             }
 
-            services.JoinService(channel, id, address);
+            var service = services.JoinService(channel, id, address);
+
+            if (id == -1)
+            {
+                var networks = _networkManager.GetNetworks(service);
+                foreach (var network in networks)
+                {
+                    var remoteServiceName = network.Service1 == name ? network.Service2 : network.Service1;
+                    var remoteService = GetServices(remoteServiceName);
+                    if(remoteService == null)
+                        continue;
+                    channel.SendMessage(remoteService.GetServicesNetworkInfo(network));
+                }
+            }
         }
     }
 }
