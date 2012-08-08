@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Threading;
-using Netronics.Protocol;
-using Netronics.Template.Service;
+using log4net;
 
 namespace Netronics.Channel.Channel
 {
     public class SocketChannel : Channel
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SocketChannel)); 
+
         public static SocketChannel CreateChannel(Socket socket)
         {
             return new SocketChannel(socket);
@@ -70,8 +70,15 @@ namespace Netronics.Channel.Channel
 
         public override void Disconnect()
         {
-            base.Disconnect();
-            _socket.BeginDisconnect(false, ar => Disconnected(), null);
+            try
+            {
+                base.Disconnect();
+                _socket.BeginDisconnect(false, ar => Disconnected(), null);
+            }
+            catch (ObjectDisposedException e)
+            {
+                Log.Error("Disconnect가 여러번 호출 됬습니다.", e);
+            }
         }
 
         protected override void Disconnected()
