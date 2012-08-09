@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Netronics.Channel;
+﻿using Netronics.Channel;
 using Netronics.Channel.Channel;
 
 namespace Service.Service.Manager.Handler
@@ -26,6 +22,7 @@ namespace Service.Service.Manager.Handler
 
         public void MessageReceive(IChannel channel, dynamic message)
         {
+            ServiceMessageReceiver.Receive(_processor, channel, message);
         }
     }
 }

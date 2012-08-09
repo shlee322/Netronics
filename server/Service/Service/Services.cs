@@ -1,16 +1,20 @@
-﻿namespace Service.Service
+﻿using Service.Service.Manager;
+
+namespace Service.Service
 {
     class Services
     {
         private string _name;
+        private ManagerProcessor _managerProcessor;
         private Service[] _services = new Service[100];
 
-        public Services(string name)
+        public Services(ManagerProcessor managerProcessor,string name)
         {
+            _managerProcessor = managerProcessor;
             _name = name;
         }
 
-        public void NotifyJoinService(int id, byte[] network)
+        public void NotifyJoinService(int id, byte[] address, int port)
         {
             Service service = GetSerivce(id);
             if(service == null)
@@ -25,7 +29,12 @@
             }
             service = GetSerivce(id);
             if(service is RemoteService)
-                ((RemoteService)service).AddNetwork(network);
+                ((RemoteService)service).AddNetwork(address, port);
+        }
+
+        public ManagerProcessor GetManagerProcessor()
+        {
+            return _managerProcessor;
         }
 
         private Service GetSerivce(int id)

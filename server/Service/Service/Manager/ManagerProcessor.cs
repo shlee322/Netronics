@@ -125,20 +125,19 @@ namespace Service.Service.Manager
                         if(!_services.ContainsKey(item.Service))
                         {
                             var services = new Dictionary<string, Services>(_services);
-                            services.Add(item.Service, new Services(item.Service));
+                            services.Add(item.Service, new Services(this, item.Service));
                             _services = services;
                         }
-                        _services[item.Service].NotifyJoinService(item.Id, item.Network);
+                        _services[item.Service].NotifyJoinService(item.Id, item.Address, item.Port);
                     }
                 }
                 Thread.Sleep(0);
             }
         }
 
-        public void NotifyJoinService(string service, int id, byte[] network, int port)
+        public void NotifyJoinService(string service, int id, byte[] address, int port)
         {
-            //여기부터 개발해야함.
-            _addremoveQueue.Enqueue(new AddRemoveItem(){IsAdd = true, Service = service, Id = id, Network = network});
+            _addremoveQueue.Enqueue(new AddRemoveItem(){IsAdd = true, Service = service, Id = id, Address = address, Port = port});
         }
     }
 }

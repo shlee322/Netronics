@@ -9,6 +9,8 @@ namespace Service.Service.Manager
 
         public string Service;
         public int Id;
-        public byte[] Network;
+        public byte[] Address;
+
+        public int Port;
     }
 }
