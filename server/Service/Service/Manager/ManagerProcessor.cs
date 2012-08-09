@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading;
 using Netronics;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
@@ -16,10 +18,9 @@ using Service.Service.Loader;
 
 namespace Service.Service.Manager
 {
-    internal class ManagerProcessor : IProperties, IChannelPipe, IProtocol
+    internal class ManagerProcessor
     {
-        private static readonly BsonEncoder Encoder = new BsonEncoder();
-        private static readonly BsonDecoder Decoder = new BsonDecoder();
+
         private readonly string[] _host;
 
         private readonly Netronics.Netronics _manager;
@@ -27,76 +28,34 @@ namespace Service.Service.Manager
 
         private IPEndPoint _managerIPEndPoint;
 
-        private uint _serviceId = 0;
+        private int _serviceId = 0;
 
+        private readonly ReaderWriterLockSlim _servicesLock = new ReaderWriterLockSlim();
+        private Dictionary<string, Services> _services = new Dictionary<string, Services>();
+        private ConcurrentQueue<AddRemoveItem> _addremoveQueue = new ConcurrentQueue<AddRemoveItem>();
+        private Thread _processor;
+
+        private Netronics.Netronics _netronics;
 
         public ManagerProcessor(ServiceLoader loader, string[] host)
         {
             _loader = loader;
             _host = host;
-            _manager = new Client(this);
+            _processor = new Thread(Processing);
+            _processor.Start();
+            _netronics = new Netronics.Netronics(new Properties.Properties(new IPEndPoint(IPAddress.Any, 0), () => new Handler.Service(this)));
+            _netronics.Start();
 
             Connect();
+            _manager = new Client(new Properties.Properties(_managerIPEndPoint, () => new Handler.Manager(this)));
             _manager.Start();
         }
 
-        #region IChannelPipe Members
-
-        public IChannel CreateChannel(Netronics.Netronics netronics, Socket socket)
+        public int GetPort()
         {
-            SocketChannel channel = SocketChannel.CreateChannel(socket);
-            channel.SetProtocol(this);
-            channel.SetHandler(new Handler(this));
-            return channel;
+            return _netronics.GetEndIPPoint().Port;
         }
 
-        #endregion
-
-        #region IProperties Members
-
-        public IPEndPoint GetIPEndPoint()
-        {
-            return _managerIPEndPoint;
-        }
-
-        public IChannelPipe GetChannelPipe()
-        {
-            return this;
-        }
-
-        public void OnStartEvent(Netronics.Netronics netronics, StartEventArgs eventArgs)
-        {
-        }
-
-        public void OnStopEvent(Netronics.Netronics netronics, EventArgs eventArgs)
-        {
-        }
-
-        #endregion
-
-        #region IProtocol Members
-
-        public IPacketEncryptor GetEncryptor()
-        {
-            return null;
-        }
-
-        public IPacketDecryptor GetDecryptor()
-        {
-            return null;
-        }
-
-        public IPacketEncoder GetEncoder()
-        {
-            return Encoder;
-        }
-
-        public IPacketDecoder GetDecoder()
-        {
-            return Decoder;
-        }
-
-        #endregion
 
         private List<byte[]> GetIPAddress()
         {
@@ -149,7 +108,37 @@ namespace Service.Service.Manager
                 packet.id = _serviceId;
             packet.name = _loader.GetServiceName();
             packet.address = new JArray(GetIPAddress());
+            packet.port = GetPort();
             return packet;
+        }
+
+        private void Processing()
+        {
+            while (true)
+            {
+                AddRemoveItem item;
+                _addremoveQueue.TryDequeue(out item);
+                if (item != null)
+                {
+                    if (item.IsAdd)
+                    {
+                        if(!_services.ContainsKey(item.Service))
+                        {
+                            var services = new Dictionary<string, Services>(_services);
+                            services.Add(item.Service, new Services(item.Service));
+                            _services = services;
+                        }
+                        _services[item.Service].NotifyJoinService(item.Id, item.Network);
+                    }
+                }
+                Thread.Sleep(0);
+            }
+        }
+
+        public void NotifyJoinService(string service, int id, byte[] network, int port)
+        {
+            //여기부터 개발해야함.
+            _addremoveQueue.Enqueue(new AddRemoveItem(){IsAdd = true, Service = service, Id = id, Network = network});
         }
     }
 }

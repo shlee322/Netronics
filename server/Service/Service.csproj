@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Manager\AddRemoveItem.cs" />
     <Compile Include="Manager\Handler.cs" />
     <Compile Include="Manager\Network.cs" />
     <Compile Include="Manager\NetworkManager.cs" />
@@ -58,13 +59,18 @@
     <Compile Include="Coroutine\NonNestedYield.cs" />
     <Compile Include="Service\Entity.cs" />
     <Compile Include="Service\IServiceInfo.cs" />
-    <Compile Include="Service\Manager\Handler.cs" />
+    <Compile Include="Service\Manager\AddRemoveItem.cs" />
+    <Compile Include="Service\Manager\Handler\Manager.cs" />
+    <Compile Include="Service\Manager\Handler\Service.cs" />
     <Compile Include="Service\Manager\ManagerProcessor.cs" />
     <Compile Include="Service\LocalService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\Manager\Properties.cs" />
+    <Compile Include="Service\RemoteService.cs" />
     <Compile Include="Service\Service.cs" />
     <Compile Include="Service\Loader\ServiceLoader.cs" />
+    <Compile Include="Service\Services.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Netronics.csproj">

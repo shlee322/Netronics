@@ -1,20 +1,23 @@
-﻿using Netronics.Channel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Netronics.Channel;
 using Netronics.Channel.Channel;
 
-namespace Service.Service.Manager
+namespace Service.Service.Manager.Handler
 {
-    class Handler : IChannelHandler
+    class Service : IChannelHandler
     {
         private ManagerProcessor _processor;
 
-        public Handler(ManagerProcessor processor)
+        public Service(ManagerProcessor processor)
         {
             _processor = processor;
         }
 
         public void Connected(IChannel channel)
         {
-            channel.SendMessage(_processor.GetJoinServicePacket());
         }
 
         public void Disconnected(IChannel channel)

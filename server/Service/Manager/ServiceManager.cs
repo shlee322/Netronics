@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -25,11 +26,20 @@ namespace Service.Manager
         private readonly Netronics.Netronics _netronics;
         private readonly ReaderWriterLockSlim _servicesLock = new ReaderWriterLockSlim();
         private readonly Dictionary<string, Services> _services = new Dictionary<string, Services>();
+        private ConcurrentQueue<AddRemoveItem> _addremoveQueue = new ConcurrentQueue<AddRemoveItem>();
         private NetworkManager _networkManager;
+        private Thread _processor;
+
+        private AutoResetEvent _nextAddRemoveProcessing = new AutoResetEvent(false);
+        private Service _addremoveService = null;
+        private int _notifyServiceCount = -1;
+
 
         public ServiceManager(string path)
         {
             _networkManager = new NetworkManager(path);
+            _processor = new Thread(Processing);
+            _processor.Start();
             _netronics = new Netronics.Netronics(this);
             _netronics.Start();
         }
@@ -107,7 +117,52 @@ namespace Service.Manager
             return services;
         }
 
-        public void JoinService(IChannel channel, string name, int id, JArray address)
+        private void Processing()
+        {
+            while (true)
+            {
+                AddRemoveItem item;
+                _addremoveQueue.TryDequeue(out item);
+                if(item != null)
+                {
+                    if (item.IsAdd)
+                        AddService(item.Channel, item.Services, item.Id, item.Address, item.Port);
+                }
+                Thread.Sleep(0);
+            }
+        }
+
+        private void AddService(IChannel channel, Services services, int id, JArray address, int port)
+        {
+            var service = services.JoinService(channel, id, address, port);
+
+            if (id == -1)
+            {
+                var networks = _networkManager.GetNetworks(service);
+
+                int notifyServiceCount = 0;
+                foreach (var network in networks)
+                {
+                    var remoteServiceName = network.Service1 == services.GetServicesName() ? network.Service2 : network.Service1;
+                    var remoteService = GetServices(remoteServiceName);
+                    if (remoteService == null)
+                        continue;
+                    notifyServiceCount += remoteService.NotifyJoinService(service, network);
+                }
+                //Interlocked.Increment
+                //여기서 광역 락 시전!
+                //추가 됬다고 정보를 알린 모든 서비스에서 승인이 떨어지면 다음꺼 처리.
+                if (notifyServiceCount > 0)
+                {
+                    _addremoveService = service;
+                    _notifyServiceCount = notifyServiceCount;
+                    _nextAddRemoveProcessing = new AutoResetEvent(false);
+                    _nextAddRemoveProcessing.WaitOne();
+                }
+            }
+        }
+
+        public void JoinService(IChannel channel, string name, int id, JArray address, int port)
         {
             var services = GetServices(name);
             if(services == null)
@@ -125,20 +180,7 @@ namespace Service.Manager
                 _servicesLock.ExitWriteLock();
             }
 
-            var service = services.JoinService(channel, id, address);
-
-            if (id == -1)
-            {
-                var networks = _networkManager.GetNetworks(service);
-                foreach (var network in networks)
-                {
-                    var remoteServiceName = network.Service1 == name ? network.Service2 : network.Service1;
-                    var remoteService = GetServices(remoteServiceName);
-                    if(remoteService == null)
-                        continue;
-                    channel.SendMessage(remoteService.GetServicesNetworkInfo(network));
-                }
-            }
+            _addremoveQueue.Enqueue(new AddRemoveItem() { IsAdd = true, Channel = channel, Address = address, Port=port,  Id = id, Services = services });
         }
     }
 }
