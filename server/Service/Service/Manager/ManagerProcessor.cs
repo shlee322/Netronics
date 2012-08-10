@@ -181,5 +181,11 @@ namespace Service.Service.Manager
         {
             _scheduler[uid % _scheduler.Length].Add(new Task.Task(func));
         }
+
+        public Services GetServices(string name)
+        {
+            var services = _services;
+            return services.ContainsKey(name) ? services[name] : null;
+        }
     }
 }

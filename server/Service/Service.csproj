@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -68,7 +68,6 @@
     <Compile Include="Service\Service.cs" />
     <Compile Include="Service\Loader\ServiceLoader.cs" />
     <Compile Include="Service\Services.cs" />
-    <Compile Include="Service\Task\Entity.cs" />
     <Compile Include="Service\Task\Request.cs" />
     <Compile Include="Service\Task\Scheduler.cs" />
     <Compile Include="Service\Task\Task.cs" />

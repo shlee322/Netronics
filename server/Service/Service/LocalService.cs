@@ -6,13 +6,6 @@ namespace Service.Service
 {
     public class LocalService : Service
     {
-        private Manager.ManagerProcessor _processor;
-
-        public void SetManagerProcessor(Manager.ManagerProcessor processor)
-        {
-            _processor = processor;
-        }
-
         public virtual void Load(Manager.ManagerProcessor processor)
         {
         }
@@ -31,7 +24,7 @@ namespace Service.Service
 
         public void Call(long uid, Func<IEnumerator<Task.Task>> func)
         {
-            _processor.Call(uid, func);
+            GetManagerProcessor().Call(uid, func);
         }
     }
 }

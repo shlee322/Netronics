@@ -1,10 +1,21 @@
 ﻿using System.Collections.Generic;
+using Service.Service.Task;
 
 namespace Service.Service
 {
     public class Service
     {
         private Manager.ManagerProcessor _processor;
+
+        public void SetManagerProcessor(Manager.ManagerProcessor processor)
+        {
+            _processor = processor;
+        }
+
+        public Manager.ManagerProcessor GetManagerProcessor()
+        {
+            return _processor;
+        }
 
         public static LocalService GetService()
         {
@@ -28,14 +39,13 @@ namespace Service.Service
             return entity;*/
         }
 
-        public Service GetService(string name)
+        public Services GetServices(string name)
         {
-            return null;
+            return _processor.GetServices(name);
         }
-        public List<Netronics.Template.Service.Service.Service> GetServices(string name)
+
+        public void SendTask(Request request)
         {
-            //test
-            return null;// new RemoteService();
         }
     }
 }

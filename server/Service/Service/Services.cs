@@ -1,5 +1,6 @@
 ﻿using Netronics.Channel.Channel;
 using Service.Service.Manager;
+using Service.Service.Task;
 
 namespace Service.Service
 {
@@ -8,6 +9,7 @@ namespace Service.Service
         private string _name;
         private ManagerProcessor _managerProcessor;
         private Service[] _services = new Service[100];
+        private int _maxService=0;
 
         public Services(ManagerProcessor managerProcessor,string name)
         {
@@ -38,6 +40,9 @@ namespace Service.Service
             Service service = GetSerivce(id);
             if(service == null)
             {
+                if (id >= _maxService)
+                    _maxService = id + 1;
+
                 if (id >= _services.Length)
                 {
                     var temp = new Service[id+10];
@@ -55,6 +60,20 @@ namespace Service.Service
             Service service = GetSerivce(id, true);
             if (service is RemoteService)
                 ((RemoteService)service).AddChannel(channel);
+        }
+
+        public void SendTask(Request request)
+        {
+            if (request.Service == null)
+                request.Service = GetTarget(request.Uid);
+            request.Service.SendTask(request);
+        }
+
+        private Service GetTarget(long uid)
+        {
+            var services = _services;
+            var service = services[uid % services.Length];
+            return service;
         }
     }
 }

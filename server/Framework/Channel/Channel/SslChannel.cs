@@ -2,11 +2,19 @@
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading;
+using log4net;
 
 namespace Netronics.Channel.Channel
 {
     public class SslChannel : Channel
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SslChannel));
+
+        private readonly byte[] _originalPacketBuffer = new byte[512];
+        private readonly Socket _socket;
+        private readonly SslStream _stream;
+        private object _tag;
+
         public static SslChannel CreateChannel(Socket socket, System.Security.Cryptography.X509Certificates.X509Certificate certificate)
         {
             var channel = new SslChannel(socket);
@@ -20,12 +28,6 @@ namespace Netronics.Channel.Channel
             channel._stream.AuthenticateAsClient(host);
             return channel;
         }
-
-        private readonly byte[] _originalPacketBuffer = new byte[512];
-        private readonly Socket _socket;
-        private readonly SslStream _stream;
-
-        private object _tag;
 
         private SslChannel(Socket socket)
         {
@@ -47,7 +49,7 @@ namespace Netronics.Channel.Channel
         {
             try
             {
-                _stream.BeginRead(_originalPacketBuffer, 0, 512, ReadCallback, null);
+                _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
             }
             catch (SocketException)
             {
@@ -59,14 +61,19 @@ namespace Netronics.Channel.Channel
         {
             int len;
             try
-            {   
-                len = _stream.EndRead(ar);
+            {
+                len = _socket.EndReceive(ar);
                 if (len == 0)
                     throw new SocketException();
             }
             catch (SocketException)
             {
-                ThreadPool.QueueUserWorkItem((o) => Disconnect());
+                Disconnect();
+                return;
+            }
+            catch(ObjectDisposedException)
+            {
+                Disconnect();
                 return;
             }
 
@@ -75,12 +82,15 @@ namespace Netronics.Channel.Channel
 
         public override void Disconnect()
         {
-            _socket.BeginDisconnect(false, ar =>
+            try
             {
-                if (GetHandler() != null)
-                    GetHandler().Disconnected(this);
-                Disconnected();
-            }, null);
+                base.Disconnect();
+                _socket.BeginDisconnect(false, ar => Disconnected(), null);
+            }
+            catch (ObjectDisposedException e)
+            {
+                Log.Error("Disconnect가 여러번 호출 됬습니다.", e);
+            }
         }
 
         protected override void Disconnected()
@@ -88,8 +98,6 @@ namespace Netronics.Channel.Channel
             base.Disconnected();
             _socket.Dispose();
         }
-
-
 
         public override void SendMessage(dynamic message)
         {
@@ -102,7 +110,7 @@ namespace Netronics.Channel.Channel
 
             try
             {
-                _stream.BeginWrite(o, 0, o.Length, SendCallback, null);
+                _socket.BeginSend(o, 0, o.Length, SocketFlags.None, SendCallback, null);
             }
             catch (SocketException)
             {
