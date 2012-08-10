@@ -1,8 +1,9 @@
-﻿using Service.Service.Manager;
+﻿using Netronics.Channel.Channel;
+using Service.Service.Manager;
 
 namespace Service.Service
 {
-    class Services
+    public class Services
     {
         private string _name;
         private ManagerProcessor _managerProcessor;
@@ -16,18 +17,7 @@ namespace Service.Service
 
         public void NotifyJoinService(int id, byte[] address, int port)
         {
-            Service service = GetSerivce(id);
-            if(service == null)
-            {
-                if (id >= _services.Length)
-                {
-                    var temp = new Service[_services.Length];
-                    System.Array.Copy(_services, temp, _services.Length);
-                    _services = temp;
-                }
-                _services[id] = new RemoteService(this, id);
-            }
-            service = GetSerivce(id);
+            Service service = GetSerivce(id, true);
             if(service is RemoteService)
                 ((RemoteService)service).AddNetwork(address, port);
         }
@@ -37,11 +27,34 @@ namespace Service.Service
             return _managerProcessor;
         }
 
-        private Service GetSerivce(int id)
+        private Service GetSerivce(int id, bool create = false)
         {
-            if (id >= _services.Length || id < 0)
-                return null;
-            return _services[id];
+            if(!create)
+            {
+                if (id >= _services.Length || id < 0)
+                    return null;
+                return _services[id];
+            }
+            Service service = GetSerivce(id);
+            if(service == null)
+            {
+                if (id >= _services.Length)
+                {
+                    var temp = new Service[id+10];
+                    System.Array.Copy(_services, temp, _services.Length);
+                    _services = temp;
+                }
+                _services[id] = new RemoteService(this, id);
+                service = _services[id];
+            }
+            return service;
+        }
+
+        public void ConnectServiceInfo(int id, IChannel channel)
+        {
+            Service service = GetSerivce(id, true);
+            if (service is RemoteService)
+                ((RemoteService)service).AddChannel(channel);
         }
     }
 }

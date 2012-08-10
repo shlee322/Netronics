@@ -1,5 +1,6 @@
 ﻿using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Newtonsoft.Json.Linq;
 
 namespace Service.Service.Manager.Handler
 {
@@ -14,6 +15,11 @@ namespace Service.Service.Manager.Handler
 
         public void Connected(IChannel channel)
         {
+            dynamic packet = new JObject();
+            packet.type = "connect_service_info";
+            packet.service = _processor.GetServiceLoader().GetServiceName();
+            packet.id = _processor.GetServiceId();
+            channel.SendMessage(packet);
         }
 
         public void Disconnected(IChannel channel)
@@ -22,7 +28,8 @@ namespace Service.Service.Manager.Handler
 
         public void MessageReceive(IChannel channel, dynamic message)
         {
-            ServiceMessageReceiver.Receive(_processor, channel, message);
+            if (message.type == "connect_service_info")
+                _processor.ConnectServiceInfo(channel, (string)message.service, (int)message.id);
         }
     }
 }

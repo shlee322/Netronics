@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Service.Service.Loader;
+using log4net.Config;
 
 namespace Service
 {
@@ -45,20 +46,13 @@ namespace Service
             if (args.Length > 0)
                 servicesFilePath = args[args.Length - 1];
 
+            Directory.SetCurrentDirectory(new FileInfo(servicesFilePath).DirectoryName);
+            DOMConfigurator.Configure(new FileInfo("log4net.xml"));
+
             //테스트
             servicesFilePath = @"C:\Users\Sanghyuck\Projects\Parfe Server\bin\system.ns";
 
             ServiceLoad(servicesFilePath);
-
-            /*
-
-            string host_name = Dns.GetHostName();
-            IPHostEntry ips = Dns.GetHostEntry(host_name);
-            foreach (IPAddress ip in ips.AddressList)
-            {
-                Console.Write(ip.ToString());
-            }*/
-
 
             ExitEvent.WaitOne();
         }

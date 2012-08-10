@@ -7,7 +7,7 @@ using Service.Service.Manager;
 
 namespace Service.Service.Loader
 {
-    class ServiceLoader
+    public class ServiceLoader
     {
         private IServiceInfo _info;
         private ManagerProcessor _manager;
@@ -31,6 +31,7 @@ namespace Service.Service.Loader
             _service = _info.GetService();
 
             _manager = new ManagerProcessor(this, File.ReadAllLines(path + "/manager.ns"));
+            
         }
 
         public string GetServiceName()

@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.0.8.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -52,17 +53,11 @@
     <Compile Include="Manager\ServiceManager.cs" />
     <Compile Include="Manager\Services.cs" />
     <Compile Include="Service\Command.cs" />
-    <Compile Include="Coroutine\Co.cs" />
-    <Compile Include="Coroutine\Coroutine.cs" />
-    <Compile Include="Coroutine\IYield.cs" />
-    <Compile Include="Coroutine\NestedYield.cs" />
-    <Compile Include="Coroutine\NonNestedYield.cs" />
     <Compile Include="Service\Entity.cs" />
     <Compile Include="Service\IServiceInfo.cs" />
     <Compile Include="Service\Manager\AddRemoveItem.cs" />
     <Compile Include="Service\Manager\Handler\Manager.cs" />
     <Compile Include="Service\Manager\Handler\Service.cs" />
-    <Compile Include="Service\Manager\Handler\ServiceMessageReceiver.cs" />
     <Compile Include="Service\Manager\ManagerProcessor.cs" />
     <Compile Include="Service\LocalService.cs" />
     <Compile Include="Program.cs" />
@@ -73,6 +68,10 @@
     <Compile Include="Service\Service.cs" />
     <Compile Include="Service\Loader\ServiceLoader.cs" />
     <Compile Include="Service\Services.cs" />
+    <Compile Include="Service\Task\Entity.cs" />
+    <Compile Include="Service\Task\Request.cs" />
+    <Compile Include="Service\Task\Scheduler.cs" />
+    <Compile Include="Service\Task\Task.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Netronics.csproj">

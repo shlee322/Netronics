@@ -4,13 +4,18 @@ namespace Service.Service
 {
     public class Service
     {
+        private Manager.ManagerProcessor _processor;
+
         public static LocalService GetService()
         {
-            return Entity.GetEntity().GetLocalService();
+            return null;
+            //return Entity.GetEntity().GetLocalService();
         }
 
         public virtual Entity NewEntity()
         {
+            return null;
+            /*
             if (Entity.GetEntity() == null)
                 return null;
 
@@ -20,7 +25,7 @@ namespace Service.Service
 
             var entity = localService.NewEntity();
             //entity.AddReceiver(this);
-            return entity;
+            return entity;*/
         }
 
         public Service GetService(string name)

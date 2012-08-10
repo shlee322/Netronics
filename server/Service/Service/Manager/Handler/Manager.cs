@@ -23,9 +23,12 @@ namespace Service.Service.Manager.Handler
 
         public void MessageReceive(IChannel channel, dynamic message)
         {
-            if(message.type == "notify_join_service")
+            if (message.type == "notify_join_service")
                 _processor.NotifyJoinService((string)message.service, (int)message.id, (byte[])message.address, (int)message.port);
-            
+            else if (message.type == "change_service_id")
+                _processor.ChangeServiceId((int)message.id);
+            else if (message.type == "max_entity_id")
+                _processor.ChangeMaxEntityId((long)message.value);
         }
     }
 }

@@ -12,5 +12,7 @@ namespace Service.Service.Manager
         public byte[] Address;
 
         public int Port;
+
+        public IChannel Channel;
     }
 }

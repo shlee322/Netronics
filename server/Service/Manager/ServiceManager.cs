@@ -138,6 +138,11 @@ namespace Service.Manager
 
             if (id == -1)
             {
+                dynamic packet = new JObject();
+                packet.type = "max_entity_id";
+                packet.value = 10000;
+                channel.SendMessage(packet);
+
                 var networks = _networkManager.GetNetworks(service);
 
                 int notifyServiceCount = 0;

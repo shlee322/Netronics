@@ -37,6 +37,11 @@ namespace Service.Manager
                 }
                 
                 _services[id] = new Service(this, id, address, port);
+
+                dynamic packet = new JObject();
+                packet.type = "change_service_id";
+                packet.id = id;
+                channel.SendMessage(packet);
                 //_servicesLock.ExitWriteLock();
             }
 

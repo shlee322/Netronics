@@ -7,7 +7,8 @@ namespace Service.Service
 {
     class RemoteService : Service
     {
-        private List<Client> _channels = new List<Client>();
+        private List<Client> _clients = new List<Client>();
+        private List<IChannel> _channels = new List<IChannel>();
         private Services _services;
         private int _id;
 
@@ -24,7 +25,12 @@ namespace Service.Service
 
         public void AddNetwork(byte[] address, int port)
         {
-            _channels.Add(new Client(this, new IPAddress(address), port));
+            _clients.Add(new Client(this, new IPAddress(address), port));
+        }
+
+        public void AddChannel(IChannel channel)
+        {
+            _channels.Add(channel);
         }
     }
 }

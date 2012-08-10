@@ -51,7 +51,7 @@ namespace Service.Manager
             packet.service = service.GetServiceName();
             packet.id = service._id;
             packet.address = network.GetAddress(service);
-            packet.port = _port;
+            packet.port = service._port;
             this.SendPacket(packet);
         }
 
