@@ -5,18 +5,12 @@ using Netronics;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
 using Netronics.Event;
-using Netronics.Protocol;
-using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.Bson;
-using Netronics.Protocol.PacketEncryptor;
 
-namespace Service.Service.Manager.Properties
+namespace Service.Service.Manager
 {
-    class Properties : IProperties, IProtocol, IChannelPipe
+    class Properties : IProperties, IChannelPipe
     {
-        private static readonly BsonEncoder Encoder = new BsonEncoder();
-        private static readonly BsonDecoder Decoder = new BsonDecoder();
-
         private readonly IPEndPoint _ipEndPoint;
         private readonly Func<IChannelHandler> _func;
 
@@ -44,31 +38,12 @@ namespace Service.Service.Manager.Properties
             return this;
         }
 
-        public IPacketEncryptor GetEncryptor()
-        {
-            return null;
-        }
-
-        public IPacketDecryptor GetDecryptor()
-        {
-            return null;
-        }
-
-        public IPacketEncoder GetEncoder()
-        {
-            return Encoder;
-        }
-
-        public IPacketDecoder GetDecoder()
-        {
-            return Decoder;
-        }
-
         public IChannel CreateChannel(Netronics.Netronics netronics, Socket socket)
         {
             SocketChannel channel = SocketChannel.CreateChannel(socket);
-            channel.SetProtocol(this);
-            channel.SetHandler(_func());
+            channel.SetConfig("encoder", BsonEncoder.Encoder);
+            channel.SetConfig("decode", BsonDecoder.Decoder);
+            channel.SetConfig("handler", _func());
             return channel;
         }
     }

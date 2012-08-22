@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using Netronics.Channel;
 using Netronics.Channel.Channel;
 using Netronics.Event;
 

@@ -6,7 +6,7 @@ using Netronics.Channel.Channel;
 
 namespace Netronics.Template.Http.SocketIO
 {
-    class XhrChannel : IChannel, IKeepHandlerChannel
+    class XhrChannel : IChannel
     {
         private string _host;
         private HttpContact _contact;
@@ -51,6 +51,15 @@ namespace Netronics.Template.Http.SocketIO
             return null;
         }
 
+        public void SetConfig(string name, object value)
+        {
+        }
+
+        public object GetConfig(string name)
+        {
+            return null;
+        }
+
         public override string ToString()
         {
             return _host;
@@ -61,7 +70,7 @@ namespace Netronics.Template.Http.SocketIO
             ThreadPool.QueueUserWorkItem((o) =>
                                              {
                                                  if (lowPostData != null)
-                                                     _handler.MessageReceive(this, lowPostData.ToArray());
+                                                     _handler.MessageReceive(new MessageContext(this, lowPostData.ToArray()));
                                              });
         }
 

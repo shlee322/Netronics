@@ -37,23 +37,20 @@ namespace Netronics.Template.Http.SocketIO
             return _channel.ToString();
         }
 
-        public void Connected(IChannel channel)
+        public void Connected(IReceiveContext context)
         {
-            if (channel.ToString().Substring(0, channel.ToString().IndexOf(":", StringComparison.Ordinal))
+            if (context.GetChannel().ToString().Substring(0, context.GetChannel().ToString().IndexOf(":", StringComparison.Ordinal))
                 != _channel.ToString().Substring(0, _channel.ToString().IndexOf(":", StringComparison.Ordinal)))
             {
-                channel.Disconnect();
+                context.GetChannel().Disconnect();
                 return;
             }
 
-            _channel = channel;
+            _channel = context.GetChannel();
 
 
-            var keepHandlerChannel = _channel as IKeepHandlerChannel;
-            if (keepHandlerChannel != null)
-            {
-                keepHandlerChannel.SetHandler(this);
-            }
+            _channel.SetConfig("handler", this);
+            
             _socketIO.Emit("connection", this);
 
             Send("1", "", _endPoint + "?server=netronics");
@@ -61,9 +58,9 @@ namespace Netronics.Template.Http.SocketIO
                 _heartbeatTimer = new Timer(state => Send("2", ""), null, 0, 10000);
         }
 
-        public void Disconnected(IChannel channel)
+        public void Disconnected(IReceiveContext context)
         {
-            if(channel != _channel)
+            if(context.GetChannel() != _channel)
                 return;
 
             if (_heartbeatTimer != null)
@@ -75,20 +72,20 @@ namespace Netronics.Template.Http.SocketIO
             _socketIO.Emit("disconnect", this);
         }
 
-        public void MessageReceive(IChannel channel, dynamic message)
+        public void MessageReceive(IReceiveContext context)
         {
-            if(message is ConnectionClose)
+            if(context.GetMessage() is ConnectionClose)
             {
-                channel.Disconnect();
+                context.GetChannel().Disconnect();
                 return;
             }
-            else if(message is byte[])
+            else if (context.GetMessage() is byte[])
             {
-                string msg = System.Text.Encoding.UTF8.GetString(message);
+                string msg = System.Text.Encoding.UTF8.GetString(context.GetMessage() as byte[]);
 
                 if (msg.StartsWith("0"))
                 {
-                    channel.Disconnect();
+                    context.GetChannel().Disconnect();
                 }
                 else if (msg.StartsWith("3:::")) //Message
                 {

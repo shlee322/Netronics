@@ -8,20 +8,14 @@ using Netronics;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
 using Netronics.Event;
-using Netronics.Protocol;
-using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.Bson;
-using Netronics.Protocol.PacketEncryptor;
 using Newtonsoft.Json.Linq;
 
 namespace Service.Manager
 {
-    internal class ServiceManager : IProperties, IChannelPipe, IProtocol
+    internal class ServiceManager : IProperties, IChannelPipe
     {
         private static ServiceManager _manager;
-
-        private static readonly BsonEncoder Encoder = new BsonEncoder();
-        private static readonly BsonDecoder Decoder = new BsonDecoder();
 
         private readonly Netronics.Netronics _netronics;
         private readonly ReaderWriterLockSlim _servicesLock = new ReaderWriterLockSlim();
@@ -49,8 +43,9 @@ namespace Service.Manager
         public IChannel CreateChannel(Netronics.Netronics netronics, Socket socket)
         {
             SocketChannel channel = SocketChannel.CreateChannel(socket);
-            channel.SetProtocol(this);
-            channel.SetHandler(new Handler(this));
+            channel.SetConfig("encoder", BsonEncoder.Encoder);
+            channel.SetConfig("decoder", BsonDecoder.Decoder);
+            channel.SetConfig("handler", new Handler(this));
             return channel;
         }
 
@@ -74,30 +69,6 @@ namespace Service.Manager
         public IChannelPipe GetChannelPipe()
         {
             return this;
-        }
-
-        #endregion
-
-        #region IProtocol Members
-
-        public IPacketEncryptor GetEncryptor()
-        {
-            return null;
-        }
-
-        public IPacketDecryptor GetDecryptor()
-        {
-            return null;
-        }
-
-        public IPacketEncoder GetEncoder()
-        {
-            return Encoder;
-        }
-
-        public IPacketDecoder GetDecoder()
-        {
-            return Decoder;
         }
 
         #endregion

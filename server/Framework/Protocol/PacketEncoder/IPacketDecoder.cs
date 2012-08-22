@@ -10,6 +10,6 @@ namespace Netronics.Protocol.PacketEncoder
         /// </summary>
         /// <param name="buffer">PacketBuffer</param>
         /// <returns>패킷 메시지 객체</returns>
-        dynamic Decode(IChannel channel, PacketBuffer buffer);
+        object Decode(IChannel channel, PacketBuffer buffer);
     }
 }

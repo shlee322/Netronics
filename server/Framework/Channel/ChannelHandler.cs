@@ -6,15 +6,15 @@ namespace Netronics.Channel
     {
         #region IChannelHandler Members
 
-        public virtual void Connected(IChannel channel)
+        public virtual void Connected(IReceiveContext context)
         {
         }
 
-        public virtual void Disconnected(IChannel channel)
+        public virtual void Disconnected(IReceiveContext context)
         {
         }
 
-        public virtual void MessageReceive(IChannel channel, dynamic message)
+        public virtual void MessageReceive(IReceiveContext context)
         {
         }
 

@@ -1,8 +1,6 @@
 ﻿using Netronics.Protocol;
 using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.WebSocket;
-using Netronics.Protocol.PacketEncryptor;
-
 namespace Netronics.Template.Http
 {
     class WebSocketProtocol : IProtocol
@@ -11,15 +9,6 @@ namespace Netronics.Template.Http
         private static readonly IPacketEncoder Encoder = new Encoder();
         private static readonly IPacketDecoder Decoder = new Decoder();
 
-        public IPacketEncryptor GetEncryptor()
-        {
-            return null;
-        }
-
-        public IPacketDecryptor GetDecryptor()
-        {
-            return null;
-        }
 
         public IPacketEncoder GetEncoder()
         {

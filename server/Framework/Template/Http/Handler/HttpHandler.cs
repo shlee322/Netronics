@@ -260,24 +260,24 @@ namespace Netronics.Template.Http.Handler
             AddDynamic("^/" + Namespace + "/1/jsonp-polling/(.*)$", socketIO.JsonpPolling);
         }
 
-        public void Connected(IChannel channel)
+        public void Connected(IReceiveContext context)
         {
         }
 
-        public void Disconnected(IChannel channel)
+        public void Disconnected(IReceiveContext context)
         {
         }
 
-        public void MessageReceive(IChannel channel, dynamic message)
+        public void MessageReceive(IReceiveContext context)
         {
-            var request = message as Request;
+            var request = context.GetMessage() as Request;
             if(request == null)
                 return;
 
-            Processing(channel, request);
+            Processing(context.GetChannel(), request);
 
             if (request.GetHeader("Connection") == null || request.GetHeader("Connection") == "close")
-                channel.Disconnect();
+                context.GetChannel().Disconnect();
         }
 
         private void Processing(IChannel channel, Request request)
@@ -324,25 +324,21 @@ namespace Netronics.Template.Http.Handler
         {
             var response = new Response { Status = 101, Protocol="1.1"};
 
-            var protocol = channel as IKeepProtocolChannel;
-            if (protocol == null)
-                return;
-
             var finder = GetWebSocketUriFinder(request);
             if (finder == null)
                 return;
 
-            var handler = channel as IKeepHandlerChannel;
-            if (handler == null)
-                return;
-
-            handler.SetHandler((IChannelHandler)finder.GetHandler(request.GetPath()));
+            channel.SetConfig("handler", finder.GetHandler(request.GetPath()));
+            //((IChannelHandler)channel.GetConfig("handler")).GetHandler();
             response.GetHeader().AppendLine("Upgrade: websocket")
                 .AppendLine("Connection: Upgrade")
                 .AppendLine("Sec-WebSocket-Accept: " + GetWebSocketAcceptCode(request.GetHeader("Sec-WebSocket-Key")));
             channel.SendMessage(response);
-            protocol.SetProtocol(WebSocketProtocol.Protocol);
-            handler.GetHandler().Connected(channel);
+            channel.SetConfig("encoder", WebSocketProtocol.Protocol.GetEncoder());
+            channel.SetConfig("decoder", WebSocketProtocol.Protocol.GetDecoder());
+            //protocol.SetProtocol(WebSocketProtocol.Protocol);
+            ((IChannelHandler)channel.GetConfig("handler")).Connected(null/**/);
+            //handler.GetHandler().Connected(channel);
         }
 
         private string GetWebSocketAcceptCode(string code)

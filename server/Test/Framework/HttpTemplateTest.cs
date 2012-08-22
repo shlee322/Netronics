@@ -62,18 +62,18 @@ namespace Framework
 
         class TestHandler : IChannelHandler
         {
-            public void Connected(IChannel channel)
+            public void Connected(IReceiveContext context)
             {
             }
 
-            public void Disconnected(IChannel channel)
+            public void Disconnected(IReceiveContext context)
             {
             }
 
-            public void MessageReceive(IChannel channel, dynamic message)
+            public void MessageReceive(IReceiveContext context)
             {
-                Request request = message;
-                channel.SendMessage(new Response());
+                Request request = context.GetMessage() as Request;
+                context.GetChannel().SendMessage(new Response());
             }
         }
     }

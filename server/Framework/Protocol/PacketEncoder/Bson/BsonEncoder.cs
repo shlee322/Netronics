@@ -19,6 +19,8 @@ namespace Netronics.Protocol.PacketEncoder.Bson
     /// 
     public class BsonEncoder : IPacketEncoder
     {
+        public static BsonEncoder Encoder = new BsonEncoder();
+
         protected JsonSerializer Serializer = new JsonSerializer();
 
         #region IPacketEncoder Members

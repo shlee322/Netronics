@@ -13,7 +13,7 @@ namespace Netronics
         protected event EventHandler<StartEventArgs> StartEvent;
         protected event EventHandler StopEvent;
 
-        public static Properties CreateProperties(IPEndPoint ipEndPoint, ChannelPipe pipe)
+        public static Properties CreateProperties(IPEndPoint ipEndPoint, IChannelPipe pipe)
         {
             var properties = new Properties();
             properties.SetIpEndPoint(ipEndPoint);
@@ -39,7 +39,7 @@ namespace Netronics
             return this;
         }
 
-        public Properties SetChannelFactoryOption(Action<IChannelPipe> action)
+        public Properties SetChannelPipeOption(Action<IChannelPipe> action)
         {
             action(GetChannelPipe());
             return this;

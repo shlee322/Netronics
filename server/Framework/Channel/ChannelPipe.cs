@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using Netronics.Channel.Channel;
 using Netronics.Protocol;
+using Netronics.Protocol.PacketEncoder;
 
 namespace Netronics.Channel
 {
@@ -11,15 +12,19 @@ namespace Netronics.Channel
     public class ChannelPipe : IChannelPipe
     {
         private Func<IChannelHandler> _handler = () => new ChannelHandler();
-        private Func<IProtocol> _procotol = () => null;
+        private Func<IPacketEncoder> _encoder = () => null;
+        private Func<IPacketDecoder> _decoder = () => null;
 
         #region IChannelPipe Members
 
         public IChannel CreateChannel(Netronics netronics, Socket socket)
         {
             SocketChannel channel = SocketChannel.CreateChannel(socket);
-            channel.SetProtocol(_procotol());
-            channel.SetHandler(_handler());
+            channel.SetConfig("encoder", _encoder());
+            channel.SetConfig("decoder", _decoder());
+            channel.SetConfig("handler", _handler());
+            //channel.SetProtocol(_procotol());
+            //channel.SetHandler(_handler());
             return channel;
         }
 
@@ -38,9 +43,15 @@ namespace Netronics.Channel
         /// 
         /// <param name="func"><see cref="IChannel"/>에서 사용할 <see cref="IProtocol"/>를 가져오는 Func</param>
         /// <returns>자신의 인스턴스</returns>
-        public ChannelPipe SetProtocol(Func<IProtocol> func)
+        public ChannelPipe SetEncoder(Func<IPacketEncoder> func)
         {
-            _procotol = func;
+            _encoder = func;
+            return this;
+        }
+
+        public ChannelPipe SetDecoder(Func<IPacketDecoder> func)
+        {
+            _decoder = func;
             return this;
         }
 

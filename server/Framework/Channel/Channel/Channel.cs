@@ -1,25 +1,50 @@
 ﻿using System;
-using System.Threading;
-using Netronics.Protocol;
+using System.Collections.Generic;
+using Netronics.Protocol.PacketEncoder;
 using log4net;
 
 namespace Netronics.Channel.Channel
 {
-    public class Channel : IKeepProtocolChannel, IKeepHandlerChannel, IKeepParallelChannel
+    public class Channel : IChannel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Channel)); 
 
         private readonly PacketBuffer _packetBuffer = new PacketBuffer();
-        private IProtocol _protocol;
-        private IChannelHandler _handler;
-        private bool _parallel;
+
+        private readonly Dictionary<string, object> _config = new Dictionary<string, object>();
+
+        public Channel()
+        {
+            SetConfig("switch", new DefaultReceiveSwitch());
+        }
+
+        public void SetConfig(string name, object value)
+        {
+            _config[name] = value;
+        }
+
+        public object GetConfig(string name)
+        {
+            try
+            {
+                return _config[name];
+            }
+            catch (KeyNotFoundException)
+            {
+            }
+            return null;
+        }
 
         protected bool ReceivePacket(byte[] buffer, int len)
         {
             if (_packetBuffer.IsDisposed())
                 return false;
-            _packetBuffer.Write(buffer, 0, len);
-            Receive();
+            Scheduler.QueueWorkItem(GetHashCode(), () =>
+                {
+                    _packetBuffer.Write(buffer, 0, len);
+                    Receive();
+                });
+
             return true;
         }
 
@@ -35,26 +60,25 @@ namespace Netronics.Channel.Channel
         {
             try
             {
-                while (true)
+                object message;
+
+                if (_packetBuffer.IsDisposed())
+                    return;
+
+                message = ((IPacketDecoder)GetConfig("decoer")).Decode(this, _packetBuffer);
+
+                if (message == null)
                 {
-                    dynamic message;
+                    BeginReceive();
+                    return;
+                }
 
-                    if (_packetBuffer.IsDisposed())
-                        return;
-
-                    message = GetProtocol().GetDecoder().Decode(this, _packetBuffer);
-
-                    if (message == null)
-                    {
-                        BeginReceive();
-                        return;
-                    }
-
-                    ThreadPool.QueueUserWorkItem((o) =>
-                        {
+                var context = new MessageContext(this, message);
+                Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
+                {
                             try
                             {
-                                GetHandler().MessageReceive(this, message);
+                                ((IChannelHandler)GetConfig("handler")).MessageReceive(context);
                             }
                             catch (Exception e)
                             {
@@ -62,7 +86,8 @@ namespace Netronics.Channel.Channel
                             }
                             
                         });
-                }
+
+                Scheduler.QueueWorkItem(GetHashCode(), Receive);
             }
             catch (Exception e)
             {
@@ -70,53 +95,21 @@ namespace Netronics.Channel.Channel
             }
         }
 
-        public virtual IProtocol SetProtocol(IProtocol protocol)
-        {
-            _protocol = protocol;
-            return protocol;
-        }
-
-        public virtual IProtocol GetProtocol()
-        {
-            return _protocol;
-        }
-
-        public virtual IChannelHandler SetHandler(IChannelHandler handler)
-        {
-            _handler = handler;
-            return handler;
-        }
-
-        public virtual IChannelHandler GetHandler()
-        {
-            return _handler;
-        }
-
-        public bool SetParallel(bool parallel)
-        {
-            _parallel = parallel;
-            return parallel;
-        }
-
-        protected virtual bool GetParallel()
-        {
-            return _parallel;
-        }
-
         public virtual void Connect()
         {
-            if (GetHandler() != null)
-            {
-                try
+                var context = new ConnectContext(this);
+                Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
                 {
-                    GetHandler().Connected(this);
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Connected Error", e);
-                }
-            }
-
+                    try
+                    {
+                        ((IChannelHandler)GetConfig("handler")).Connected(context);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error("Connected Error", e);
+                    }
+                });
+                
             BeginReceive();
         }
 
@@ -127,17 +120,18 @@ namespace Netronics.Channel.Channel
 
         public virtual void Disconnect()
         {
-            if (GetHandler() != null)
+            var context = new DisconnectContext(this);
+            Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
             {
                 try
                 {
-                    GetHandler().Disconnected(this);
+                    ((IChannelHandler)GetConfig("handler")).Connected(context);
                 }
                 catch (Exception e)
                 {
                     Log.Error("Disconnected Error", e);
                 }
-            }
+            });
         }
 
         public virtual void SendMessage(dynamic message)

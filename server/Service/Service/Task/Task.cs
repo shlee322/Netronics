@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Netronics;
 
 namespace Service.Service.Task
 {
@@ -10,14 +11,17 @@ namespace Service.Service.Task
         private IEnumerator<Task> _enumerator;
         private static readonly ThreadLocal<Task> CurrentTask = new ThreadLocal<Task>();
 
-        private bool _wait = false;
+        private bool _wait;
 
-        public Task(Func<IEnumerator<Task>> func)
+        private long _uid;
+
+        public Task(long uid, Func<IEnumerator<Task>> func)
         {
+            _uid = uid;
             _func = func;
         }
 
-        public void Call(Scheduler scheduler)
+        public void Call()
         {
             CurrentTask.Value = this;
 
@@ -29,7 +33,7 @@ namespace Service.Service.Task
                 {
                     if (!_enumerator.Current._wait)
                     {
-                        scheduler.Add(_enumerator.Current);
+                        Scheduler.QueueWorkItem((int)_uid, ()=>_enumerator.Current.Call());
                     }
                     else
                     {
@@ -46,9 +50,10 @@ namespace Service.Service.Task
             return CurrentTask.Value;
         }
 
-        public static Task Call(Func<IEnumerator<Task>> func)
+        public static Task Call(long uid, Func<IEnumerator<Task>> func)
         {
-            return new Task(func);
+            return new Task(uid, func);
         }
+
     }
 }

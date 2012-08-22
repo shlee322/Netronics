@@ -13,23 +13,24 @@ namespace Service.Service.Manager.Handler
             _processor = processor;
         }
 
-        public void Connected(IChannel channel)
+        public void Connected(IReceiveContext context)
         {
             dynamic packet = new JObject();
             packet.type = "connect_service_info";
             packet.service = _processor.GetServiceLoader().GetServiceName();
             packet.id = _processor.GetServiceId();
-            channel.SendMessage(packet);
+            context.GetChannel().SendMessage(packet);
         }
 
-        public void Disconnected(IChannel channel)
+        public void Disconnected(IReceiveContext context)
         {
         }
 
-        public void MessageReceive(IChannel channel, dynamic message)
+        public void MessageReceive(IReceiveContext context)
         {
+            dynamic message = context.GetMessage();
             if (message.type == "connect_service_info")
-                _processor.ConnectServiceInfo(channel, (string)message.service, (int)message.id);
+                _processor.ConnectServiceInfo(context.GetChannel(), (string)message.service, (int)message.id);
         }
     }
 }

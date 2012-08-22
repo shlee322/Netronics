@@ -8,7 +8,6 @@ using Netronics.Event;
 using Netronics.Protocol;
 using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.Http;
-using Netronics.Protocol.PacketEncryptor;
 
 namespace Netronics.Template.Http
 {
@@ -29,20 +28,12 @@ namespace Netronics.Template.Http
         public IChannel CreateChannel(Netronics netronics, Socket socket)
         {
             SslChannel channel = SslChannel.CreateChannel(socket, X509Certificate.CreateFromCertFile("test.cert"));
-            channel.SetProtocol(this);
-            channel.SetHandler(_handler());
+            channel.SetConfig("encoder", Encoder);
+            channel.SetConfig("decoder", Decoder);
+            channel.SetConfig("handler", _handler());
             return channel;
         }
 
-        public IPacketEncryptor GetEncryptor()
-        {
-            return null;
-        }
-
-        public IPacketDecryptor GetDecryptor()
-        {
-            return null;
-        }
 
         public IPacketEncoder GetEncoder()
         {

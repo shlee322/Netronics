@@ -47,7 +47,7 @@ namespace Netronics.Template.Http.SocketIO
                 return;
 
             if(!(client.GetChannel() is XhrChannel))
-                client.Connected(new XhrChannel(contact.GetChannel().ToString().Substring(0, contact.GetChannel().ToString().IndexOf(":", StringComparison.Ordinal))));
+                client.Connected(new ConnectContext(new XhrChannel(contact.GetChannel().ToString().Substring(0, contact.GetChannel().ToString().IndexOf(":", StringComparison.Ordinal)))));
 
             var channel = client.GetChannel() as XhrChannel;
             contact.GetResponse().ContentType = "text/plain";

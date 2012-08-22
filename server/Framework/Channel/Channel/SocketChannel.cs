@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using Netronics.Protocol.PacketEncoder;
 using log4net;
 
 namespace Netronics.Channel.Channel
@@ -89,7 +90,7 @@ namespace Netronics.Channel.Channel
 
         public override void SendMessage(dynamic message)
         {
-            PacketBuffer buffer = GetProtocol().GetEncoder().Encode(this, message);
+            PacketBuffer buffer = ((IPacketEncoder)GetConfig("encoder")).Encode(this, message);
 
             if (buffer == null)
                 return;

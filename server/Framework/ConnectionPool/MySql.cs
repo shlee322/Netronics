@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Linq;
-using System.Text;
+﻿using System.Data;
 using MySql.Data.MySqlClient;
 
 namespace Netronics.ConnectionPool

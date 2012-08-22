@@ -63,13 +63,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Manager\Properties.cs" />
-    <Compile Include="Service\Manager\ServiceChannel\Client.cs" />
+    <Compile Include="Service\ServiceChannel\Client.cs" />
     <Compile Include="Service\RemoteService.cs" />
     <Compile Include="Service\Service.cs" />
     <Compile Include="Service\Loader\ServiceLoader.cs" />
     <Compile Include="Service\Services.cs" />
     <Compile Include="Service\Task\Request.cs" />
-    <Compile Include="Service\Task\Scheduler.cs" />
     <Compile Include="Service\Task\Task.cs" />
   </ItemGroup>
   <ItemGroup>

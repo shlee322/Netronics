@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Netronics Framework")]
 [assembly: AssemblyDescription("https://github.com/shlee322/Netronics")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SangHyuck, Lee")]
+[assembly: AssemblyCompany("Lee Sanghyuck")]
 [assembly: AssemblyProduct("Netronics")]
-[assembly: AssemblyCopyright("Copyright © SangHyuck Lee 2012")]
+[assembly: AssemblyCopyright("Copyright © Lee Sanghyuck 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      상태 번호
 //      빌드 번호
 //
-[assembly: AssemblyVersion("0.1.2.86")]
-[assembly: AssemblyFileVersion("0.1.2.86")]
+[assembly: AssemblyVersion("0.2.0.88")]
+[assembly: AssemblyFileVersion("0.2.0.88")]

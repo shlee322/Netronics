@@ -32,8 +32,6 @@ namespace Service.Service.Manager
 
         private Netronics.Netronics _netronics;
 
-        private Task.Scheduler[] _scheduler = new Scheduler[4];
-
         private long _maxEntityId;
 
         public ManagerProcessor(ServiceLoader loader, string[] host)
@@ -42,16 +40,15 @@ namespace Service.Service.Manager
             _host = host;
             _processor = new Thread(Processing);
             _processor.Start();
-            for (int i = 0; i < 4; i++)
-                _scheduler[i] = new Scheduler();
+
             _loader.GetService().SetManagerProcessor(this);
             _loader.GetService().Load(this);
 
-            _netronics = new Netronics.Netronics(new Properties.Properties(new IPEndPoint(IPAddress.Any, 0), () => new Handler.Service(this)));
+            _netronics = new Netronics.Netronics(new Properties(new IPEndPoint(IPAddress.Any, 0), () => new Handler.Service(this)));
             _netronics.Start();
 
             Connect();
-            _manager = new Client(new Properties.Properties(_managerIPEndPoint, () => new Handler.Manager(this)));
+            _manager = new Client(new Properties(_managerIPEndPoint, () => new Handler.Manager(this)));
             _manager.Start();
 
             _loader.GetService().Start();
@@ -179,7 +176,7 @@ namespace Service.Service.Manager
 
         public void Call(long uid, Func<IEnumerator<Task.Task>> func)
         {
-            _scheduler[uid % _scheduler.Length].Add(new Task.Task(func));
+            Scheduler.QueueWorkItem((int)uid, ()=>new Task.Task(uid, func).Call());
         }
 
         public Services GetServices(string name)

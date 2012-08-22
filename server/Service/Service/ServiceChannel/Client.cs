@@ -14,7 +14,7 @@ namespace Service.Service.Manager.ServiceChannel
         public Client(RemoteService service, IPAddress address, int port)
         {
             _service = service;
-            _client = new Netronics.Client(new Properties.Properties(new IPEndPoint(address, port), () => new Handler.Service(_service.GetServices().GetManagerProcessor())));
+            _client = new Netronics.Client(new Properties(new IPEndPoint(address, port), () => new Handler.Service(_service.GetServices().GetManagerProcessor())));
             _client.Start();
         }
     }

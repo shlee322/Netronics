@@ -11,25 +11,25 @@ namespace BroadcastServer
         ReaderWriterLockSlim channelLock = new ReaderWriterLockSlim();
         readonly LinkedList<IChannel> _channels = new LinkedList<IChannel>();
 
-        public void Connected(IChannel channel)
+        public void Connected(IReceiveContext context)
         {
             channelLock.EnterWriteLock();
-            _channels.AddLast(channel);
+            _channels.AddLast(context.GetChannel());
             channelLock.ExitWriteLock();
         }
 
-        public void Disconnected(IChannel channel)
+        public void Disconnected(IReceiveContext context)
         {
             channelLock.EnterWriteLock();
-            _channels.Remove(channel);
+            _channels.Remove(context.GetChannel());
             channelLock.ExitWriteLock();
         }
 
-        public void MessageReceive(IChannel channel, dynamic message)
+        public void MessageReceive(IReceiveContext context)
         {
             channelLock.EnterReadLock();
             foreach (var c in _channels)
-                c.SendMessage(message);
+                c.SendMessage(context.GetMessage());
             channelLock.ExitReadLock();
         }
     }

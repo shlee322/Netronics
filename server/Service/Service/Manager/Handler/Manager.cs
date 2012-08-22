@@ -12,17 +12,18 @@ namespace Service.Service.Manager.Handler
             _processor = processor;
         }
 
-        public void Connected(IChannel channel)
+        public void Connected(IReceiveContext context)
         {
-            channel.SendMessage(_processor.GetJoinServicePacket());
+            context.GetChannel().SendMessage(_processor.GetJoinServicePacket());
         }
 
-        public void Disconnected(IChannel channel)
+        public void Disconnected(IReceiveContext context)
         {
         }
 
-        public void MessageReceive(IChannel channel, dynamic message)
+        public void MessageReceive(IReceiveContext context)
         {
+            dynamic message = context.GetMessage();
             if (message.type == "notify_join_service")
                 _processor.NotifyJoinService((string)message.service, (int)message.id, (byte[])message.address, (int)message.port);
             else if (message.type == "change_service_id")

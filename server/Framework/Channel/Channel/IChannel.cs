@@ -19,9 +19,12 @@ namespace Netronics.Channel.Channel
         /// <see cref="IChannel"/>에게 메시지를 전송하는 메서드
         /// </summary>
         /// <param name="message"><see cref="IChannel"/>에게 전송할 메시지</param>
-        void SendMessage(dynamic message);
+        void SendMessage(object message);
 
         object SetTag(object tag);
         object GetTag();
+
+        void SetConfig(string name, object value);
+        object GetConfig(string name);
     }
 }

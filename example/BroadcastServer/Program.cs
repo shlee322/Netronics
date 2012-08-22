@@ -26,6 +26,7 @@ namespace BroadcastServer
         private static void SetFactoryOption(ChannelPipe pipe)
         {
             PacketEncoder encoder = new PacketEncoder();
+            pipe
             pipe.SetProtocol(() => new ModifiableProtocol(encoder: encoder, decoder: encoder));
             pipe.SetHandler(() => Handler);
         }

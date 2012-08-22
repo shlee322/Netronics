@@ -14,18 +14,19 @@ namespace Service.Manager
             _manager = manager;
         }
 
-        public void Connected(IChannel channel)
+        public void Connected(IReceiveContext context)
         {
         }
 
-        public void Disconnected(IChannel channel)
+        public void Disconnected(IReceiveContext context)
         {
         }
 
-        public void MessageReceive(IChannel channel, dynamic message)
+        public void MessageReceive(IReceiveContext context)
         {
+            dynamic message = context.GetMessage();
             if(message.type == "join_service")
-                _manager.JoinService(channel, (string)message.name, message.id == null ? -1 : (int)message.id, (JArray)message.address, (int)message.port);
+                _manager.JoinService(context.GetChannel(), (string)message.name, message.id == null ? -1 : (int)message.id, (JArray)message.address, (int)message.port);
             
         }
     }

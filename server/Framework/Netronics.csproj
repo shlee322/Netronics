@@ -71,22 +71,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Channel\DefaultReceiveSwitch.cs" />
+    <Compile Include="Channel\IReceiveSwitch.cs" />
+    <Compile Include="Channel\ConnectContext.cs" />
     <Compile Include="Channel\ChannelHandler.cs" />
     <Compile Include="Channel\Channel\Channel.cs" />
     <Compile Include="Channel\Channel\IChannel.cs" />
     <Compile Include="Channel\Channel\SslChannel.cs" />
+    <Compile Include="Channel\DisconnectContext.cs" />
     <Compile Include="Channel\IChannelHandler.cs" />
-    <Compile Include="Channel\Channel\IKeepHandlerChannel.cs" />
-    <Compile Include="Channel\Channel\IKeepParallelChannel.cs" />
-    <Compile Include="Channel\Channel\IKeepProtocolChannel.cs" />
+    <Compile Include="Channel\IReceiveContext.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="ConnectionPool\ConnectionPool.cs" />
     <Compile Include="ConnectionPool\MySql.cs" />
     <Compile Include="Event\StartEventArgs.cs" />
+    <Compile Include="Channel\MessageContext.cs" />
     <Compile Include="Protocol\HandShake\HandShake.cs" />
     <Compile Include="IProperties.cs" />
     <Compile Include="Protocol\HandShake\IStep.cs" />
-    <Compile Include="Protocol\ModifiableProtocol.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpEncoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="Protocol\PacketEncoder\WebSocket\Pong.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\Decoder.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\Encoder.cs" />
+    <Compile Include="Scheduler.cs" />
     <Compile Include="Template\Http\Handler\DynamicUriHandler.cs" />
     <Compile Include="Template\Http\HttpContact.cs" />
     <Compile Include="Template\Http\Handler\HttpHandler.cs" />
@@ -123,8 +126,6 @@
     <Compile Include="Protocol\PacketEncoder\IPacketDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\IPacketEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protocol\PacketEncryptor\IPacketEncryptor.cs" />
-    <Compile Include="Protocol\PacketEncryptor\IPacketDecryptor.cs" />
     <Compile Include="Template\Service\Entity.cs" />
     <Compile Include="Template\Service\Service\IRole.cs" />
     <Compile Include="Template\Service\Service\LocalService.cs" />
