@@ -66,12 +66,12 @@ namespace Netronics.Template.Http.SocketIO
         }
 
         public void Receive(MemoryStream lowPostData)
-        {
+        {/*
             ThreadPool.QueueUserWorkItem((o) =>
                                              {
                                                  if (lowPostData != null)
                                                      _handler.MessageReceive(new MessageContext(this, lowPostData.ToArray()));
-                                             });
+                                             });*/
         }
 
         public void Send(HttpContact contact)

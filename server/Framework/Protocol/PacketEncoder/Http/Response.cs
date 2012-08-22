@@ -2,7 +2,6 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
-using RazorEngine;
 using Encoding = System.Text.Encoding;
 
 namespace Netronics.Protocol.PacketEncoder.Http
@@ -72,17 +71,17 @@ namespace Netronics.Protocol.PacketEncoder.Http
         {
             return _content as StringBuilder;
         }
-
+        /*
         public void SetTemplate(string file, object model=null, Encoding encoding = null)
         {
             SetTemplate<object>(file, model, encoding);
         }
-
+        
         public void SetTemplate<T>(string file, T model, Encoding encoding = null)
         {
             var streamReader = new StreamReader(file, encoding ?? Encoding.UTF8);
             _content = new StringBuilder(Razor.Parse(streamReader.ReadToEnd(), model));
             streamReader.Close();
-        }
+        }*/
     }
 }

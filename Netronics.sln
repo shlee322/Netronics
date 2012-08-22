@@ -22,9 +22,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppClient", "client\cpp\CppClient\CppClient.vcxproj", "{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "server\Service\Service.csproj", "{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Template", "Template", "{8EA8692E-907B-42BB-A5E4-750D89AB0643}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Http", "server\Http\Http.csproj", "{A3D165C8-4C82-411B-B52C-4A029AE05A6A}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -113,18 +115,6 @@ Global
 		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Release|Win32.ActiveCfg = Release|x86
 		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Release|x86.ActiveCfg = Release|x86
 		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD}.Release|x86.Build.0 = Release|x86
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Debug|Win32.Build.0 = Debug|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Debug|x86.ActiveCfg = Debug|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|Any CPU.ActiveCfg = Release|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|Win32.ActiveCfg = Release|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|Win32.Build.0 = Release|Win32
-		{B1A72114-1E4B-4025-81E9-F92E1B06EBA5}.Release|x86.ActiveCfg = Release|Win32
 		{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -137,6 +127,18 @@ Global
 		{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}.Release|Win32.ActiveCfg = Release|x86
 		{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}.Release|x86.ActiveCfg = Release|x86
 		{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}.Release|x86.Build.0 = Release|x86
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Release|Win32.ActiveCfg = Release|Any CPU
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,11 +149,13 @@ Global
 		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82} = {758FDE00-EAA5-4DE0-93A9-284D558D680D}
+		{4CA1EF2C-573E-4885-B167-56AD75F6B5F1} = {8EA8692E-907B-42BB-A5E4-750D89AB0643}
+		{A3D165C8-4C82-411B-B52C-4A029AE05A6A} = {8EA8692E-907B-42BB-A5E4-750D89AB0643}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UpdateFileVersion = True
-		BuildVersion_UpdateAssemblyVersion = True
 		BuildVersion_BuildVersioningStyle = None.None.None.Increment
+		BuildVersion_UpdateAssemblyVersion = True
+		BuildVersion_UpdateFileVersion = True
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Framework\Netronics.csproj

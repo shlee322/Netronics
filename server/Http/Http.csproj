@@ -2,20 +2,19 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{A3D165C8-4C82-411B-B52C-4A029AE05A6A}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Service</RootNamespace>
-    <AssemblyName>Service</AssemblyName>
+    <RootNamespace>Netronics.Template.Http</RootNamespace>
+    <AssemblyName>Netronics.Template.Http</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,8 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\Release\</OutputPath>
@@ -34,44 +32,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="RazorEngine">
+      <HintPath>..\..\packages\RazorEngine.3.0.8\lib\net40\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\..\packages\RazorEngine.3.0.8\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Manager\AddRemoveItem.cs" />
-    <Compile Include="Manager\Handler.cs" />
-    <Compile Include="Manager\Network.cs" />
-    <Compile Include="Manager\NetworkManager.cs" />
-    <Compile Include="Manager\Service.cs" />
-    <Compile Include="Manager\ServiceManager.cs" />
-    <Compile Include="Manager\Services.cs" />
-    <Compile Include="Service\Command.cs" />
-    <Compile Include="Service\Entity.cs" />
-    <Compile Include="Service\IServiceInfo.cs" />
-    <Compile Include="Service\Manager\AddRemoveItem.cs" />
-    <Compile Include="Service\Manager\Handler\Manager.cs" />
-    <Compile Include="Service\Manager\Handler\Service.cs" />
-    <Compile Include="Service\Manager\ManagerProcessor.cs" />
-    <Compile Include="Service\LocalService.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Handler\DynamicUriHandler.cs" />
+    <Compile Include="Handler\HttpHandler.cs" />
+    <Compile Include="Handler\IUriHandler.cs" />
+    <Compile Include="Handler\StaticUriHandler.cs" />
+    <Compile Include="HttpContact.cs" />
+    <Compile Include="HttpProperties.cs" />
+    <Compile Include="HttpsProperties.cs" />
+    <Compile Include="Module\Controller.cs" />
+    <Compile Include="Module\Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service\Manager\Properties.cs" />
-    <Compile Include="Service\ServiceChannel\Client.cs" />
-    <Compile Include="Service\RemoteService.cs" />
-    <Compile Include="Service\Service.cs" />
-    <Compile Include="Service\Loader\ServiceLoader.cs" />
-    <Compile Include="Service\Services.cs" />
-    <Compile Include="Service\Task\Request.cs" />
-    <Compile Include="Service\Task\Task.cs" />
+    <Compile Include="SocketIO\Client.cs" />
+    <Compile Include="SocketIO\ISocketIO.cs" />
+    <Compile Include="SocketIO\SocketIO.cs" />
+    <Compile Include="SocketIO\XhrChannel.cs" />
+    <Compile Include="UriFinder.cs" />
+    <Compile Include="WebSocketProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Netronics.csproj">
@@ -80,10 +71,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

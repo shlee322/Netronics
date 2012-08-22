@@ -50,7 +50,9 @@
       <HintPath>..\..\..\bin\Debug\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.4.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
-    <Reference Include="nunit.framework, Version=2.6.0.12051, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="Newtonsoft.Json, Version=4.0.5.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <SpecificVersion>False</SpecificVersion>
@@ -77,6 +79,10 @@
       <Project>{394898C7-12EE-478A-AD9A-7377B5DCC081}</Project>
       <Name>Netronics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Http\Http.csproj">
+      <Project>{A3D165C8-4C82-411B-B52C-4A029AE05A6A}</Project>
+      <Name>Http</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -99,5 +105,8 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

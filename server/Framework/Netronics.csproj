@@ -52,16 +52,12 @@
       <HintPath>..\..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.4.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.4.5.4\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RazorEngine, Version=3.0.8.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RazorEngine.3.0.8\lib\net40\RazorEngine.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.4.5.5\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Razor">
       <HintPath>..\..\packages\RazorEngine.3.0.8\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -100,21 +96,6 @@
     <Compile Include="Protocol\PacketEncoder\WebSocket\Decoder.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\Encoder.cs" />
     <Compile Include="Scheduler.cs" />
-    <Compile Include="Template\Http\Handler\DynamicUriHandler.cs" />
-    <Compile Include="Template\Http\HttpContact.cs" />
-    <Compile Include="Template\Http\Handler\HttpHandler.cs" />
-    <Compile Include="Template\Http\HttpProperties.cs" />
-    <Compile Include="Template\Http\Handler\IUriHandler.cs" />
-    <Compile Include="Template\Http\HttpsProperties.cs" />
-    <Compile Include="Template\Http\Module\Controller.cs" />
-    <Compile Include="Template\Http\Module\Module.cs" />
-    <Compile Include="Template\Http\SocketIO\ISocketIO.cs" />
-    <Compile Include="Template\Http\SocketIO\SocketIO.cs" />
-    <Compile Include="Template\Http\Handler\StaticUriHandler.cs" />
-    <Compile Include="Template\Http\SocketIO\Client.cs" />
-    <Compile Include="Template\Http\SocketIO\XhrChannel.cs" />
-    <Compile Include="Template\Http\WebSocketProtocol.cs" />
-    <Compile Include="Template\Http\UriFinder.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonEncoder.cs" />
     <Compile Include="Channel\ChannelPipe.cs" />
@@ -126,12 +107,6 @@
     <Compile Include="Protocol\PacketEncoder\IPacketDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\IPacketEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Template\Service\Entity.cs" />
-    <Compile Include="Template\Service\Service\IRole.cs" />
-    <Compile Include="Template\Service\Service\LocalService.cs" />
-    <Compile Include="Template\Service\Service\RemoteService.cs" />
-    <Compile Include="Template\Service\Service\Service.cs" />
-    <Compile Include="Template\Service\Task.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -158,6 +133,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -168,7 +144,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
