@@ -13,6 +13,10 @@ namespace Netronics
         protected event EventHandler<StartEventArgs> StartEvent;
         protected event EventHandler StopEvent;
 
+        protected Properties()
+        {
+        }
+
         public static Properties CreateProperties(IPEndPoint ipEndPoint, IChannelPipe pipe)
         {
             var properties = new Properties();
@@ -36,12 +40,6 @@ namespace Netronics
         public Properties SetIpEndPoint(IPEndPoint endPoint)
         {
             IpEndPoint = endPoint;
-            return this;
-        }
-
-        public Properties SetChannelPipeOption(Action<IChannelPipe> action)
-        {
-            action(GetChannelPipe());
             return this;
         }
 

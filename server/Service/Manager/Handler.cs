@@ -27,7 +27,6 @@ namespace Service.Manager
             dynamic message = context.GetMessage();
             if(message.type == "join_service")
                 _manager.JoinService(context.GetChannel(), (string)message.name, message.id == null ? -1 : (int)message.id, (JArray)message.address, (int)message.port);
-            
         }
     }
 }

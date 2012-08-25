@@ -64,14 +64,10 @@
   <ItemGroup>
     <Compile Include="BSONEnDecoderTest.cs" />
     <Compile Include="HttpTemplateTest.cs" />
+    <Compile Include="MicrothreadTest.cs" />
     <Compile Include="MySqlTest.cs" />
     <Compile Include="NetronicsTest.cs" />
     <Compile Include="PacketBufferTest.cs" />
-    <Compile Include="Service\AuthServer.cs" />
-    <Compile Include="Service\IAuthServer.cs" />
-    <Compile Include="Service\ILoginServer.cs" />
-    <Compile Include="Service\LoginServer.cs" />
-    <Compile Include="Service\TestServer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

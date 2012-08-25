@@ -19,8 +19,6 @@ namespace Netronics.Template.Http
             IsAutoSendResponse = true;
         }
 
-        
-
         public IChannel GetChannel()
         {
             return _channel;

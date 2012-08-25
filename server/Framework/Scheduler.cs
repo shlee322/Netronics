@@ -54,9 +54,24 @@ namespace Netronics
             return _schedulers.Length;
         }
 
+        public void QueueWorkItem(Action action)
+        {
+            _queue.Enqueue(action);
+        }
+
         public static void QueueWorkItem(int index, Action action)
         {
-            _schedulers[index % _schedulers.Length]._queue.Enqueue(action);
+            _schedulers[index % _schedulers.Length].QueueWorkItem(action);
+        }
+
+        public void RunMicrothread(Microthreading.Microthread microthread)
+        {
+            QueueWorkItem(()=>microthread.Run(this));
+        }
+
+        public static void RunMicrothread(int index, Microthreading.Microthread microthread)
+        {
+            _schedulers[index % _schedulers.Length].RunMicrothread(microthread);
         }
 
         private void Loop()
