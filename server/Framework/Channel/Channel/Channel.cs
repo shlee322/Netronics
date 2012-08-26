@@ -65,7 +65,7 @@ namespace Netronics.Channel.Channel
                 if (_packetBuffer.IsDisposed())
                     return;
 
-                message = ((IPacketDecoder)GetConfig("decoer")).Decode(this, _packetBuffer);
+                message = ((IPacketDecoder)GetConfig("decoder")).Decode(this, _packetBuffer);
 
                 if (message == null)
                 {
