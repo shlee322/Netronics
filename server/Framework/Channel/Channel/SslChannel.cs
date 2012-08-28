@@ -81,12 +81,13 @@ namespace Netronics.Channel.Channel
             ReceivePacket(_originalPacketBuffer, len);
         }
 
-        public override void Disconnect()
+        protected override void Disconnecting()
         {
             try
             {
-                base.Disconnect();
-                _socket.BeginDisconnect(false, ar => Disconnected(), null);
+                base.Disconnecting();
+                _socket.BeginDisconnect(false, ar => Scheduler.QueueWorkItem(GetHashCode(),
+                                                                             Disconnected), null);
             }
             catch (ObjectDisposedException e)
             {

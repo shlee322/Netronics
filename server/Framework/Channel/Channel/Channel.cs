@@ -103,32 +103,14 @@ namespace Netronics.Channel.Channel
             }
         }
 
-        public virtual void Connect()
+        public void Connect()
         {
-                var context = new ConnectContext(this);
-                Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
-                {
-                    try
-                    {
-                        ((IChannelHandler)GetConfig("handler")).Connected(context);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error("Connected Error", e);
-                    }
-                });
-                
-            BeginReceive();
+            Scheduler.QueueWorkItem(GetHashCode(), Connecting);
         }
 
-        protected virtual void BeginReceive()
+        public virtual void Connecting()
         {
-            
-        }
-
-        public virtual void Disconnect()
-        {
-            var context = new DisconnectContext(this);
+            var context = new ConnectContext(this);
             Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
             {
                 try
@@ -137,9 +119,33 @@ namespace Netronics.Channel.Channel
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Disconnected Error", e);
+                    Log.Error("Connected Error", e);
                 }
+                BeginReceive();
             });
+
+        }
+
+        protected virtual void BeginReceive()
+        {
+        }
+
+        public void Disconnect()
+        {
+            Scheduler.QueueWorkItem(GetHashCode(), Disconnecting);
+        }
+
+        protected virtual void Disconnecting()
+        {
+            var context = new DisconnectContext(this);
+            try
+            {
+                Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () => ((IChannelHandler)GetConfig("handler")).Disconnected(context));
+            }
+            catch (Exception e)
+            {
+                Log.Error("Disconnected Error", e);
+            }
         }
 
         public virtual void SendMessage(dynamic message)

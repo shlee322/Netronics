@@ -2,7 +2,7 @@
 
 namespace Netronics.Channel
 {
-    class DisconnectContext : IReceiveContext
+    public class DisconnectContext : IReceiveContext
     {
         private IChannel _channel;
 

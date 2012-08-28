@@ -69,12 +69,12 @@ namespace Netronics.Channel.Channel
             ReceivePacket(_originalPacketBuffer, len);
         }
 
-        public override void Disconnect()
+        protected override void Disconnecting()
         {
             try
             {
-                base.Disconnect();
-                _socket.BeginDisconnect(false, ar => Disconnected(), null);
+                base.Disconnecting();
+                Disconnected();
             }
             catch (ObjectDisposedException e)
             {
