@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Netronics
 {
@@ -166,7 +167,10 @@ namespace Netronics
 
         public int Read(byte[] buffer, int offset, int count)
         {
-            return _buffer.Read(buffer, offset, count);
+            int len = _buffer.Read(buffer, offset, count);
+            if(len != count)
+                throw new PacketLengthException();
+            return len;
         }
 
         public void ReadBytes(byte[] buffer)

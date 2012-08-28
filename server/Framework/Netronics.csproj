@@ -83,6 +83,7 @@
     <Compile Include="Microthreading\IYield.cs" />
     <Compile Include="Microthreading\Microthread.cs" />
     <Compile Include="Microthreading\SleepData.cs" />
+    <Compile Include="PacketLengthException.cs" />
     <Compile Include="Protocol\HandShake\HandShake.cs" />
     <Compile Include="IProperties.cs" />
     <Compile Include="Protocol\HandShake\IStep.cs" />
@@ -145,7 +146,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

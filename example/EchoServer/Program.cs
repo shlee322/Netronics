@@ -12,20 +12,18 @@ namespace EchoServer
 
         static void Main(string[] args)
         {
-            var properties = new Properties();
-            properties.SetIpEndPoint(new IPEndPoint(IPAddress.Any, 7777));
-            properties.SetChannelFactoryOption(factory => SetFactoryOption((ChannelPipe)factory));
+            var properties = Properties.CreateProperties(new IPEndPoint(IPAddress.Any, 7777),
+                                                         new ChannelPipe().SetCreateChannelAction((channel) =>
+                                                             {
+                                                                 channel.SetConfig("encoder", new PacketEncoder());
+                                                                 channel.SetConfig("decoder", new PacketDecoder());
+                                                                 channel.SetConfig("handler", new Handler());
+                                                             }));
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
 
             ExitEvent.WaitOne();
-        }
-
-        private static void SetFactoryOption(ChannelPipe pipe)
-        {
-            pipe.SetProtocol(() => new ModifiableProtocol(encoder: new PacketEncoder(), decoder: new PacketDecoder()));
-            pipe.SetHandler(() => new Handler());
         }
     }
 }

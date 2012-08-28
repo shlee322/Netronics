@@ -11,7 +11,8 @@ namespace Netronics
         private bool _run = true;
         private readonly Thread _thread;
 
-        private readonly ConcurrentQueue<Action> _queue; 
+        private readonly ConcurrentQueue<Action> _queue;
+        private readonly AutoResetEvent _queueEvent = new AutoResetEvent(false);
 
         static Scheduler()
         {
@@ -57,6 +58,7 @@ namespace Netronics
         public void QueueWorkItem(Action action)
         {
             _queue.Enqueue(action);
+            _queueEvent.Set();
         }
 
         public static void QueueWorkItem(int index, Action action)
@@ -80,8 +82,11 @@ namespace Netronics
             while (_run)
             {
                 _queue.TryDequeue(out action);
-                if(action == null)
+                if (action == null)
+                {
+                    _queueEvent.WaitOne();
                     continue;
+                }
                 action();
             }
         }

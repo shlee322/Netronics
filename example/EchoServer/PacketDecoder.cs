@@ -6,7 +6,7 @@ namespace EchoServer
 {
     class PacketDecoder : IPacketDecoder
     {
-        public dynamic Decode(IChannel channel, PacketBuffer buffer)
+        public object Decode(IChannel channel, PacketBuffer buffer)
         {
             buffer.BeginBufferIndex();
             if (buffer.AvailableBytes() < 1)

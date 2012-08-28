@@ -71,6 +71,12 @@ namespace Netronics.Microthreading
             return new SleepYield();
         }
 
+        public static IYield Wait()
+        {
+            //이벤트 호출
+            return null;
+        }
+
         private static void SleepThreadLoop()
         {
             while (true)

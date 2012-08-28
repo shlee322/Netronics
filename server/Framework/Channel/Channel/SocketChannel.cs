@@ -104,6 +104,9 @@ namespace Netronics.Channel.Channel
             catch (SocketException)
             {
             }
+            catch(ObjectDisposedException)
+            {
+            }
         }
 
         public override object SetTag(object tag)
