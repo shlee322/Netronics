@@ -50,10 +50,7 @@ namespace Netronics.Channel.Channel
 
         protected virtual void Disconnected()
         {
-            lock (_packetBuffer)
-            {
-                _packetBuffer.Dispose();
-            }
+           _packetBuffer.Dispose();
         }
 
         private void Receive()
@@ -132,7 +129,12 @@ namespace Netronics.Channel.Channel
 
         public void Disconnect()
         {
-            Scheduler.QueueWorkItem(GetHashCode(), Disconnecting);
+            Scheduler.QueueWorkItem(GetHashCode(), ()=>
+                {
+                    if (_packetBuffer.IsDisposed())
+                        return;
+                    Disconnecting();
+                });
         }
 
         protected virtual void Disconnecting()
