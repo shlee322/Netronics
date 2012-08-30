@@ -69,19 +69,6 @@ namespace Netronics.Channel.Channel
             ReceivePacket(_originalPacketBuffer, len);
         }
 
-        protected override void Disconnecting()
-        {
-            try
-            {
-                base.Disconnecting();
-                Disconnected();
-            }
-            catch (ObjectDisposedException e)
-            {
-                Log.Error("Disconnect가 여러번 호출 됬습니다.", e);
-            }
-        }
-
         protected override void Disconnected()
         {
             base.Disconnected();

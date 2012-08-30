@@ -129,25 +129,34 @@ namespace Netronics.Channel.Channel
 
         public void Disconnect()
         {
-            Scheduler.QueueWorkItem(GetHashCode(), ()=>
-                {
-                    if (_packetBuffer.IsDisposed())
-                        return;
-                    Disconnecting();
-                });
-        }
-
-        protected virtual void Disconnecting()
-        {
             var context = new DisconnectContext(this);
             try
             {
-                Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () => ((IChannelHandler)GetConfig("handler")).Disconnected(context));
+                Scheduler.QueueWorkItem(GetHashCode(), () =>
+                        {
+                            if (_packetBuffer.IsDisposed())
+                                return;
+                            Disconnecting();
+                            Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
+                                {
+                                    ((IChannelHandler) GetConfig("handler")).Disconnected(context);
+                                    Scheduler.QueueWorkItem(GetHashCode(), () =>
+                                    {
+                                        if (_packetBuffer.IsDisposed())
+                                            return;
+                                        Disconnected();
+                                    });
+                                });
+                        });
             }
             catch (Exception e)
             {
                 Log.Error("Disconnected Error", e);
             }
+        }
+
+        protected virtual void Disconnecting()
+        {
         }
 
         public virtual void SendMessage(dynamic message)
