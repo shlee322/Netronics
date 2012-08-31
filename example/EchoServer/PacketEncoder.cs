@@ -11,8 +11,8 @@ namespace EchoServer
             if (data.GetType() != typeof(byte[]))
                 return null;
 
-            byte[] bytes = (byte[]) data;
-            PacketBuffer buffer = new PacketBuffer();
+            var bytes = (byte[]) data;
+            var buffer = new PacketBuffer();
             buffer.Write(bytes, 0, bytes.Length);
             return buffer;
         }

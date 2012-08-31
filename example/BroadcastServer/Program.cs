@@ -2,7 +2,6 @@
 using System.Threading;
 using Netronics;
 using Netronics.Channel;
-using Netronics.Protocol;
 
 namespace BroadcastServer
 {
@@ -13,22 +12,18 @@ namespace BroadcastServer
 
         static void Main(string[] args)
         {
-            var properties = new Properties();
-            properties.SetIpEndPoint(new IPEndPoint(IPAddress.Any, 7777));
-            properties.SetChannelFactoryOption(factory => SetFactoryOption((ChannelPipe)factory));
+            var properties = Properties.CreateProperties(new IPEndPoint(IPAddress.Any, 7777),
+                                             new ChannelPipe().SetCreateChannelAction((channel) =>
+                                             {
+                                                 channel.SetConfig("encoder", PacketEncoder.Encoder);
+                                                 channel.SetConfig("decoder", PacketEncoder.Encoder);
+                                                 channel.SetConfig("handler", Handler);
+                                             }));
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
 
             ExitEvent.WaitOne();
-        }
-
-        private static void SetFactoryOption(ChannelPipe pipe)
-        {
-            PacketEncoder encoder = new PacketEncoder();
-            pipe
-            pipe.SetProtocol(() => new ModifiableProtocol(encoder: encoder, decoder: encoder));
-            pipe.SetHandler(() => Handler);
         }
     }
 }

@@ -64,10 +64,15 @@ namespace Netronics.Channel.Channel
 
                 try
                 {
+                    _packetBuffer.BeginBufferIndex();
+                    if(_packetBuffer.AvailableBytes() == 0)
+                        throw new PacketLengthException();
                     message = ((IPacketDecoder)GetConfig("decoder")).Decode(this, _packetBuffer);
+                    _packetBuffer.EndBufferIndex();
                 }
                 catch (PacketLengthException)
                 {
+                    _packetBuffer.ResetBufferIndex();
                     BeginReceive();
                     return;
                 }

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using log4net;
 
 namespace Netronics
 {
     public class Scheduler
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Scheduler)); 
+
         private static Scheduler[] _schedulers = new Scheduler[0];
 
         private bool _run = true;
@@ -87,7 +90,15 @@ namespace Netronics
                     _queueEvent.WaitOne();
                     continue;
                 }
-                action();
+
+                try
+                {
+                    action();
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Netronics Scheduler Action Error", e);
+                }
             }
         }
     }
