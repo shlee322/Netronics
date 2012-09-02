@@ -116,6 +116,9 @@ namespace Netronics.Channel.Channel
             catch (SocketException)
             {
             }
+            catch (ObjectDisposedException)
+            {
+            }
         }
     }
 }
