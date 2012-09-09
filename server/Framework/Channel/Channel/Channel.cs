@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Netronics.Protocol.PacketEncoder;
+using Netronics.Protocol.PacketEncoder.Linefeed;
 using log4net;
 
 namespace Netronics.Channel.Channel
@@ -15,7 +16,11 @@ namespace Netronics.Channel.Channel
 
         public Channel()
         {
-            SetConfig("switch", new DefaultReceiveSwitch());
+            SetConfig("buffer_size", 0);
+            //SetConfig("timeout", 0);
+            SetConfig("encoder", LinefeedEncoder.Encoder);
+            SetConfig("decoder", LinefeedEncoder.Encoder);
+            SetConfig("switch", DefaultReceiveSwitch.Switch);
         }
 
         public void SetConfig(string name, object value)
@@ -42,6 +47,14 @@ namespace Netronics.Channel.Channel
             Scheduler.QueueWorkItem(GetHashCode(), () =>
                 {
                     _packetBuffer.Write(buffer, 0, len);
+                    _packetBuffer.BeginBufferIndex();
+
+                    var size = (int) GetConfig("buffer_size");
+                    if(size > 0 && _packetBuffer.AvailableBytes() > size)
+                    {
+                        Disconnect();
+                        return;
+                    }
                     Receive();
                 });
 

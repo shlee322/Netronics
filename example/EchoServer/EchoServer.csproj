@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PacketDecoder.cs" />
     <Compile Include="Handler.cs" />
     <Compile Include="PacketEncoder.cs" />
     <Compile Include="Program.cs" />

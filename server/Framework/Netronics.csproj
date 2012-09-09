@@ -84,14 +84,13 @@
     <Compile Include="Microthreading\Microthread.cs" />
     <Compile Include="Microthreading\SleepData.cs" />
     <Compile Include="PacketLengthException.cs" />
-    <Compile Include="Protocol\HandShake\HandShake.cs" />
     <Compile Include="IProperties.cs" />
-    <Compile Include="Protocol\HandShake\IStep.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpEncoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Response.cs" />
     <Compile Include="Protocol\IProtocol.cs" />
+    <Compile Include="Protocol\PacketEncoder\Linefeed\LinefeedEncoder.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\ConnectionClose.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\Ping.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\Pong.cs" />
@@ -146,7 +145,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

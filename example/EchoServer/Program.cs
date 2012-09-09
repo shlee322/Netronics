@@ -15,8 +15,8 @@ namespace EchoServer
             var properties = Properties.CreateProperties(new IPEndPoint(IPAddress.Any, 7777),
                                                          new ChannelPipe().SetCreateChannelAction((channel) =>
                                                              {
-                                                                 channel.SetConfig("encoder", new PacketEncoder());
-                                                                 channel.SetConfig("decoder", new PacketDecoder());
+                                                                 channel.SetConfig("encoder", PacketEncoder.Encoder);
+                                                                 channel.SetConfig("decoder", PacketEncoder.Encoder);
                                                                  channel.SetConfig("handler", new Handler());
                                                              }));
 

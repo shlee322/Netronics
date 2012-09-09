@@ -21,6 +21,7 @@ namespace Netronics
 
         private int _time;
         private int _count;
+        private bool _work;
 
         static Scheduler()
         {
@@ -109,6 +110,7 @@ namespace Netronics
                     continue;
                 }
 
+                _work = true;
                 try
                 {
                     action();
@@ -120,6 +122,7 @@ namespace Netronics
 
                 _time = Environment.TickCount;
                 _count++;
+                _work = false;
             }
         }
 
@@ -131,15 +134,17 @@ namespace Netronics
                 for (int i = 0; i < _schedulers.Length; i++)
                 {
                     var scheduler = _schedulers[i];
-                    Log.InfoFormat("Thread ID : {0}, Queue : {1}, Last : {2}ms, TPS : {3:N}", i, scheduler._queue.Count, time - scheduler._time, scheduler._count / 60);
+                    Log.InfoFormat("Thread ID : {0}, Queue : {1}, Last : {2}ms, TPS : {3} ({4:N})", i, scheduler._queue.Count, time - scheduler._time, scheduler._count, scheduler._count / 60);
                     
                     //1분 이상 지연됨
-                    if (time - scheduler._time > 60000)
+                    if (time - scheduler._time > 60000 && scheduler._work)
                     {
                         try
                         {
+                            scheduler._thread.Suspend();
                             var stack = new StackTrace(scheduler._thread, true);
                             Log.InfoFormat("Thread ID : {0}, Stack {1}", i, stack);
+                            scheduler._thread.Resume();
                         }
                         catch (Exception e)
                         {

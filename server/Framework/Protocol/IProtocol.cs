@@ -1,5 +1,4 @@
-﻿using Netronics.Protocol.HandShake;
-using Netronics.Protocol.PacketEncoder;
+﻿using Netronics.Protocol.PacketEncoder;
 
 namespace Netronics.Protocol
 {
