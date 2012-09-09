@@ -7,7 +7,6 @@ namespace BroadcastServer
 {
     class Program
     {
-        private static readonly AutoResetEvent ExitEvent = new AutoResetEvent(false);
         private static readonly Handler Handler = new Handler();
 
         static void Main(string[] args)
@@ -22,8 +21,6 @@ namespace BroadcastServer
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
-
-            ExitEvent.WaitOne();
         }
     }
 }

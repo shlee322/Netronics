@@ -28,14 +28,15 @@ namespace Netronics
             SetThreadCount(4);
         }
 
-        private Scheduler()
+        private Scheduler(bool background)
         {
             _queue = new ConcurrentQueue<Action>();
             _thread = new Thread(Loop);
+            _thread.IsBackground = background;
             _thread.Start();
         }
 
-        public static void SetThreadCount(int count)
+        public static void SetThreadCount(int count, bool background = false)
         {
             if (count < 1)
                 return;
@@ -63,7 +64,7 @@ namespace Netronics
                 for (int i = 0; i < _schedulers.Length; i++)
                     temp[i] = _schedulers[i];
                 for (int i = _schedulers.Length; i < temp.Length; i++)
-                    temp[i] = new Scheduler();
+                    temp[i] = new Scheduler(background);
                 _schedulers = temp;
             }
 

@@ -11,6 +11,11 @@ namespace Netronics
         protected readonly IProperties Properties;
         protected Socket Socket;
 
+        static Netronics()
+        {
+            Scheduler.GetThreadCount();//스케줄러 활성화를 위해 한번 호출
+        }
+
         public Netronics(IProperties properties)
         {
             Properties = properties;

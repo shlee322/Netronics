@@ -8,8 +8,6 @@ namespace EchoServer
 {
     class Program
     {
-        private static readonly AutoResetEvent ExitEvent = new AutoResetEvent(false);
-
         static void Main(string[] args)
         {
             var properties = Properties.CreateProperties(new IPEndPoint(IPAddress.Any, 7777),
@@ -22,8 +20,6 @@ namespace EchoServer
 
             var netronics = new Netronics.Netronics(properties);
             netronics.Start();
-
-            ExitEvent.WaitOne();
         }
     }
 }
