@@ -28,12 +28,16 @@ namespace Netronics
             SetThreadCount(4);
         }
 
-        private Scheduler(bool background)
+        private Scheduler()
         {
             _queue = new ConcurrentQueue<Action>();
             _thread = new Thread(Loop);
-            _thread.IsBackground = background;
             _thread.Start();
+        }
+
+        private void SetBackground(bool background)
+        {
+            _thread.IsBackground = background;
         }
 
         public static void SetThreadCount(int count, bool background = false)
@@ -64,12 +68,20 @@ namespace Netronics
                 for (int i = 0; i < _schedulers.Length; i++)
                     temp[i] = _schedulers[i];
                 for (int i = _schedulers.Length; i < temp.Length; i++)
-                    temp[i] = new Scheduler(background);
+                    temp[i] = new Scheduler();
                 _schedulers = temp;
             }
 
-            _monitoringThread = new Thread(Monitoring);
-            _monitoringThread.Start();
+            foreach (var scheduler in _schedulers)
+            {
+                scheduler.SetBackground(background);
+            }
+
+            if(_monitoringThread == null)
+            {
+                _monitoringThread = new Thread(Monitoring);
+                _monitoringThread.Start();
+            }
         }
 
         public static int GetThreadCount()
@@ -135,7 +147,7 @@ namespace Netronics
                 for (int i = 0; i < _schedulers.Length; i++)
                 {
                     var scheduler = _schedulers[i];
-                    Log.InfoFormat("Thread ID : {0}, Queue : {1}, Last : {2}ms, TPS : {3} ({4:N})", i, scheduler._queue.Count, time - scheduler._time, scheduler._count, scheduler._count / 60);
+                    Log.InfoFormat("Thread ID : {0}, Queue : {1}, Last : {2}ms, TPS : {3} ({4:N})", i, scheduler._queue.Count, time - scheduler._time, scheduler._count, scheduler._count / 60.0f);
                     
                     //1분 이상 지연됨
                     if (time - scheduler._time > 60000 && scheduler._work)
