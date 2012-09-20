@@ -93,8 +93,8 @@
     <Compile Include="Protocol\PacketEncoder\WebSocket\ConnectionClose.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\Ping.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\Pong.cs" />
-    <Compile Include="Protocol\PacketEncoder\WebSocket\Decoder.cs" />
-    <Compile Include="Protocol\PacketEncoder\WebSocket\Encoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\WebSocket\WebSocketDecoder.cs" />
+    <Compile Include="Protocol\PacketEncoder\WebSocket\WebSocketEncoder.cs" />
     <Compile Include="Scheduler.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonEncoder.cs" />

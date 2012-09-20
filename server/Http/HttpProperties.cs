@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Net;
 using Netronics.Channel;
-using Netronics.Protocol;
-using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.Http;
 
 namespace Netronics.Template.Http
@@ -22,6 +20,5 @@ namespace Netronics.Template.Http
                     channel.SetConfig("handler", handler());
                 });
         }
-
     }
 }

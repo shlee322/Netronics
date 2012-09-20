@@ -62,7 +62,6 @@
     <Compile Include="SocketIO\SocketIO.cs" />
     <Compile Include="SocketIO\XhrChannel.cs" />
     <Compile Include="UriFinder.cs" />
-    <Compile Include="WebSocketProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Netronics.csproj">

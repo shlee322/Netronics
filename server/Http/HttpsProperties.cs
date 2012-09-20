@@ -11,18 +11,20 @@ using Netronics.Protocol.PacketEncoder.Http;
 
 namespace Netronics.Template.Http
 {
-    public class HttpsProperties : IProperties, IProtocol, IChannelPipe
+    public class HttpsProperties : IProperties, IChannelPipe
     {
         private static readonly HttpEncoder Encoder = new HttpEncoder();
         private static readonly HttpDecoder Decoder = new HttpDecoder();
         private readonly Func<IChannelHandler> _handler;
         protected IPEndPoint IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+        private string _certFile;
        
 
-        public HttpsProperties(Func<IChannelHandler> handler, int port = 443)
+        public HttpsProperties(Func<IChannelHandler> handler, string certFile, int port = 443)
         {
             IpEndPoint = new IPEndPoint(IPAddress.Any, port);
             _handler = handler;
+            _certFile = certFile;
         }
 
         public IChannel CreateChannel(Netronics netronics, Socket socket)
@@ -33,18 +35,6 @@ namespace Netronics.Template.Http
             channel.SetConfig("handler", _handler());
             return channel;
         }
-
-
-        public IPacketEncoder GetEncoder()
-        {
-            return Encoder;
-        }
-
-        public IPacketDecoder GetDecoder()
-        {
-            return Decoder;
-        }
-
 
         public void OnStartEvent(Netronics netronics, StartEventArgs eventArgs)
         {

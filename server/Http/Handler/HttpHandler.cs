@@ -334,8 +334,8 @@ namespace Netronics.Template.Http.Handler
                 .AppendLine("Connection: Upgrade")
                 .AppendLine("Sec-WebSocket-Accept: " + GetWebSocketAcceptCode(request.GetHeader("Sec-WebSocket-Key")));
             channel.SendMessage(response);
-            channel.SetConfig("encoder", WebSocketProtocol.Protocol.GetEncoder());
-            channel.SetConfig("decoder", WebSocketProtocol.Protocol.GetDecoder());
+            channel.SetConfig("encoder", Protocol.PacketEncoder.WebSocket.WebSocketEncoder.Encoder);
+            channel.SetConfig("decoder", Protocol.PacketEncoder.WebSocket.WebSocketDecoder.Decoder);
             //protocol.SetProtocol(WebSocketProtocol.Protocol);
             ((IChannelHandler)channel.GetConfig("handler")).Connected(null/**/);
             //handler.GetHandler().Connected(channel);
