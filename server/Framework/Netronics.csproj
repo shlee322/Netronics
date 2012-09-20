@@ -89,7 +89,6 @@
     <Compile Include="Protocol\PacketEncoder\Http\HttpEncoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Request.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\Response.cs" />
-    <Compile Include="Protocol\IProtocol.cs" />
     <Compile Include="Protocol\PacketEncoder\Linefeed\LinefeedEncoder.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\ConnectionClose.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\Ping.cs" />
@@ -145,7 +144,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
