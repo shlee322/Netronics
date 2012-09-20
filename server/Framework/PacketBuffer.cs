@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Netronics
 {
+    /// <summary>
+    /// Packet의 데이터를 효과적으로 관리하기 위한 Buffer
+    /// </summary>
     public class PacketBuffer : IDisposable
     {
         private readonly byte[] _buf = new byte[1024];
@@ -22,6 +25,10 @@ namespace Netronics
 
         #endregion
 
+        /// <summary>
+        /// 이 객체가 Disposed 되었는지 여부를 반환하는 메소드
+        /// </summary>
+        /// <returns>Disposed 여부</returns>
         public bool IsDisposed()
         {
             return Disposed;
@@ -40,31 +47,55 @@ namespace Netronics
             }
         }
 
+        /// <summary>
+        /// Buffer에 사용되는 Stream을 반환하는 메소드
+        /// Netronics 내부 용도이기 때문에 사용을 추천하지 않음
+        /// </summary>
+        /// <returns>Buffer에 사용되는 Stream</returns>
         public Stream GetStream()
         {
             return _buffer;
         }
 
+        /// <summary>
+        /// Buffer의 데이터를 byte[] 형태로 모두 반환하는 메소드
+        /// Netronics 내부 용도이기 때문에 사용을 추천하지 않음
+        /// </summary>
+        /// <returns>Buffer의 데이터</returns>
         public byte[] GetBytes()
         {
             return _buffer.ToArray();
         }
 
+        /// <summary>
+        /// Buffer에서 현재 읽을 수 있는 byte 수를 반환하는 메소드
+        /// </summary>
+        /// <returns>현재 읽을 수 있는 byte 수</returns>
         public long AvailableBytes()
         {
             return _buffer.Length - _buffer.Position;
         }
 
+        /// <summary>
+        /// Buffer의 위치를 0으로 변경하는 메소드
+        /// </summary>
         public void BeginBufferIndex()
         {
             _buffer.Position = 0;
         }
 
+        /// <summary>
+        /// Buffer의 위치를 해당값으로 변경하는 메소드
+        /// </summary>
+        /// <param name="p"></param>
         public void SetPosition(int p)
         {
             _buffer.Position = p;
         }
 
+        /// <summary>
+        /// Buffer 읽기를 끝내고 지금까지 읽은 데이터를 Buffer내에서 삭제하는 메소드
+        /// </summary>
         public void EndBufferIndex()
         {
             MemoryStream old = _buffer;
@@ -76,6 +107,9 @@ namespace Netronics
             old.Dispose();
         }
 
+        /// <summary>
+        /// Buffer의 위치를 처음으로 변경하는 메소드
+        /// </summary>
         public void ResetBufferIndex()
         {
             _buffer.Position = 0;
@@ -90,21 +124,21 @@ namespace Netronics
         public void Write(object value)
         {
             if (value is Stream)
-                WriteStream((Stream)value);
+                WriteStream((Stream) value);
             else if (value is UInt16)
-                WriteUInt16((UInt16)value);
+                WriteUInt16((UInt16) value);
             else if (value is UInt32)
-                WriteUInt32((UInt32)value);
+                WriteUInt32((UInt32) value);
             else if (value is UInt64)
-                WriteUInt64((UInt64)value);
+                WriteUInt64((UInt64) value);
             else if (value is byte)
-                WriteByte((byte)value);
+                WriteByte((byte) value);
             else if (value is Int16)
-                WriteInt16((Int16)value);
+                WriteInt16((Int16) value);
             else if (value is Int32)
-                WriteInt32((Int32)value);
+                WriteInt32((Int32) value);
             else if (value is Int64)
-                WriteInt64((Int64)value);
+                WriteInt64((Int64) value);
             else if (value is byte[])
                 WriteBytes((byte[]) value);
         }
@@ -119,18 +153,21 @@ namespace Netronics
             _buffer.Position = _buffer.Length;
             stream.CopyTo(_buffer);
         }
+
         public void WriteUInt16(UInt16 value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
             Array.Reverse(buffer);
             Write(buffer, 0, 2);
         }
+
         public void WriteUInt32(UInt32 value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
             Array.Reverse(buffer);
             Write(buffer, 0, 4);
         }
+
         public void WriteUInt64(UInt64 value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
@@ -168,7 +205,7 @@ namespace Netronics
         public int Read(byte[] buffer, int offset, int count)
         {
             int len = _buffer.Read(buffer, offset, count);
-            if(len != count)
+            if (len != count)
                 throw new PacketLengthException();
             return len;
         }
@@ -240,11 +277,18 @@ namespace Netronics
             return byteData[0];
         }
 
-        public string ReadString(int len)
+        public string ReadString(int len, Encoding encoding = null)
         {
-            return System.Text.Encoding.UTF8.GetString(ReadBytes(len));
+            if (encoding == null)
+                encoding = Encoding.UTF8;
+            return encoding.GetString(ReadBytes(len));
         }
 
+        /// <summary>
+        /// Buffer내에서 해당 byte[]을 찾는 메소드
+        /// </summary>
+        /// <param name="q">찾을 데이터</param>
+        /// <returns>데이터가 발견되면 데이터의 시작위치, 없으면 -1</returns>
         public long FindBytes(byte[] q)
         {
             long p = _buffer.Position;
@@ -282,7 +326,7 @@ namespace Netronics
                 {
                     for (int x = 0; x < q.Length; x++)
                     {
-                        if (bytes[i+x] != q[x])
+                        if (bytes[i + x] != q[x])
                         {
                             find = false;
                             break;
@@ -300,7 +344,6 @@ namespace Netronics
                 if (len != q.Length)
                     break;
                 Array.Copy(bytes, q.Length, bytes, 0, q.Length);
-               
             }
             _buffer.Position = p;
             return -1;
