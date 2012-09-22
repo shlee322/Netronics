@@ -2,6 +2,9 @@
 
 namespace Netronics.Channel
 {
+    /// <summary>
+    /// Netronics에서 Channel을 처리하는 인터페이스
+    /// </summary>
     public interface IChannelHandler
     {
         /// <summary>

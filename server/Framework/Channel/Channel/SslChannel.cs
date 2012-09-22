@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Net.Security;
 using System.Net.Sockets;
-using System.Threading;
 using Netronics.Protocol.PacketEncoder;
 using log4net;
 
 namespace Netronics.Channel.Channel
 {
+    /// <summary>
+    /// Socket에다 SSL을 사용하는 Channel 클래스
+    /// </summary>
     public class SslChannel : Channel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SslChannel));

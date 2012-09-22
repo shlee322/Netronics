@@ -5,6 +5,9 @@ using log4net;
 
 namespace Netronics.Channel.Channel
 {
+    /// <summary>
+    /// Socket을 사용하는 Channel 클래스
+    /// </summary>
     public class SocketChannel : Channel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SocketChannel)); 
