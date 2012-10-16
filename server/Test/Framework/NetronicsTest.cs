@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using NUnit.Framework;
 using Netronics.Channel;
@@ -20,16 +21,18 @@ namespace Netronics.Test
         [Test]
         public void RunTest()
         {
-            CreateNetronics();
-            CreateNetronics(17778);
-            CreateNetronics(17779);
-            CreateNetronics(17780);
+            var list = new List<Netronics>();
+            for (int i = 0; i < 4; i++)
+                list.Add(CreateNetronics(17777 + i));
+            foreach (var netronicse in list)
+                netronicse.Stop();
+            
         }
 
         [Test]
         public void ConnectTest()
         {
-            CreateNetronics();
+            var netronics = CreateNetronics();
 
             Console.WriteLine("클라이언트 초기화");
             var socket = new System.Net.Sockets.TcpClient();
@@ -37,6 +40,7 @@ namespace Netronics.Test
             socket.Connect(new IPEndPoint(IPAddress.Loopback, 17777));
             Console.WriteLine("클라이언트 종료");
             socket.GetStream().Close();
+            netronics.Stop();
         }
 
         [Test]
@@ -47,7 +51,7 @@ namespace Netronics.Test
             var ipPoint = netronics.GetEndIPPoint();
             if(!ipPoint.Equals(new IPEndPoint(IPAddress.Any, 17777)))
                 throw new Exception("IPEndPoint 값이 변함");
-
+            netronics.Stop();
         }
     }
 }

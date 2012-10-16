@@ -93,6 +93,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MicrothreadTest.cs" />
     <Compile Include="NetronicsTest.cs" />
+    <Compile Include="PacketBufferTest.cs" />
+    <Compile Include="SchedulerTest.cs" />
   </ItemGroup>
 </Project>
