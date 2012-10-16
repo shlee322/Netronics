@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0BF9B5F7-4189-4C6B-B758-4038C10B1D82}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Framework</RootNamespace>
-    <AssemblyName>Framework</AssemblyName>
+    <RootNamespace>Netronics.Test</RootNamespace>
+    <AssemblyName>Netronics.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -49,7 +49,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\bin\Debug\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.4.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework">
       <HintPath>..\..\..\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -61,23 +60,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BSONEnDecoderTest.cs" />
-    <Compile Include="HttpTemplateTest.cs" />
-    <Compile Include="MicrothreadTest.cs" />
-    <Compile Include="MySqlTest.cs" />
-    <Compile Include="NetronicsTest.cs" />
-    <Compile Include="PacketBufferTest.cs" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Netronics.csproj">
       <Project>{394898C7-12EE-478A-AD9A-7377B5DCC081}</Project>
       <Name>Netronics</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Http\Http.csproj">
-      <Project>{A3D165C8-4C82-411B-B52C-4A029AE05A6A}</Project>
-      <Name>Http</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -104,5 +91,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="NetronicsTest.cs" />
   </ItemGroup>
 </Project>

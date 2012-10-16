@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 
-namespace Netronics.Template.Http.SocketIO
+namespace Netronics.Http.SocketIO
 {
     public interface ISocketIO
     {

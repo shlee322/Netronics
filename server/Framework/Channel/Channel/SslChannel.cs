@@ -37,7 +37,6 @@ namespace Netronics.Channel.Channel
             _socket = socket;
             _stream = new SslStream(new NetworkStream(socket, true));
         }
-
         public Socket GetSocket()
         {
             return _socket;
@@ -52,7 +51,7 @@ namespace Netronics.Channel.Channel
         {
             try
             {
-                _socket.BeginReceive(_originalPacketBuffer, 0, 512, SocketFlags.None, ReadCallback, null);
+                _stream.BeginRead(_originalPacketBuffer, 0, 512, ReadCallback, null);
             }
             catch (SocketException)
             {
@@ -65,7 +64,7 @@ namespace Netronics.Channel.Channel
             int len;
             try
             {
-                len = _socket.EndReceive(ar);
+                len = _stream.EndRead(ar);
                 if (len == 0)
                     throw new SocketException();
             }
@@ -74,27 +73,13 @@ namespace Netronics.Channel.Channel
                 Disconnect();
                 return;
             }
-            catch(ObjectDisposedException)
+            catch (ObjectDisposedException)
             {
                 Disconnect();
                 return;
             }
 
             ReceivePacket(_originalPacketBuffer, len);
-        }
-
-        protected override void Disconnecting()
-        {
-            try
-            {
-                base.Disconnecting();
-                _socket.BeginDisconnect(false, ar => Scheduler.QueueWorkItem(GetHashCode(),
-                                                                             Disconnected), null);
-            }
-            catch (ObjectDisposedException e)
-            {
-                Log.Error("Disconnect가 여러번 호출 됬습니다.", e);
-            }
         }
 
         protected override void Disconnected()
@@ -114,9 +99,12 @@ namespace Netronics.Channel.Channel
 
             try
             {
-                _socket.BeginSend(o, 0, o.Length, SocketFlags.None, SendCallback, null);
+                _stream.BeginWrite(o, 0, o.Length, SendCallback, null);
             }
             catch (SocketException)
+            {
+            }
+            catch (ObjectDisposedException)
             {
             }
         }
@@ -139,6 +127,9 @@ namespace Netronics.Channel.Channel
                 _socket.EndSend(ar);
             }
             catch (SocketException)
+            {
+            }
+            catch (ObjectDisposedException)
             {
             }
         }

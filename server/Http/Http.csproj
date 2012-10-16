@@ -8,7 +8,7 @@
     <ProjectGuid>{A3D165C8-4C82-411B-B52C-4A029AE05A6A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Netronics.Template.Http</RootNamespace>
+    <RootNamespace>Netronics.Http</RootNamespace>
     <AssemblyName>Netronics.Template.Http</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

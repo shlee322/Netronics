@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Netronics.Template.Http
+namespace Netronics.Http
 {
     class UriFinder
     {

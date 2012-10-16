@@ -2,9 +2,10 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Netronics.Channel.Channel;
+using Netronics.Http;
 using Netronics.Protocol.PacketEncoder.Http;
 
-namespace Netronics.Template.Http.Handler
+namespace Netronics.Http.Handler
 {
     class DynamicUriHandler : IUriHandler
     {

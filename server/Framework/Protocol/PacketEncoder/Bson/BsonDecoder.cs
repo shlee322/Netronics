@@ -10,9 +10,9 @@ namespace Netronics.Protocol.PacketEncoder.Bson
     /// BSON을 사용하는 Packet Decoder
     /// 
     ///  BSON 패킷 구조
-    /// ┌─────────┬───────────┐
-    /// │len = uint(4byte)│BSON DATA([len] byte)│
-    /// └─────────┴───────────┘
+    /// ┌──────┬─────────┬───────────┐
+    /// │ver = 1byte│len = uint(4byte)│BSON DATA([len] byte)│
+    /// └──────┴─────────┴───────────┘
     ///
     /// </summary>
     public class BsonDecoder : IPacketDecoder
@@ -33,9 +33,9 @@ namespace Netronics.Protocol.PacketEncoder.Bson
             //버퍼 읽기 시작을 알림
             buffer.BeginBufferIndex();
 
-            if (buffer.AvailableBytes() < 5) //버퍼길이가 5미만이면 리턴
+            if (buffer.AvailableBytes() < 6) //버퍼길이가 5미만이면 리턴
                 return null;
-
+            buffer.ReadByte();
             uint len = buffer.ReadUInt32();
             if (len > buffer.AvailableBytes())
             {

@@ -3,7 +3,7 @@ using System.Net;
 using Netronics.Channel;
 using Netronics.Protocol.PacketEncoder.Http;
 
-namespace Netronics.Template.Http
+namespace Netronics.Http
 {
     public class HttpProperties : Properties
     {

@@ -5,11 +5,9 @@ using System.Security.Cryptography.X509Certificates;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
 using Netronics.Event;
-using Netronics.Protocol;
-using Netronics.Protocol.PacketEncoder;
 using Netronics.Protocol.PacketEncoder.Http;
 
-namespace Netronics.Template.Http
+namespace Netronics.Http
 {
     public class HttpsProperties : IProperties, IChannelPipe
     {

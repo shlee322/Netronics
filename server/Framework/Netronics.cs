@@ -48,12 +48,13 @@ namespace Netronics
         /// Netronics를 중지하는 메소드
         /// </summary>
         /// <returns>중지된 Netronics</returns>
-        public virtual Netronics Stop()
+        /*public virtual Netronics Stop()
         {
+            
             if (Properties != null)
                 Properties.OnStopEvent(this, new EventArgs());
             return this;
-        }
+        }*/
 
         /// <summary>
         /// 소켓 초기화를 하는 메소드

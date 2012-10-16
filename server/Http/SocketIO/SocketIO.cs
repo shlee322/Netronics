@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using Netronics.Channel;
+using Netronics.Http;
 
-namespace Netronics.Template.Http.SocketIO
+namespace Netronics.Http.SocketIO
 {
     public class SocketIO : ISocketIO
     {

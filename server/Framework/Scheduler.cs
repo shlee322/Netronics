@@ -157,6 +157,14 @@ namespace Netronics
             _schedulers[index%_schedulers.Length].RunMicrothread(microthread);
         }
 
+        public static void SetDefaultTimeout(int warning=1000, int timeout=-1)
+        {
+        }
+
+        public static void SetCurrentTimeout(int time, Action action)
+        {
+        }
+
         /// <summary>
         /// Worker Thread의 메인 Loop 메소드
         /// </summary>

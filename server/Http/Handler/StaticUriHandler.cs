@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
-using Microsoft.SqlServer.Server;
 using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder.Http;
 
-namespace Netronics.Template.Http.Handler
+namespace Netronics.Http.Handler
 {
     class StaticUriHandler : IUriHandler
     {

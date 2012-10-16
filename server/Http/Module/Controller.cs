@@ -1,4 +1,4 @@
-﻿namespace Netronics.Template.Http.Module
+﻿namespace Netronics.Http.Module
 {
     public class Controller
     {

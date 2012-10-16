@@ -3,8 +3,9 @@ using System.IO;
 using System.Threading;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Netronics.Http;
 
-namespace Netronics.Template.Http.SocketIO
+namespace Netronics.Http.SocketIO
 {
     class XhrChannel : IChannel
     {

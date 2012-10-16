@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Netronics.Http;
 using Netronics.Protocol.PacketEncoder.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Netronics.Template.Http.Handler
+namespace Netronics.Http.Handler
 {
     public class HttpHandler : IChannelHandler
     {

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Threading;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
+using Netronics.Http;
 using Netronics.Protocol.PacketEncoder.WebSocket;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Netronics.Template.Http.SocketIO
+namespace Netronics.Http.SocketIO
 {
     class Client : ISocketIO, IChannelHandler
     {

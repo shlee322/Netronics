@@ -11,9 +11,9 @@ namespace Netronics.Protocol.PacketEncoder.Bson
     /// BSON을 사용하는 Packet Encoder
     /// 
     ///  BSON 패킷 구조
-    /// ┌─────────┬───────────┐
-    /// │len = uint(4byte)│BSON DATA([len] byte)│
-    /// └─────────┴───────────┘
+    /// ┌──────┬─────────┬───────────┐
+    /// │ver = 1byte│len = uint(4byte)│BSON DATA([len] byte)│
+    /// └──────┴─────────┴───────────┘
     ///
     /// </summary>
     /// 
@@ -35,7 +35,7 @@ namespace Netronics.Protocol.PacketEncoder.Bson
         public PacketBuffer Encode(IChannel channel, dynamic data)
         {
             var buffer = new PacketBuffer();
-
+            buffer.WriteByte(1);
             var stream = new MemoryStream();
             Serializer.Serialize(new BsonWriter(stream), data);
             stream.Position = 0;
