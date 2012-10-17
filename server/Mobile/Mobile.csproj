@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auth\AuthProcessor.cs" />
+    <Compile Include="Auth\User.cs" />
     <Compile Include="ChannelPipe.cs" />
     <Compile Include="Commend.cs" />
     <Compile Include="CommendAction.cs" />
@@ -51,6 +53,10 @@
     <Compile Include="Request.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DB\DB.csproj">
+      <Project>{35B4E4F1-5AEA-4B26-8CE7-CFB86CCD1518}</Project>
+      <Name>DB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\Netronics.csproj">
       <Project>{394898C7-12EE-478A-AD9A-7377B5DCC081}</Project>
       <Name>Netronics</Name>

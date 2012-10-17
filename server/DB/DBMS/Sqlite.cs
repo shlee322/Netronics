@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
@@ -44,7 +45,7 @@ namespace Netronics.DB.DBMS
             conn.Close();
         }
 
-        public override void Save(string tableName, IEnumerable<FieldData> dbField, Model model)
+        public override long Save(string tableName, IEnumerable<FieldData> dbField, Model model)
         {
             var writer = new StringWriter();
 
@@ -64,7 +65,29 @@ namespace Netronics.DB.DBMS
             var cmd = conn.CreateCommand();
             cmd.CommandText = writer.ToString();
             cmd.ExecuteNonQuery();
+            long id = conn.LastInsertRowId;
             conn.Close();
+
+            return id;
+        }
+
+        public override NameValueCollection Find(string tableName, int id)
+        {
+            NameValueCollection collection = null;
+
+            var conn = new SQLiteConnection(_connectionStringBuilder.ToString());
+            conn.Open();
+            var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT * from @table WHERE `id`=@id ";
+            cmd.Parameters.AddWithValue("table", tableName);
+            cmd.Parameters.AddWithValue("id", id);
+            var reader = cmd.ExecuteReader();
+            if(reader.NextResult())
+            {
+                collection = reader.GetValues();
+            }
+            conn.Close();
+            return collection;
         }
     }
 }

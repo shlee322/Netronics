@@ -31,6 +31,7 @@ public class Mobile {
     int ver;
     private String host;
     private int port;
+    private String authFile;
 
     public Mobile(int ver, String host, int port) throws NoSuchAlgorithmException, KeyManagementException {
         this.ver = ver;
@@ -77,5 +78,15 @@ public class Mobile {
     public int GetVer()
     {
         return this.ver;
+    }
+
+    public void SetAuthFile(String path)
+    {
+        authFile = path;
+    }
+
+    public String GetAuthFile()
+    {
+        return authFile;
     }
 }

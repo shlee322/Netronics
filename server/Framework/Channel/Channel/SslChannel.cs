@@ -124,7 +124,7 @@ namespace Netronics.Channel.Channel
         {
             try
             {
-                _socket.EndSend(ar);
+                _stream.EndWrite(ar);
             }
             catch (SocketException)
             {

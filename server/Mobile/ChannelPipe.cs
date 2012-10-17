@@ -3,7 +3,6 @@ using System.Security.Cryptography.X509Certificates;
 using Netronics.Channel;
 using Netronics.Channel.Channel;
 using Netronics.Protocol.PacketEncoder.Bson;
-using Netronics.Protocol.PacketEncoder.MsgPack;
 
 namespace Netronics.Mobile
 {
@@ -21,8 +20,8 @@ namespace Netronics.Mobile
         public IChannel CreateChannel(Netronics netronics, Socket socket)
         {
             var channel = SslChannel.CreateChannel(socket, _cert);
-            channel.SetConfig("encoder", MsgPackEncoder.Encoder);
-            channel.SetConfig("decoder", MsgPackDecoder.Decoder);
+            channel.SetConfig("encoder", BsonEncoder.Encoder);
+            channel.SetConfig("decoder", BsonDecoder.Decoder);
             channel.SetConfig("handler", new Handler(channel, _mobile));
             return channel;
         }

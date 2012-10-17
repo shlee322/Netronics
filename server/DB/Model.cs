@@ -5,7 +5,7 @@ namespace Netronics.DB
 {
     public class Model
     {
-        public int Id=-1;
+        public long Id=-1;
         private readonly List<FieldData> _dbField = new List<FieldData>();
 
         public Model()
@@ -24,7 +24,9 @@ namespace Netronics.DB
         {
             var tableName = GetType().FullName.Replace(".", "_").ToLower();
 
-            DBMS.DB.GetInstance().Save(tableName, _dbField, this);
+            long newID = DBMS.DB.GetInstance().Save(tableName, _dbField, this);
+            if(Id == -1)
+                Id = newID;
         }
 
         public static Raw ModelObjects<T>()

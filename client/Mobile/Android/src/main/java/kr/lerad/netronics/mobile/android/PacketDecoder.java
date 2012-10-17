@@ -1,15 +1,16 @@
 package kr.lerad.netronics.mobile.android;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.undercouch.bson4jackson.BsonFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
-import org.msgpack.MessagePack;
 
 import java.util.Map;
 
 public class PacketDecoder extends FrameDecoder {
-    private static final MessagePack messagePack = new MessagePack();
+    private static final ObjectMapper objectMapper = new ObjectMapper(new BsonFactory());
 
     protected Object decode(
             ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer) throws Exception {
@@ -29,6 +30,6 @@ public class PacketDecoder extends FrameDecoder {
         byte[] decoded = new byte[dataLength];
         buffer.readBytes(decoded);
 
-        return messagePack.read(decoded);
+        return objectMapper.readValue(decoded, 0, dataLength, Map.class);
     }
 }

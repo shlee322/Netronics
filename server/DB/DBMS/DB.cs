@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Reflection;
 
 namespace Netronics.DB.DBMS
@@ -22,12 +23,17 @@ namespace Netronics.DB.DBMS
             throw new Exception("DB 설정 에러");
         }
 
-        public virtual void Save(string tableName, IEnumerable<FieldData> dbField, Model model)
+        public virtual long Save(string tableName, IEnumerable<FieldData> dbField, Model model)
         {
             throw new Exception("DB 설정 에러");
         }
 
         public virtual int GetCount(string tableName)
+        {
+            throw new Exception("DB 설정 에러");
+        }
+
+        public virtual NameValueCollection Find(string tableName, int id)
         {
             throw new Exception("DB 설정 에러");
         }

@@ -1,28 +1,28 @@
 package kr.lerad.netronics.mobile.android;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.undercouch.bson4jackson.BsonFactory;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
-import org.msgpack.MessagePack;
-import org.msgpack.type.Value;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 public class PacketEncoder extends OneToOneEncoder {
-    private static final MessagePack messagePack = new MessagePack();
+    private static final ObjectMapper objectMapper = new ObjectMapper(new BsonFactory());
 
     protected Object encode(
             ChannelHandlerContext ctx, Channel channel, Object msg) throws Exception {
-        if (!(msg instanceof Value)) {
-            return null;
+        if (!(msg instanceof Map)) {
+            return msg;
         }
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        messagePack.write(stream, msg);
+        objectMapper.writeValue(stream, msg);
 
         int dataLength = stream.size();
 

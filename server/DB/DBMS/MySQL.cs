@@ -47,7 +47,7 @@ namespace Netronics.DB.DBMS
             conn.Close();
         }
 
-        public override void Save(string tableName, IEnumerable<FieldData> dbField, Model model)
+        public override long Save(string tableName, IEnumerable<FieldData> dbField, Model model)
         {
             var writer = new StringWriter();
 
@@ -75,7 +75,9 @@ namespace Netronics.DB.DBMS
             var cmd = conn.CreateCommand();
             cmd.CommandText = writer.ToString();
             cmd.ExecuteNonQuery();
+            long id = conn.LastInsertRowId;
             conn.Close();
+            return id;
         }
     }
 }

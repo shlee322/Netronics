@@ -45,5 +45,17 @@ namespace Netronics.DB
             return null;
         }
 
+        public Model Find(int id)
+        {
+            var data = DBMS.DB.GetInstance().Find(_tableName, id);
+            if (data == null)
+                return null;
+            var obj = (Model)Activator.CreateInstance(_type);
+            foreach (var fieldData in _dbField)
+            {
+                fieldData.GetInfo().SetValue(obj, data.Get(fieldData.GetInfo().Name.ToLower()));
+            }
+            return obj;
+        }
     }
 }
