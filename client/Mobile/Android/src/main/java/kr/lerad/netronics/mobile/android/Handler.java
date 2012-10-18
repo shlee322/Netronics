@@ -76,6 +76,7 @@ public class Handler extends SimpleChannelUpstreamHandler {
                 out.newLine();
                 out.write(map.get("key").toString());
                 out.newLine();
+                out.flush();
                 out.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
