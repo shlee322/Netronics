@@ -42,16 +42,9 @@ namespace Netronics.Mobile
                 key = authData.Value<string>("key");
                 user = AuthProcessor.GetUser(authData.Value<int>("id"));
 
-                if(user == null)
+                if (user == null || user.Key != key) //비정상 계정으로 판단하고 새로운 계정을 발급
                 {
-                    //계정 증발
-                }
-
-                if(user.Key != key)
-                {
-                    //인증키 오류
-                    _channel.Disconnect();
-                    return;
+                    user = AuthProcessor.NewAuthUser(key);
                 }
 
                 user.Key = AuthProcessor.GenerateKey();

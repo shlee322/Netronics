@@ -53,10 +53,17 @@ namespace Netronics.DB.DBMS
 
             foreach (var fieldData in dbField)
                 writer.Write(", `{0}`", fieldData.GetInfo().Name.ToLower());
+
+            /*
             writer.Write(") values ({0}", model.Id == -1 ? "null" : model.Id.ToString());
 
             foreach (var fieldData in dbField)
                 writer.Write(", '{0}'", fieldData.GetInfo().GetValue(model));
+            */
+            writer.Write(") values (@id");
+
+            foreach (var fieldData in dbField)
+                writer.Write(", @{0}", fieldData.GetInfo().Name.ToLower());
 
             writer.Write(");");
 
@@ -64,6 +71,9 @@ namespace Netronics.DB.DBMS
             conn.Open();
             var cmd = conn.CreateCommand();
             cmd.CommandText = writer.ToString();
+            cmd.Parameters.AddWithValue("@id", model.Id == -1 ? "null" : model.Id.ToString());
+            foreach (var fieldData in dbField)
+                cmd.Parameters.AddWithValue("@" + fieldData.GetInfo().Name.ToLower(), fieldData.GetInfo().GetValue(model));
             cmd.ExecuteNonQuery();
             long id = conn.LastInsertRowId;
             conn.Close();
@@ -78,14 +88,14 @@ namespace Netronics.DB.DBMS
             var conn = new SQLiteConnection(_connectionStringBuilder.ToString());
             conn.Open();
             var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT * from @table WHERE `id`=@id ";
-            cmd.Parameters.AddWithValue("table", tableName);
-            cmd.Parameters.AddWithValue("id", id);
+            cmd.CommandText = "SELECT * FROM `" + tableName + "` WHERE `id`=@id ";
+            cmd.Parameters.AddWithValue("@id", id);
             var reader = cmd.ExecuteReader();
-            if(reader.NextResult())
+            if(reader.Read())
             {
                 collection = reader.GetValues();
             }
+            reader.Close();
             conn.Close();
             return collection;
         }

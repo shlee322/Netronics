@@ -18,7 +18,7 @@ namespace Netronics.DB
         {
             _type = type;
 
-            _tableName = GetType().FullName.Replace(".", "_").ToLower();
+            _tableName = _type.FullName.Replace(".", "_").ToLower();
 
             foreach (var field in type.GetFields())
             {
@@ -51,6 +51,7 @@ namespace Netronics.DB
             if (data == null)
                 return null;
             var obj = (Model)Activator.CreateInstance(_type);
+            obj.Id = Convert.ToInt64(data.Get("id"));
             foreach (var fieldData in _dbField)
             {
                 fieldData.GetInfo().SetValue(obj, data.Get(fieldData.GetInfo().Name.ToLower()));
