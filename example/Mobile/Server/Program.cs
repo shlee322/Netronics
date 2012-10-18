@@ -4,6 +4,7 @@ using Netronics.DB.DBMS;
 using Netronics.DB.Where;
 using Netronics.Mobile;
 using Netronics.DB;
+using Newtonsoft.Json.Linq;
 
 namespace MobileServer
 {
@@ -21,8 +22,18 @@ namespace MobileServer
             mobile.Disconnected = client =>
                 {
                 };
-            mobile.On("hi", request => { });
-            mobile.On("hi", request => { }, 5);
+            mobile.On("hi", request =>
+                {
+                    request.Client.Emit("hi", new JValue("test222"));
+                });
+            mobile.On("hi", request =>
+                {
+                    
+                }, 5);
+            mobile.On("hi2", request =>
+            {
+
+            });
             mobile.Run();/*
             var doc = new DB.Doc() {Id = 1, Title = "테스트", Content = "테스트입니다.", Date = DateTime.Now};
             doc.Save();

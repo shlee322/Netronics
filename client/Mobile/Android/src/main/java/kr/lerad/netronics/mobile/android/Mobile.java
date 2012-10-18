@@ -1,10 +1,7 @@
 package kr.lerad.netronics.mobile.android;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
+import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
@@ -23,6 +20,7 @@ import java.lang.String;
 import java.net.InetSocketAddress;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 
 public class Mobile {
@@ -32,6 +30,8 @@ public class Mobile {
     private String host;
     private int port;
     private String authFile;
+    private Channel _channel;
+    private HashMap<String, RecvOnListener> Listener = new HashMap<String, RecvOnListener>();
 
     public Mobile(int ver, String host, int port) throws NoSuchAlgorithmException, KeyManagementException {
         this.ver = ver;
@@ -46,7 +46,7 @@ public class Mobile {
         this.bootstrap = new ClientBootstrap(factory);
 
         clientContext = SSLContext.getInstance("SSLv3");
-        clientContext.init(null, SecureChatTrustManagerFactory.getTrustManagers(), null);
+        clientContext.init(null, SecureTrustManagerFactory.getTrustManagers(), null);
 
         this.bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
                 public ChannelPipeline getPipeline() {
@@ -62,17 +62,29 @@ public class Mobile {
             });
     }
 
-    public void Run()
-    {
-        bootstrap.connect(new InetSocketAddress(host, port));
+    public void Run() throws InterruptedException {
+        _channel = bootstrap.connect(new InetSocketAddress(host, port)).await().getChannel();
     }
 
-    public void On(String type, Object o)
+    public void On(String type, RecvOnListener listener)
     {
+        Listener.put(type, listener);
+    }
+
+    public void Call(String type, Object o)
+    {
+        if(!Listener.containsKey(type))
+            return;
+        Listener.get(type).On(this, o);
     }
 
     public void Emit(String type, Object o)
     {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("type","msg");
+        map.put("name", type);
+        map.put("arg", o);
+        _channel.write(map);
     }
 
     public int GetVer()

@@ -1,6 +1,5 @@
 package kr.lerad.netronics.mobile.android;
 
-import android.content.Context;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.handler.ssl.SslHandler;
 
@@ -10,7 +9,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Handler extends SimpleChannelUpstreamHandler {
+class Handler extends SimpleChannelUpstreamHandler {
     private static final Logger logger = Logger.getLogger(
             Handler.class.getName());
     public static final String AuthDataFile = "AuthData";
@@ -82,7 +81,12 @@ public class Handler extends SimpleChannelUpstreamHandler {
                 e1.printStackTrace();
             }
         }
+        else if(map.get("type").equals("msg"))
+        {
+            this.mobile.Call(map.get("name").toString(), map.get("arg"));
+        }
     }
+
 
     @Override
     public void exceptionCaught(

@@ -18,8 +18,13 @@ namespace Netronics.Mobile
 
         public int Ver { get; set; }
 
-        public void Emit(string type)
+        public void Emit(string type, JToken o)
         {
+            var obj = new JObject();
+            obj.Add("type", "msg");
+            obj.Add("name", type);
+            obj.Add("arg", o);
+            _channel.SendMessage(obj);
         }
 
         public long GetIndex()

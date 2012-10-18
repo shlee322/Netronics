@@ -17,7 +17,7 @@ import java.security.cert.X509Certificate;
  * Time: 오후 4:40
  * To change this template use File | Settings | File Templates.
  */
-public class SecureChatTrustManagerFactory extends TrustManagerFactorySpi {
+class SecureTrustManagerFactory extends TrustManagerFactorySpi {
     private static final TrustManager DUMMY_TRUST_MANAGER = new X509TrustManager() {
         public X509Certificate[] getAcceptedIssuers() {
             return new X509Certificate[0];

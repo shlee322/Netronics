@@ -12,7 +12,7 @@ import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
-public class PacketEncoder extends OneToOneEncoder {
+class PacketEncoder extends OneToOneEncoder {
     private static final ObjectMapper objectMapper = new ObjectMapper(new BsonFactory());
 
     protected Object encode(

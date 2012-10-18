@@ -39,8 +39,8 @@ namespace Netronics.Mobile
                         _client.Auth(message.Value<JObject>("auth"));
                     }
                     break;
-                case "data":
-                    _mobile.Call(new Request() { Client = _client, Type = message.Value<string>("msg"), Arg = message.Value<JToken>("arg") });
+                case "msg":
+                    _mobile.Call(new Request() { Client = _client, Type = message.Value<string>("name"), Arg = message.Value<JToken>("arg") });
                     break;
             }
         }

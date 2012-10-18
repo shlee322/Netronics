@@ -9,7 +9,7 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
 import java.util.Map;
 
-public class PacketDecoder extends FrameDecoder {
+class PacketDecoder extends FrameDecoder {
     private static final ObjectMapper objectMapper = new ObjectMapper(new BsonFactory());
 
     protected Object decode(
