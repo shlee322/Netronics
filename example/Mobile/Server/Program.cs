@@ -1,9 +1,6 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography.X509Certificates;
 using Netronics.DB.DBMS;
-using Netronics.DB.Where;
 using Netronics.Mobile;
-using Netronics.DB;
 using Newtonsoft.Json.Linq;
 
 namespace MobileServer
@@ -36,13 +33,7 @@ namespace MobileServer
 
             });
             mobile.Push.SetGCMKey("568476072992", "AIzaSyAbX7hP5h29tgUczJDqhtntJavHTkvvodU");
-            mobile.Run();/*
-            var doc = new DB.Doc() {Id = 1, Title = "테스트", Content = "테스트입니다.", Date = DateTime.Now};
-            doc.Save();
-
-            var test = Model.ModelObjects<DB.Doc>().Count;
-            var docs = Model.ModelObjects<DB.Doc>().Find(new Where().Match(new DB.Doc(){Title = "테스트"}));
-            */
+            mobile.Run();
         }
     }
 }

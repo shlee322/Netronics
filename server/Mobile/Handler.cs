@@ -28,7 +28,6 @@ namespace Netronics.Mobile
         public void MessageReceive(IReceiveContext context)
         {
             var message = (JToken)context.GetMessage();
-            System.Console.WriteLine(message.ToString());
             switch (message.Value<string>("type"))
             {
                 case "connect":
