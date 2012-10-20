@@ -22,6 +22,8 @@ import java.net.InetSocketAddress;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class Mobile {
@@ -33,6 +35,7 @@ public class Mobile {
     private String authFile;
     private Channel _channel;
     private HashMap<String, RecvOnListener> Listener = new HashMap<String, RecvOnListener>();
+    private List<Push> pushList = new LinkedList<Push>();
 
     public Mobile(int ver, String host, int port) throws NoSuchAlgorithmException, KeyManagementException {
         this.ver = ver;
@@ -65,6 +68,8 @@ public class Mobile {
 
     public void Run() throws InterruptedException {
         _channel = bootstrap.connect(new InetSocketAddress(host, port)).await().getChannel();
+        for(Push push : pushList)
+            push.Run();
     }
 
     public void On(String type, RecvOnListener listener)
@@ -106,6 +111,21 @@ public class Mobile {
     public void AddPush(Push push)
     {
         push.SetMobile(this);
-        push.Run();
+        pushList.add(push);
+    }
+
+    public void AddPushAuth(String type, Object o) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("type","add_push");
+        map.put("name", type);
+        map.put("arg", o);
+        _channel.write(map);
+    }
+
+    public void RemovePushAuth(String type) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("type","remove_push");
+        map.put("name", type);
+        _channel.write(map);
     }
 }

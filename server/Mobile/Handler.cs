@@ -42,6 +42,12 @@ namespace Netronics.Mobile
                 case "msg":
                     _mobile.Call(new Request() { Client = _client, Type = message.Value<string>("name"), Arg = message.Value<JToken>("arg") });
                     break;
+                case "add_push":
+                    _mobile.Push.AddPush(_client, message);
+                    break;
+                case "remove_push":
+                    _mobile.Push.RemovePush(_client, message);
+                    break;
             }
         }
     }

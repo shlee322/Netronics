@@ -30,6 +30,10 @@ namespace Netronics.DB.DBMS
                 {
                     writer.Write(", `{0}` TEXT NOT NULL", field.GetInfo().Name.ToLower());
                 }
+                else if (field.GetField().GetType() == typeof(Int64Field))
+                {
+                    writer.Write(", `{0}` INTEGER", field.GetInfo().Name.ToLower());
+                }
                 else if (field.GetField().GetType() == typeof(DateTimeField))
                 {
                     //updated TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
