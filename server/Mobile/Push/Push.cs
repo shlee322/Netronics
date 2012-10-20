@@ -25,13 +25,17 @@ namespace Netronics.Mobile.Push
             _gcmKey = key;
         }
 
-        public void SendMessage(Client client, JToken obj)
+        public void SendMessage(Client client, string type, JToken arg)
         {
-            SendMessage(client.GetId(), obj);
+            SendMessage(client.GetId(), type, arg);
         }
 
-        public void SendMessage(long id, JToken obj)
+        public void SendMessage(long id, string type, JToken arg)
         {
+            var jsonData = new JObject();
+            jsonData.Add("type", type);
+            jsonData.Add("arg", arg);
+
             var data = Model.ModelObjects<User>().Find(new Where().Match(new User() { UserId = id }));
             if (data.Length == 0)
                 return;
@@ -46,7 +50,7 @@ namespace Netronics.Mobile.Push
 
                 request.Headers.Add(string.Format("Sender: id={0}", _gcmId));
 
-                string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + HttpUtility.UrlEncode(obj.ToString()) + "&data.time=" + DateTime.Now.ToString() + "&registration_id=" + user.Key + "";
+                string postData = "collapse_key=score_update&time_to_live=108&delay_while_idle=1&data.message=" + HttpUtility.UrlEncode(jsonData.ToString()) + "&data.time=" + DateTime.Now.ToString() + "&registration_id=" + user.Key + "";
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentLength = byteArray.Length;
 

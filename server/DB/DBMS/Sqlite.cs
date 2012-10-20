@@ -68,10 +68,10 @@ namespace Netronics.DB.DBMS
             foreach (var fieldData in dbField)
                 writer.Write(", '{0}'", fieldData.GetInfo().GetValue(model));
             */
-            writer.Write(") values (@id");
+            writer.Write(") values ({0}", model.Id == -1 ? "null" : model.Id.ToString());
 
             foreach (var fieldData in dbField)
-                writer.Write(", @{0}", fieldData.GetInfo().Name.ToLower());
+                writer.Write(", '{0}'", fieldData.GetInfo().GetValue(model));
 
             writer.Write(");");
 
@@ -79,9 +79,11 @@ namespace Netronics.DB.DBMS
             conn.Open();
             var cmd = conn.CreateCommand();
             cmd.CommandText = writer.ToString();
+            /*
             cmd.Parameters.AddWithValue("@id", model.Id == -1 ? "null" : model.Id.ToString());
             foreach (var fieldData in dbField)
-                cmd.Parameters.AddWithValue("@" + fieldData.GetInfo().Name.ToLower(), fieldData.GetInfo().GetValue(model).ToString());
+                cmd.Parameters.AddWithValue("@" + fieldData.GetInfo().Name.ToLower(), fieldData.GetInfo().GetValue(model));
+            */
             cmd.ExecuteNonQuery();
             long id = conn.LastInsertRowId;
             conn.Close();

@@ -25,7 +25,7 @@ namespace MobileServer
             mobile.On("hi", request =>
                 {
                     request.Client.Emit("hi", new JValue("test222"));
-                    mobile.Push.SendMessage(request.Client, new JObject("{test:123}"));
+                    mobile.Push.SendMessage(request.Client, "push_test", JToken.Parse("{test:123}"));
                 });
             mobile.On("hi", request =>
                 {
