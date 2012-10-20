@@ -1,4 +1,6 @@
-﻿namespace Netronics.DB
+﻿using System;
+
+namespace Netronics.DB
 {
     public class ForeignKey : Field
     {

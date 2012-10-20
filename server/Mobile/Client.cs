@@ -8,7 +8,7 @@ namespace Netronics.Mobile
 {
     public class Client
     {
-        private long _index = -1;
+        private long _id = -1;
         private IChannel _channel;
 
         public Client(IChannel channel)
@@ -27,9 +27,9 @@ namespace Netronics.Mobile
             _channel.SendMessage(obj);
         }
 
-        public long GetIndex()
+        public long GetId()
         {
-            return _index;
+            return _id;
         }
 
         public void Auth(JObject authData)
@@ -56,7 +56,7 @@ namespace Netronics.Mobile
                 user.Save();
             }
 
-            _index = user.Id;
+            _id = user.Id;
 
             //유저에게 바뀐 정보를 전송
             var obj = new JObject();

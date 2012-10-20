@@ -1,5 +1,6 @@
 package kr.lerad.netronics.mobile.android;
 
+import kr.lerad.netronics.mobile.android.push.Push;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
@@ -100,5 +101,11 @@ public class Mobile {
     public String GetAuthFile()
     {
         return authFile;
+    }
+
+    public void AddPush(Push push)
+    {
+        push.SetMobile(this);
+        push.Run();
     }
 }

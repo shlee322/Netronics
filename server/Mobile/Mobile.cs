@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using Newtonsoft.Json.Linq;
 
 namespace Netronics.Mobile
 {
@@ -11,19 +10,25 @@ namespace Netronics.Mobile
         private Netronics _netronics;
         private readonly int _port;
         private readonly ChannelPipe _channelPipe;
-        private Dictionary<string, Commend> _cmd; 
+        private readonly Dictionary<string, Commend> _cmd;
+        private Push.Push _push;
 
         public Mobile(int port, X509Certificate cert)
         {
             _port = port;
             _channelPipe = new ChannelPipe(this, cert);
             _cmd = new Dictionary<string, Commend>();
+            _push = new Push.Push(this);
 
             Connected = client => { };
             Disconnected = client => { };
         }
 
         public bool UseAuth { get; set; }
+        public Push.Push Push
+        {
+            get { return _push; }
+        }
 
         public void Run()
         {
