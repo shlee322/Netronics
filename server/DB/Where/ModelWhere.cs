@@ -8,5 +8,10 @@
         {
             _model = model;
         }
+
+        public Model GetModel()
+        {
+            return _model;
+        }
     }
 }

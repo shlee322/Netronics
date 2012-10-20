@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data.SQLite;
 using System.IO;
 using System.Reflection;
+using Netronics.DB.Where;
 
 namespace Netronics.DB.DBMS
 {
@@ -45,7 +47,9 @@ namespace Netronics.DB.DBMS
             conn.Open();
             var cmd = conn.CreateCommand();
             cmd.CommandText = writer.ToString();
+
             cmd.ExecuteNonQuery();
+
             conn.Close();
         }
 
@@ -77,12 +81,77 @@ namespace Netronics.DB.DBMS
             cmd.CommandText = writer.ToString();
             cmd.Parameters.AddWithValue("@id", model.Id == -1 ? "null" : model.Id.ToString());
             foreach (var fieldData in dbField)
-                cmd.Parameters.AddWithValue("@" + fieldData.GetInfo().Name.ToLower(), fieldData.GetInfo().GetValue(model));
+                cmd.Parameters.AddWithValue("@" + fieldData.GetInfo().Name.ToLower(), fieldData.GetInfo().GetValue(model).ToString());
             cmd.ExecuteNonQuery();
             long id = conn.LastInsertRowId;
             conn.Close();
 
             return id;
+        }
+
+        public override NameValueCollection[] Find(string tableName, Where.Where where)
+        {
+            var collections = new List<NameValueCollection>();
+
+            var conn = new SQLiteConnection(_connectionStringBuilder.ToString());
+            conn.Open();
+            var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT * FROM `" + tableName + "` WHERE " + GetWhereSQL(where);
+
+
+            
+            var reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                collections.Add(reader.GetValues());
+            }
+            reader.Close();
+            conn.Close();
+
+            return collections.ToArray();
+        }
+
+        private string GetWhereSQL(Where.Where where)
+        {
+            var writer = new StringWriter();
+            where.Or(null);
+            foreach (var ordata in where.GetOrData())
+            {
+                writer.Write("(");
+                foreach (var anddata in ordata)
+                {
+                    if(anddata is ModelWhere)
+                    {
+                        writer.Write("(");
+                        foreach (var field in ((ModelWhere)anddata).GetModel().GetFieldData())
+                        {
+                            var value = field.GetInfo().GetValue(((ModelWhere) anddata).GetModel());
+
+                            if (value == null)
+                                continue;
+                            if(value is long && ((long)value) == 0)
+                                continue;
+                            
+                            writer.Write("{0} = '{1}' and ", field.GetInfo().Name.ToLower(), value); 
+                        }
+                        writer.Write("true)");
+                    }
+                    else if (anddata is StringWhere)
+                    {
+                        
+                    }
+                    else
+                    {
+                        writer.Write(GetWhereSQL(anddata));
+                    }
+                    writer.Write(" and ");
+                }
+
+                writer.Write("true) or ");
+            }
+            writer.Write("false");
+
+            return writer.ToString().Replace(" or false","").Replace(" and true","");
         }
 
         public override NameValueCollection Find(string tableName, int id)

@@ -33,6 +33,11 @@ namespace Netronics.DB.DBMS
             throw new Exception("DB 설정 에러");
         }
 
+        public virtual NameValueCollection[] Find(string tableName, Where.Where where)
+        {
+            throw new Exception("DB 설정 에러");
+        }
+
         public virtual NameValueCollection Find(string tableName, int id)
         {
             throw new Exception("DB 설정 에러");

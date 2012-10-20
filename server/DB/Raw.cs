@@ -42,7 +42,24 @@ namespace Netronics.DB
 
         public Model[] Find(Where.Where where)
         {
-            return null;
+            var data = DBMS.DB.GetInstance().Find(_tableName, where);
+
+            var list = new List<Model>();
+            foreach (var row in data)
+            {
+                var obj = (Model)Activator.CreateInstance(_type);
+                obj.Id = Convert.ToInt64(row.Get("id"));
+                foreach (var fieldData in _dbField)
+                {
+                    if(fieldData.GetField() is CharField)
+                        fieldData.GetInfo().SetValue(obj, row.Get(fieldData.GetInfo().Name.ToLower()));
+                    else if(fieldData.GetField() is Int64Field)
+                        fieldData.GetInfo().SetValue(obj, Convert.ToInt64(row.Get(fieldData.GetInfo().Name.ToLower())));
+                }
+                list.Add(obj);
+            }
+
+            return list.ToArray();
         }
 
         public Model Find(int id)

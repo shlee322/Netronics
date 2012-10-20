@@ -50,7 +50,15 @@ namespace DBTool
                         fieldInfos.Add(new FieldData(field, attributes[0] as Field));
                     }
 
-                    DB.GetInstance().CreateTable(tableName, fieldInfos);
+                    try
+                    {
+                        DB.GetInstance().CreateTable(tableName, fieldInfos);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+                    
                 }
             }
             

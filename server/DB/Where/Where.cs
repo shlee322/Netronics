@@ -33,5 +33,15 @@ namespace Netronics.DB.Where
             _andData.Add(new StringWhere(sql));
             return this;
         }
+
+        public IEnumerable<IEnumerable<Where>> GetOrData()
+        {
+            return _orData;
+        }
+
+        public IEnumerable<Where> GetAndData()
+        {
+            return _andData;
+        }
     }
 }

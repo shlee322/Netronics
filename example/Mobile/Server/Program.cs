@@ -25,6 +25,7 @@ namespace MobileServer
             mobile.On("hi", request =>
                 {
                     request.Client.Emit("hi", new JValue("test222"));
+                    mobile.Push.SendMessage(request.Client, new JObject("{test:123}"));
                 });
             mobile.On("hi", request =>
                 {
@@ -34,6 +35,7 @@ namespace MobileServer
             {
 
             });
+            mobile.Push.SetGCMKey("568476072992", "AIzaSyAbX7hP5h29tgUczJDqhtntJavHTkvvodU");
             mobile.Run();/*
             var doc = new DB.Doc() {Id = 1, Title = "테스트", Content = "테스트입니다.", Date = DateTime.Now};
             doc.Save();

@@ -39,6 +39,11 @@ namespace Netronics.DB
             get { return Raw.GetModelObjects(GetType()); }
         }
 
+        public IEnumerable<FieldData> GetFieldData()
+        {
+            return _dbField;
+        }
+
         protected DateTime DateTimeField()
         {
             return DateTime.Now;
