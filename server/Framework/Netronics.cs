@@ -88,7 +88,9 @@ namespace Netronics
         {
             if (Socket == null)
                 return;
-            AddChannel(Properties.GetChannelPipe().CreateChannel(this, Socket.EndAccept(ar))).Connect();
+            var channel = Properties.GetChannelPipe().CreateChannel(this, Socket.EndAccept(ar));
+            if (channel != null)
+                AddChannel(channel).Connect();
             Socket.BeginAccept(AcceptCallback, null);
         }
 

@@ -24,6 +24,8 @@ namespace Netronics
         {
             Socket.Connect(Properties.GetIPEndPoint());
             _channel = AddChannel(Properties.GetChannelPipe().CreateChannel(this, Socket));
+            if (_channel == null)
+                return;
             _channel.Connect();
         }
 

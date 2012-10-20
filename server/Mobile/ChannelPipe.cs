@@ -19,10 +19,19 @@ namespace Netronics.Mobile
 
         public IChannel CreateChannel(Netronics netronics, Socket socket)
         {
-            var channel = SslChannel.CreateChannel(socket, _cert);
-            channel.SetConfig("encoder", BsonEncoder.Encoder);
-            channel.SetConfig("decoder", BsonDecoder.Decoder);
-            channel.SetConfig("handler", new Handler(channel, _mobile));
+            SslChannel channel;
+            try
+            {
+                channel = SslChannel.CreateChannel(socket, _cert);
+                channel.SetConfig("encoder", BsonEncoder.Encoder);
+                channel.SetConfig("decoder", BsonDecoder.Decoder);
+                channel.SetConfig("handler", new Handler(channel, _mobile));
+            }
+            catch(System.Exception e)
+            {
+                return null;
+            }
+
             return channel;
         }
     }
