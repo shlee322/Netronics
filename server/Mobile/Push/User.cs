@@ -2,7 +2,7 @@
 
 namespace Netronics.Mobile.Push
 {
-    class User : Model
+    public class User : Model
     {
         [Int64Field] public long UserId;
         [CharField] public string Type;
