@@ -32,7 +32,7 @@ namespace Netronics.DB
         }
 
 
-        public int Count
+        public long Count
         {
             get
             {

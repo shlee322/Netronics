@@ -53,6 +53,16 @@ namespace Netronics.DB.DBMS
             conn.Close();
         }
 
+        public override long GetCount(string tableName)
+        {
+            var conn = new SQLiteConnection(_connectionStringBuilder.ToString());
+            conn.Open();
+            var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT count(*) FROM `" + tableName + "`;";
+
+            return (long)cmd.ExecuteScalar() ;
+        }
+
         public override long Save(string tableName, IEnumerable<FieldData> dbField, Model model)
         {
             var writer = new StringWriter();

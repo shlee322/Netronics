@@ -28,7 +28,7 @@ namespace Netronics.DB.DBMS
             throw new Exception("DB 설정 에러");
         }
 
-        public virtual int GetCount(string tableName)
+        public virtual long GetCount(string tableName)
         {
             throw new Exception("DB 설정 에러");
         }
