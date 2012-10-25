@@ -71,7 +71,10 @@ namespace Netronics.DB
             obj.Id = Convert.ToInt64(data.Get("id"));
             foreach (var fieldData in _dbField)
             {
-                fieldData.GetInfo().SetValue(obj, data.Get(fieldData.GetInfo().Name.ToLower()));
+                if (fieldData.GetField() is CharField)
+                    fieldData.GetInfo().SetValue(obj, data.Get(fieldData.GetInfo().Name.ToLower()));
+                else if (fieldData.GetField() is Int64Field)
+                    fieldData.GetInfo().SetValue(obj, Convert.ToInt64(data.Get(fieldData.GetInfo().Name.ToLower())));
             }
             return obj;
         }

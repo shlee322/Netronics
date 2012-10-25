@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBTool", "tool\DBTool\DBToo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB", "server\DB\DB.csproj", "{35B4E4F1-5AEA-4B26-8CE7-CFB86CCD1518}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SslServer", "example\SslServer\SslServer.csproj", "{0F072889-5D2B-4151-803C-1CEDB3777D2B}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Netronics.vsmdi
@@ -195,6 +197,18 @@ Global
 		{35B4E4F1-5AEA-4B26-8CE7-CFB86CCD1518}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{35B4E4F1-5AEA-4B26-8CE7-CFB86CCD1518}.Release|Win32.ActiveCfg = Release|Any CPU
 		{35B4E4F1-5AEA-4B26-8CE7-CFB86CCD1518}.Release|x86.ActiveCfg = Release|Any CPU
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Debug|Win32.ActiveCfg = Debug|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Debug|x86.ActiveCfg = Debug|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Debug|x86.Build.0 = Debug|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|Any CPU.ActiveCfg = Release|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|Win32.ActiveCfg = Release|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|x86.ActiveCfg = Release|x86
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -205,13 +219,14 @@ Global
 		{7FA17C15-3D1A-41E0-B917-C349F68EBFD8} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{D19079E5-4B3C-4303-B0B0-6DA3E2E384CD} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{2B6E32EB-CDE4-4C71-BF28-94B83D80ECF9} = {2885301C-7770-4865-A67E-C3349455D0C8}
+		{0F072889-5D2B-4151-803C-1CEDB3777D2B} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82} = {758FDE00-EAA5-4DE0-93A9-284D558D680D}
 		{D42F5DCD-2E40-45F9-B382-80626A39D605} = {0D1F333F-A2E9-47DC-B573-8ACFF0EC12EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UpdateFileVersion = True
-		BuildVersion_UpdateAssemblyVersion = True
 		BuildVersion_BuildVersioningStyle = None.None.None.Increment
+		BuildVersion_UpdateAssemblyVersion = True
+		BuildVersion_UpdateFileVersion = True
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Framework\Netronics.csproj
