@@ -8,6 +8,7 @@ namespace Netronics.Mobile
     {
         private Mobile _mobile;
         private Client _client;
+        private JToken _addPushData;
 
         public Handler(IChannel channel, Mobile mobile)
         {
@@ -37,13 +38,22 @@ namespace Netronics.Mobile
                     if(_mobile.UseAuth)
                     {
                         _client.Auth(message.Value<JObject>("auth"));
+
+                        if(_addPushData != null)
+                        {
+                            _mobile.Push.AddPush(_client, _addPushData);
+                            _addPushData = null;
+                        }
                     }
                     break;
                 case "msg":
                     _mobile.Call(new Request() { Client = _client, Type = message.Value<string>("name"), Arg = message.Value<JToken>("arg") });
                     break;
                 case "add_push":
-                    _mobile.Push.AddPush(_client, message);
+                    if (_client.GetId() != -1)
+                        _mobile.Push.AddPush(_client, message);
+                    else
+                        _addPushData = message;
                     break;
                 case "remove_push":
                     _mobile.Push.RemovePush(_client, message);
