@@ -202,10 +202,10 @@ namespace Netronics
             Write(buffer, 0, 8);
         }
 
-        public int Read(byte[] buffer, int offset, int count)
+        public int Read(byte[] buffer, int offset, int count, bool exact= true)
         {
             int len = _buffer.Read(buffer, offset, count);
-            if (len != count)
+            if (len != count && exact)
                 throw new PacketLengthException();
             return len;
         }
@@ -319,7 +319,7 @@ namespace Netronics
             find = true;
 
             long temp = 0;
-            while ((len = Read(bytes, q.Length, q.Length)) > 0)
+            while ((len = Read(bytes, q.Length, q.Length, false)) > 0)
             {
                 temp = len;
                 for (int i = 0; i <= q.Length; i++)

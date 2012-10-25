@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Security;
 using System.Net.Sockets;
 using Netronics.Protocol.PacketEncoder;
@@ -53,7 +54,7 @@ namespace Netronics.Channel.Channel
             {
                 _stream.BeginRead(_originalPacketBuffer, 0, 512, ReadCallback, null);
             }
-            catch (SocketException)
+            catch (IOException)
             {
                 Disconnect();
             }
@@ -66,9 +67,9 @@ namespace Netronics.Channel.Channel
             {
                 len = _stream.EndRead(ar);
                 if (len == 0)
-                    throw new SocketException();
+                    throw new IOException();
             }
-            catch (SocketException)
+            catch (IOException)
             {
                 Disconnect();
                 return;
@@ -101,7 +102,7 @@ namespace Netronics.Channel.Channel
             {
                 _stream.BeginWrite(o, 0, o.Length, SendCallback, null);
             }
-            catch (SocketException)
+            catch (IOException)
             {
             }
             catch (ObjectDisposedException)
@@ -126,7 +127,7 @@ namespace Netronics.Channel.Channel
             {
                 _stream.EndWrite(ar);
             }
-            catch (SocketException)
+            catch (IOException)
             {
             }
             catch (ObjectDisposedException)

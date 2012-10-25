@@ -97,5 +97,9 @@
     <Compile Include="NetronicsTest.cs" />
     <Compile Include="PacketBufferTest.cs" />
     <Compile Include="SchedulerTest.cs" />
+    <Compile Include="SocketChannelTest\Client.cs" />
+    <Compile Include="SocketChannelTest\RandemSwitch.cs" />
+    <Compile Include="SocketChannelTest\Server.cs" />
+    <Compile Include="SocketChannelTest\SocketChannel.cs" />
   </ItemGroup>
 </Project>

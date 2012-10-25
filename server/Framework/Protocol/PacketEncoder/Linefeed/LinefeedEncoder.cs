@@ -27,7 +27,13 @@ namespace Netronics.Protocol.PacketEncoder.Linefeed
         public object Decode(IChannel channel, PacketBuffer buffer)
         {
             var index = buffer.FindBytes(new byte[] {10, 13});
-            return index == -1 ? null : _encoding.GetString(buffer.ReadBytes((int)index));
+            if (index == -1)
+                return null;
+
+            string data = _encoding.GetString(buffer.ReadBytes((int) index));
+            buffer.ReadBytes(2);
+
+            return data;
         }
     }
 }
