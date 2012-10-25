@@ -101,5 +101,9 @@
     <Compile Include="SocketChannelTest\RandemSwitch.cs" />
     <Compile Include="SocketChannelTest\Server.cs" />
     <Compile Include="SocketChannelTest\SocketChannel.cs" />
+    <Compile Include="BsonTest\Client.cs" />
+    <Compile Include="BsonTest\RandemSwitch.cs" />
+    <Compile Include="BsonTest\Server.cs" />
+    <Compile Include="BsonTest\SocketChannel.cs" />
   </ItemGroup>
 </Project>
