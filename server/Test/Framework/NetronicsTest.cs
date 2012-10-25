@@ -59,5 +59,20 @@ namespace Netronics.Test
 
             Console.WriteLine("Server GetEndIPPoint 테스트 완료");
         }
+
+        [Test]
+        public void ClientTest()
+        {
+            Console.WriteLine("Client 모듈 테스트 시작");
+            var netronics = CreateNetronics();
+
+            var client = new Client(Properties.CreateProperties(new IPEndPoint(IPAddress.Loopback, 17777), new ChannelPipe().SetCreateChannelAction(channel => { })));
+            client.Start();
+            System.Console.WriteLine("Client GetIPEndPoint" + client.GetEndIPPoint());
+
+            client.Stop();
+            netronics.Stop();
+            Console.WriteLine("Client 모듈 테스트 완료");
+        }
     }
 }
