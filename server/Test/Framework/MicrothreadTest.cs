@@ -16,6 +16,7 @@ namespace Netronics.Test
         [Test]
         public void MicrothreadTest1()
         {
+            Console.WriteLine("Microthread 작동 시작");
             Scheduler.RunMicrothread(0, new Microthread(() => NPC1(1)));
             Scheduler.RunMicrothread(1, new Microthread(() => NPC1(2)));
             Scheduler.RunMicrothread(0, new Microthread(() => NPC1(3)));
@@ -37,7 +38,10 @@ namespace Netronics.Test
         {
             Console.WriteLine(DateTime.Now + " NPC" + index + " - 2");
             if (index % 2 == 0)
+            {
+                Console.WriteLine("Sleep");
                 yield return Microthread.Sleep(3);
+            }
             Console.WriteLine(DateTime.Now + " NPC" + index + " - 3");
         }
     }

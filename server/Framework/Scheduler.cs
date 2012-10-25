@@ -33,6 +33,7 @@ namespace Netronics
 
         private Scheduler()
         {
+            _time = Environment.TickCount;
             _queue = new ConcurrentQueue<Action>();
             _thread = new Thread(Loop);
             _thread.Start();
@@ -232,6 +233,7 @@ namespace Netronics
                 }
 
                 Thread.Sleep(60000);
+
             }
         }
     }

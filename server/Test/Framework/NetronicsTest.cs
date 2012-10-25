@@ -21,17 +21,19 @@ namespace Netronics.Test
         [Test]
         public void RunTest()
         {
+            Console.WriteLine("서버 실행 테스트 시작");
             var list = new List<Netronics>();
             for (int i = 0; i < 4; i++)
                 list.Add(CreateNetronics(17777 + i));
             foreach (var netronicse in list)
                 netronicse.Stop();
-            
+            Console.WriteLine("서버 실행 테스트 완료");
         }
 
         [Test]
         public void ConnectTest()
         {
+            Console.WriteLine("커넥트 테스트 시작");
             var netronics = CreateNetronics();
 
             Console.WriteLine("클라이언트 초기화");
@@ -41,17 +43,21 @@ namespace Netronics.Test
             Console.WriteLine("클라이언트 종료");
             socket.GetStream().Close();
             netronics.Stop();
+            Console.WriteLine("커넥트 테스트 완료");
         }
 
         [Test]
         public void GetEndIPPointTest()
         {
+            Console.WriteLine("Server GetEndIPPoint 테스트 시작");
             var netronics = CreateNetronics();
             Console.WriteLine("GetEndIPPoint");
             var ipPoint = netronics.GetEndIPPoint();
             if(!ipPoint.Equals(new IPEndPoint(IPAddress.Any, 17777)))
                 throw new Exception("IPEndPoint 값이 변함");
             netronics.Stop();
+
+            Console.WriteLine("Server GetEndIPPoint 테스트 완료");
         }
     }
 }
