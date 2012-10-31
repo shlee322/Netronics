@@ -32,6 +32,10 @@ namespace Netronics.Microthreading
             _parent = parent;
         }
 
+        /// <summary>
+        /// 프레임워크 내부적으로 사용되는 메서드
+        /// </summary>
+        /// <param name="scheduler"></param>
         public void Run(Scheduler scheduler)
         {
             _scheduler = scheduler;
@@ -44,7 +48,7 @@ namespace Netronics.Microthreading
             Thread.Value = null;
 
             if (_parent != null && end)
-                scheduler.RunMicrothread(_parent);
+                Run(_parent);
         }
 
         private bool Loop(Scheduler scheduler)
@@ -71,10 +75,15 @@ namespace Netronics.Microthreading
             return new SleepYield();
         }
 
-        public static IYield Wait()
+        public static IYield Wait(WaitEvent waitEvent)
         {
-            //이벤트 호출
-            return null;
+            waitEvent.AddWaitMicrothread(Thread.Value);
+            return new WaitEventYield();
+        }
+
+        public static void Run(Microthread microthread)
+        {
+            microthread._scheduler.RunMicrothread(microthread);
         }
 
         private static void SleepThreadLoop()
@@ -94,7 +103,7 @@ namespace Netronics.Microthreading
                 foreach (var sleepData in removeData)
                 {
                     SleepDatas.Remove(sleepData);
-                    sleepData.Thread._scheduler.RunMicrothread(sleepData.Thread);
+                    Run(sleepData.Thread);
                 }
 
                 System.Threading.Thread.Sleep(250);

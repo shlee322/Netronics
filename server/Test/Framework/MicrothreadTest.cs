@@ -24,6 +24,34 @@ namespace Netronics.Test
             _exitEvent.WaitOne();
         }
 
+        [Test]
+        public void MicrothreadTest2()
+        {
+            Scheduler.RunMicrothread(0, new Microthread(NPCTest_1));
+            Scheduler.RunMicrothread(0, new Microthread(NPCTest_2));
+            _exitEvent.WaitOne();
+        }
+
+        private WaitEvent _event = new WaitEvent();
+
+        private IEnumerator<IYield> NPCTest_1()
+        {
+            Console.WriteLine("NPCTest_1 - 1");
+            yield return Microthread.Sleep(2);
+            Console.WriteLine("NPCTest_1 - 2");
+            yield return Microthread.Sleep(2);
+            Console.WriteLine("NPCTest_1 - 3");
+            _event.Set();
+        }
+
+        private IEnumerator<IYield> NPCTest_2()
+        {
+            Console.WriteLine("NPCTest_2 - 1");
+            yield return Microthread.Wait(_event);
+            Console.WriteLine("NPCTest_2 - 2");
+            _exitEvent.Set();
+        }
+
         public IEnumerator<IYield> NPC1(int index)
         {
             Console.WriteLine(DateTime.Now + " NPC" + index + " - 1");
