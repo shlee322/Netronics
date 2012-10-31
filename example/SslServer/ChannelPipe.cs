@@ -21,8 +21,8 @@ namespace SslServer
             try
             {
                 channel = SslChannel.CreateChannel(socket, _cert);
-                channel.SetConfig("encoder", BsonEncoder.Encoder);
-                channel.SetConfig("decoder", BsonDecoder.Decoder);
+                channel.SetConfig("encoder", PacketEncoder.Encoder);
+                channel.SetConfig("decoder", PacketEncoder.Encoder);
                 channel.SetConfig("handler", new Handler());
             }
             catch(System.Exception e)
