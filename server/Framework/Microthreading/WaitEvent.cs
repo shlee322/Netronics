@@ -5,6 +5,7 @@ namespace Netronics.Microthreading
     public class WaitEvent
     {
         private readonly bool _isLock;
+        private bool _set = false;
         private readonly List<Microthread> _microthreads = new List<Microthread>();
 
         public WaitEvent(bool isLock = false)
@@ -28,14 +29,13 @@ namespace Netronics.Microthreading
 
         private void SetA()
         {
+            _set = true;
             foreach (var microthread in _microthreads)
             {
                 Microthread.Run(microthread);
             }
             _microthreads.Clear();
         }
-
-
 
         /// <summary>
         /// 프레임워크 내부적으로 사용되는 메소드입니다.
@@ -53,6 +53,11 @@ namespace Netronics.Microthreading
             }
 
             _microthreads.Add(microthread);
+        }
+
+        public bool IsSet()
+        {
+            return _set;
         }
     }
 }

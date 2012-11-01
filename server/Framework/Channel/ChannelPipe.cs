@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using Netronics.Channel.Channel;
 using Netronics.Protocol;
 using Netronics.Protocol.PacketEncoder;
+using Netronics.Protocol.PacketEncoder.Linefeed;
 
 namespace Netronics.Channel
 {
@@ -28,6 +29,23 @@ namespace Netronics.Channel
         {
             _createChannel = action;
             return this;
+        }
+
+        public static ChannelPipe CreateChannelPipe(IPacketEncoder encoder, IPacketDecoder decoder, IChannelHandler handler)
+        {
+            var pipe = new ChannelPipe();
+            pipe.SetCreateChannelAction((channel) =>
+            {
+                channel.SetConfig("encoder", encoder);
+                channel.SetConfig("decoder", decoder);
+                channel.SetConfig("handler", handler);
+            });
+            return pipe;
+        }
+
+        public static ChannelPipe CreateChannelPipe(IChannelHandler handler)
+        {
+            return CreateChannelPipe(LinefeedEncoder.Encoder, LinefeedEncoder.Encoder, handler);
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.Framework;
 using Netronics.Microthreading;
+using Netronics.Microthreading.IO;
 
 namespace Netronics.Test
 {
@@ -30,6 +32,22 @@ namespace Netronics.Test
             Scheduler.RunMicrothread(0, new Microthread(NPCTest_1));
             Scheduler.RunMicrothread(0, new Microthread(NPCTest_2));
             _exitEvent.WaitOne();
+        }
+
+        [Test]
+        public void NIOTest()
+        {
+            Scheduler.RunMicrothread(0, new Microthread(FileWrite));
+            _exitEvent.WaitOne();
+        }
+
+        private IEnumerator<IYield> FileWrite()
+        {
+            byte[] data = System.Text.Encoding.Default.GetBytes("testtest");
+            var file = new System.IO.FileStream("temp", FileMode.OpenOrCreate);
+            yield return file.NioWrite(data, 0, data.Length);
+            Console.WriteLine("파일쓰기 완료");
+            _exitEvent.Set();
         }
 
         private WaitEvent _event = new WaitEvent();

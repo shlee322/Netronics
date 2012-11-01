@@ -15,10 +15,14 @@ namespace Netronics.Microthreading
 
         private Scheduler _scheduler;
         private readonly Microthread _parent;
+        private readonly Microthread _root;
         private readonly Func<IEnumerator<IYield>> _func;
         private IEnumerator<IYield> _enumerator;
-
+        
         private bool _wait = false;
+
+        private object _result;
+        private object _tag;
 
         static Microthread()
         {
@@ -29,7 +33,15 @@ namespace Netronics.Microthreading
         public Microthread(Func<IEnumerator<IYield>> func, Microthread parent = null)
         {
             _func = func;
-            _parent = parent;
+            if (parent == null)
+            {
+                _root = this;
+            }
+            else
+            {
+                _parent = parent;
+                _root = _parent._root;
+            }
         }
 
         /// <summary>
@@ -77,6 +89,12 @@ namespace Netronics.Microthreading
 
         public static IYield Wait(WaitEvent waitEvent)
         {
+            if (waitEvent.IsSet())
+            {
+                Run(Thread.Value);
+                return null;
+            }
+
             waitEvent.AddWaitMicrothread(Thread.Value);
             return new WaitEventYield();
         }
@@ -84,6 +102,23 @@ namespace Netronics.Microthreading
         public static void Run(Microthread microthread)
         {
             microthread._scheduler.RunMicrothread(microthread);
+        }
+
+        public static Microthread CurrentMicrothread
+        {
+            get { return Thread.Value; }
+        }
+
+        public object Result
+        {
+            get { return _root._result; }
+            set { _root._result = value; }
+        }
+
+        public object Tag
+        {
+            get { return _root._tag; }
+            set { _root._tag = value; }
         }
 
         private static void SleepThreadLoop()
