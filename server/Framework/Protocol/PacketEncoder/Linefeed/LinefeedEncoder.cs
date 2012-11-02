@@ -20,13 +20,13 @@ namespace Netronics.Protocol.PacketEncoder.Linefeed
 
             var buffer = new PacketBuffer();
             buffer.Write(_encoding.GetBytes(str));
-            buffer.WriteBytes(new byte[]{10,13});
+            buffer.WriteBytes(new byte[]{13, 10});
             return buffer;
         }
 
         public object Decode(IChannel channel, PacketBuffer buffer)
         {
-            var index = buffer.FindBytes(new byte[] {10, 13});
+            var index = buffer.FindBytes(new byte[] {13, 10});
             if (index == -1)
                 return null;
 

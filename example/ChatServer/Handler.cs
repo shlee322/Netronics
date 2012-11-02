@@ -10,38 +10,33 @@ namespace ChatServer
         ReaderWriterLockSlim channelLock = new ReaderWriterLockSlim();
         readonly LinkedList<IChannel> _channels = new LinkedList<IChannel>();
 
-        public void Connected(IChannel channel)
+        public void Connected(IReceiveContext context)
         {
-            channel.SetTag(false);
+            context.GetChannel().SetTag(false);
             channelLock.EnterWriteLock();
-            _channels.AddLast(channel);
+            _channels.AddLast(context.GetChannel());
             channelLock.ExitWriteLock();
-            SendMessage("hi! " + channel + "\r\n");
-            channel.SendMessage("your name : ");
+            SendMessage("hi! " + context.GetChannel());
+            context.GetChannel().SendMessage("your name\r\n>");
         }
 
-        public void Disconnected(IChannel channel)
+        public void Disconnected(IReceiveContext context)
         {
             channelLock.EnterWriteLock();
-            _channels.Remove(channel);
+            _channels.Remove(context.GetChannel());
             channelLock.ExitWriteLock();
-            SendMessage(channel + " 88" + "\r\n> ");
+            SendMessage(context.GetChannel() + " 88" + "\r\n> ");
         }
 
-        public void MessageReceive(IChannel channel, dynamic message)
+        public void MessageReceive(IReceiveContext context)
         {
-            if (channel.GetTag() is bool)
+            if (context.GetChannel().GetTag() is bool)
             {
-                channel.SetTag(((string)message).Substring(0, ((string)message).LastIndexOf("\r\n", System.StringComparison.Ordinal)));
-                SendMessage(channel + " name is " + channel.GetTag() + "\r\n> ");
+                context.GetChannel().SetTag(context.GetMessage());
+                SendMessage(context.GetChannel() + " name is " + context.GetChannel().GetTag() + "\r\n> ");
                 return;
             }
-            if (message == "\r\n")
-            {
-                channel.SendMessage("\r\n> ");
-                return;
-            }
-            SendMessage(channel.GetTag() + " : " + message + "> ");
+            SendMessage(context.GetChannel().GetTag() + " : " + context.GetChannel() + "> ");
         }
 
         public void SendMessage(string message)

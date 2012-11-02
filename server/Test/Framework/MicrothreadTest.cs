@@ -43,8 +43,8 @@ namespace Netronics.Test
 
         private IEnumerator<IYield> FileWrite()
         {
-            byte[] data = System.Text.Encoding.Default.GetBytes("testtest");
-            var file = new System.IO.FileStream("temp", FileMode.OpenOrCreate);
+            byte[] data = Encoding.Default.GetBytes("testtest");
+            var file = new FileStream("temp", FileMode.OpenOrCreate);
             yield return file.NioWrite(data, 0, data.Length);
             Console.WriteLine("파일쓰기 완료");
             _exitEvent.Set();

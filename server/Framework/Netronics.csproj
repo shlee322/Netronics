@@ -81,7 +81,7 @@
     <Compile Include="ConnectionPool\ConnectionPool.cs" />
     <Compile Include="Event\StartEventArgs.cs" />
     <Compile Include="Channel\MessageContext.cs" />
-    <Compile Include="Microthreading\IO\Stream.cs" />
+    <Compile Include="Microthreading\IO\NioStream.cs" />
     <Compile Include="Microthreading\SleepYield.cs" />
     <Compile Include="Microthreading\IYield.cs" />
     <Compile Include="Microthreading\Microthread.cs" />
