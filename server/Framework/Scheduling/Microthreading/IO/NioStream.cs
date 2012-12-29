@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Netronics.Microthreading.IO
+namespace Netronics.Scheduling.Microthreading.IO
 {
     public static class NioStream
     {

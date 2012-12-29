@@ -24,6 +24,7 @@ namespace Netronics.Channel.Channel
             SetConfig("encoder", LinefeedEncoder.Encoder);
             SetConfig("decoder", LinefeedEncoder.Encoder);
             SetConfig("switch", DefaultReceiveSwitch.Switch);
+            SetConfig("scheduler", Scheduling.Scheduler.Default);
         }
 
         public void SetConfig(string name, object value)
@@ -43,11 +44,16 @@ namespace Netronics.Channel.Channel
             return null;
         }
 
+        protected Scheduling.Scheduler GetScheduler()
+        {
+            return (Scheduling.Scheduler)GetConfig("scheduler");
+        }
+
         protected bool ReceivePacket(byte[] buffer, int len)
         {
             if (_packetBuffer.IsDisposed())
                 return false;
-            Scheduler.QueueWorkItem(GetHashCode(), () =>
+            GetScheduler().QueueWorkItem(GetHashCode(), () =>
                 {
                     _packetBuffer.Write(buffer, 0, len);
                     _packetBuffer.BeginBufferIndex();
@@ -100,7 +106,7 @@ namespace Netronics.Channel.Channel
                 }
 
                 var context = new MessageContext(this, message);
-                Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
+                GetScheduler().QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
                 {
                             try
                             {
@@ -113,7 +119,7 @@ namespace Netronics.Channel.Channel
                             
                         });
 
-                Scheduler.QueueWorkItem(GetHashCode(), Receive);
+                GetScheduler().QueueWorkItem(GetHashCode(), Receive);
             }
             catch (Exception e)
             {
@@ -123,13 +129,13 @@ namespace Netronics.Channel.Channel
 
         public void Connect()
         {
-            Scheduler.QueueWorkItem(GetHashCode(), Connecting);
+            GetScheduler().QueueWorkItem(GetHashCode(), Connecting);
         }
 
         public virtual void Connecting()
         {
             var context = new ConnectContext(this);
-            Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
+            GetScheduler().QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
             {
                 try
                 {
@@ -153,15 +159,15 @@ namespace Netronics.Channel.Channel
             var context = new DisconnectContext(this);
             try
             {
-                Scheduler.QueueWorkItem(GetHashCode(), () =>
+                GetScheduler().QueueWorkItem(GetHashCode(), () =>
                         {
                             if (_packetBuffer.IsDisposed())
                                 return;
                             Disconnecting();
-                            Scheduler.QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
+                            GetScheduler().QueueWorkItem(((IReceiveSwitch)GetConfig("switch")).ReceiveSwitching(context), () =>
                                 {
                                     ((IChannelHandler) GetConfig("handler")).Disconnected(context);
-                                    Scheduler.QueueWorkItem(GetHashCode(), () =>
+                                    GetScheduler().QueueWorkItem(GetHashCode(), () =>
                                     {
                                         if (_packetBuffer.IsDisposed())
                                             return;

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Netronics.Microthreading
+namespace Netronics.Scheduling.Microthreading
 {
     public class WaitEvent
     {

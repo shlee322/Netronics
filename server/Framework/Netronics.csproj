@@ -26,6 +26,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,13 +83,13 @@
     <Compile Include="ConnectionPool\ConnectionPool.cs" />
     <Compile Include="Event\StartEventArgs.cs" />
     <Compile Include="Channel\MessageContext.cs" />
-    <Compile Include="Microthreading\IO\NioStream.cs" />
-    <Compile Include="Microthreading\SleepYield.cs" />
-    <Compile Include="Microthreading\IYield.cs" />
-    <Compile Include="Microthreading\Microthread.cs" />
-    <Compile Include="Microthreading\SleepData.cs" />
-    <Compile Include="Microthreading\WaitEvent.cs" />
-    <Compile Include="Microthreading\WaitEventYield.cs" />
+    <Compile Include="Scheduling\Microthreading\IO\NioStream.cs" />
+    <Compile Include="Scheduling\Microthreading\SleepYield.cs" />
+    <Compile Include="Scheduling\Microthreading\IYield.cs" />
+    <Compile Include="Scheduling\Microthreading\Microthread.cs" />
+    <Compile Include="Scheduling\Microthreading\SleepData.cs" />
+    <Compile Include="Scheduling\Microthreading\WaitEvent.cs" />
+    <Compile Include="Scheduling\Microthreading\WaitEventYield.cs" />
     <Compile Include="PacketLengthException.cs" />
     <Compile Include="IProperties.cs" />
     <Compile Include="Protocol\PacketEncoder\Http\HttpDecoder.cs" />
@@ -102,7 +104,7 @@
     <Compile Include="Protocol\PacketEncoder\WebSocket\Pong.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\WebSocketDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\WebSocket\WebSocketEncoder.cs" />
-    <Compile Include="Scheduler.cs" />
+    <Compile Include="Scheduling\Scheduler.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\Bson\BsonEncoder.cs" />
     <Compile Include="Channel\ChannelPipe.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Protocol\PacketEncoder\IPacketDecoder.cs" />
     <Compile Include="Protocol\PacketEncoder\IPacketEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scheduling\Worker.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -151,7 +154,8 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

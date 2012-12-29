@@ -16,7 +16,7 @@ namespace Netronics
 
         static Netronics()
         {
-            Scheduler.GetThreadCount(); //스케줄러 활성화를 위해 한번 호출
+            Scheduling.Scheduler.Default.GetThreadCount(); //스케줄러 활성화를 위해 한번 호출
         }
 
         /// <summary>

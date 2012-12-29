@@ -2,8 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using Netronics.Scheduling;
 
-namespace Netronics.Microthreading
+namespace Netronics.Scheduling.Microthreading
 {
     public class Microthread : IYield
     {
@@ -13,7 +14,7 @@ namespace Netronics.Microthreading
         private static readonly LinkedList<SleepData> SleepDatas = new LinkedList<SleepData>();
 
 
-        private Scheduler _scheduler;
+        private Worker _worker;
         private readonly Microthread _parent;
         private readonly Microthread _root;
         private readonly Func<IEnumerator<IYield>> _func;
@@ -48,14 +49,14 @@ namespace Netronics.Microthreading
         /// 프레임워크 내부적으로 사용되는 메서드
         /// </summary>
         /// <param name="scheduler"></param>
-        public void Run(Scheduler scheduler)
+        public void Run(Worker worker)
         {
-            _scheduler = scheduler;
+            _worker = worker;
             Thread.Value = this;
             if (_enumerator == null)
                 _enumerator = _func();
 
-            bool end = Loop(scheduler);
+            bool end = Loop(worker);
 
             Thread.Value = null;
 
@@ -63,12 +64,12 @@ namespace Netronics.Microthreading
                 Run(_parent);
         }
 
-        private bool Loop(Scheduler scheduler)
+        private bool Loop(Worker worker)
         {
             if(_enumerator.MoveNext())
             {
                 if (_enumerator.Current is Microthread)
-                    scheduler.RunMicrothread(_enumerator.Current as Microthread);
+                    worker.RunMicrothread(_enumerator.Current as Microthread);
                 return false;
             }
             return true;
@@ -101,7 +102,7 @@ namespace Netronics.Microthreading
 
         public static void Run(Microthread microthread)
         {
-            microthread._scheduler.RunMicrothread(microthread);
+            microthread._worker.RunMicrothread(microthread);
         }
 
         public static Microthread CurrentMicrothread
