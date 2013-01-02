@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.Framework;
-using Netronics.Microthreading;
-using Netronics.Microthreading.IO;
+using Netronics.Scheduling;
+using Netronics.Scheduling.Microthreading;
+using Netronics.Scheduling.Microthreading.IO;
 
 namespace Netronics.Test
 {
@@ -19,25 +20,25 @@ namespace Netronics.Test
         public void MicrothreadTest1()
         {
             Console.WriteLine("Microthread 작동 시작");
-            Scheduler.RunMicrothread(0, new Microthread(() => NPC1(1)));
-            Scheduler.RunMicrothread(1, new Microthread(() => NPC1(2)));
-            Scheduler.RunMicrothread(0, new Microthread(() => NPC1(3)));
-            Scheduler.RunMicrothread(1, new Microthread(() => NPC1(4)));
+            Scheduler.Default.RunMicrothread(0, new Microthread(() => NPC1(1)));
+            Scheduler.Default.RunMicrothread(1, new Microthread(() => NPC1(2)));
+            Scheduler.Default.RunMicrothread(0, new Microthread(() => NPC1(3)));
+            Scheduler.Default.RunMicrothread(1, new Microthread(() => NPC1(4)));
             _exitEvent.WaitOne();
         }
 
         [Test]
         public void MicrothreadTest2()
         {
-            Scheduler.RunMicrothread(0, new Microthread(NPCTest_1));
-            Scheduler.RunMicrothread(0, new Microthread(NPCTest_2));
+            Scheduler.Default.RunMicrothread(0, new Microthread(NPCTest_1));
+            Scheduler.Default.RunMicrothread(0, new Microthread(NPCTest_2));
             _exitEvent.WaitOne();
         }
 
         [Test]
         public void NIOTest()
         {
-            Scheduler.RunMicrothread(0, new Microthread(FileWrite));
+            Scheduler.Default.RunMicrothread(0, new Microthread(FileWrite));
             _exitEvent.WaitOne();
         }
 

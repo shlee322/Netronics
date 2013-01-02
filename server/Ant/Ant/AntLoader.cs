@@ -13,7 +13,7 @@ namespace Netronics.Ant.Ant
         private string _className;
         private Assembly _assembly;
         private AntModel _localAnt;
-        private AntManager _antManager;
+        //private AntManager _antManager;
 
         private IPEndPoint[] _queenIPEndPoints;
 
@@ -25,7 +25,7 @@ namespace Netronics.Ant.Ant
 
             LoadAssembly();
 
-            _antManager = new AntManager(this);
+            //_antManager = new AntManager(this);
         }
 
         private void LoadQueenIPEndPoint()

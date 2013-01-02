@@ -13,6 +13,8 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,15 +52,21 @@
     <Compile Include="AntConfig.cs" />
     <Compile Include="Ant\AntLoader.cs" />
     <Compile Include="Ant\Ant.cs" />
-    <Compile Include="Ant\AntManager.cs" />
+    <Compile Include="Ant\Kernel.cs" />
+    <Compile Include="Ant\LocalAnt.cs" />
+    <Compile Include="Ant\Network\AntPipeline.cs" />
+    <Compile Include="Ant\Network\QueenPacketHandler.cs" />
     <Compile Include="Ant\Ants.cs" />
     <Compile Include="Ant\AntModel.cs" />
     <Compile Include="Ant\IAnt.cs" />
     <Compile Include="Loader.cs" />
+    <Compile Include="Packet\Packet.cs" />
+    <Compile Include="QueenAnt\Ant.cs" />
+    <Compile Include="QueenAnt\AntManager.cs" />
+    <Compile Include="QueenAnt\Ants.cs" />
     <Compile Include="QueenAnt\Network.cs" />
-    <Compile Include="QueenAnt\MasterQueen.cs" />
+    <Compile Include="QueenAnt\AntPacketHandler.cs" />
     <Compile Include="QueenAnt\QueenAnt.cs" />
-    <Compile Include="QueenAnt\QueenLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -74,6 +82,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

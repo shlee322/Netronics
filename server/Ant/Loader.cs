@@ -1,5 +1,6 @@
 ﻿using Netronics.Ant.Ant;
 using Netronics.Ant.QueenAnt;
+using log4net.Config;
 
 namespace Netronics.Ant
 {
@@ -9,20 +10,18 @@ namespace Netronics.Ant
 
         public static void Load(AntConfig config)
         {
-            Loader loader = null;
+            var logFile = config.GetData("log") != null ? config.GetData("log").ToObject<string>() : @".\log.xml";
+            XmlConfigurator.Configure(new System.IO.FileInfo(logFile));
+
             switch (config.GetServerType())
             {
                 case "queen":
-                    loader = new QueenLoader();
+                    QueenAnt.QueenAnt.Init(config);
                     break;
                 case "ant":
-                    loader = new AntLoader();
+                    Kernel.Init(config);
                     break;
             }
-            if (loader == null)
-                return;
-            loader._config = config;
-            loader.Load();
         }
 
         protected AntConfig GetConfig()

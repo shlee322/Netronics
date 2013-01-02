@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Netronics.Ant.QueenAnt
 {
@@ -6,6 +7,8 @@ namespace Netronics.Ant.QueenAnt
     {
         public string Service1;
         public string Service2;
+        public int Service1Id;
+        public int Service2Id;
         public byte[] Subnet;
         public byte[] Mask;
 
@@ -30,19 +33,19 @@ namespace Netronics.Ant.QueenAnt
             }
             return true;
         }
-        /*
-        public bool Check(Service.Manager.Service service)
+        
+        public bool Check(Ant ant)
         {
-            if (Service1 != service.GetServiceName() && Service2 != service.GetServiceName())
+            if (Service1 != ant.GetAnts().GetName() && Service2 != ant.GetAnts().GetName())
                 return false;
 
-            foreach (var ip in service.GetAddress())
+            foreach (var ip in ant.GetAddress())
             {
                 if (Check(ip))
                     return true;
             }
             return false;
-        }*/
+        }
 
         public bool Check(byte[] address)
         {
@@ -55,20 +58,21 @@ namespace Netronics.Ant.QueenAnt
                 return true;
             return false;
         }
-        /*
-        public byte[] GetAddress(Service.Manager.Service service)
+
+        public IEnumerable<byte[]> GetAddress(Ant ant)
         {
-            if (Service1 != service.GetServiceName() && Service2 != service.GetServiceName())
+            if (Service1 != ant.GetAnts().GetName() && Service2 != ant.GetAnts().GetName())
                 return null;
 
-            foreach (var address in service.GetAddress())
+            var _list = new List<byte[]>();
+            foreach (var address in ant.GetAddress())
             {
                 if (Check(address))
                 {
-                    return address;
+                    _list.Add(address);
                 }
             }
-            return null;
-        }*/
+            return _list;
+        }
     }
 }

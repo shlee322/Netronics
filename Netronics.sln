@@ -38,6 +38,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB", "server\DB\DB.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SslServer", "example\SslServer\SslServer.csproj", "{0F072889-5D2B-4151-803C-1CEDB3777D2B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5C78E3D0-A03D-4508-B26F-46F1E362363A}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test1Ant", "server\Test\Test1Ant\Test1Ant.csproj", "{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Netronics.vsmdi
@@ -209,6 +218,18 @@ Global
 		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|Win32.ActiveCfg = Release|x86
 		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|x86.ActiveCfg = Release|x86
 		{0F072889-5D2B-4151-803C-1CEDB3777D2B}.Release|x86.Build.0 = Release|x86
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Release|Win32.ActiveCfg = Release|Any CPU
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -221,6 +242,7 @@ Global
 		{2B6E32EB-CDE4-4C71-BF28-94B83D80ECF9} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{0F072889-5D2B-4151-803C-1CEDB3777D2B} = {2885301C-7770-4865-A67E-C3349455D0C8}
 		{0BF9B5F7-4189-4C6B-B758-4038C10B1D82} = {758FDE00-EAA5-4DE0-93A9-284D558D680D}
+		{1EA8CA66-A6C2-4A6D-A8EB-99C12E4C2431} = {758FDE00-EAA5-4DE0-93A9-284D558D680D}
 		{D42F5DCD-2E40-45F9-B382-80626A39D605} = {0D1F333F-A2E9-47DC-B573-8ACFF0EC12EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

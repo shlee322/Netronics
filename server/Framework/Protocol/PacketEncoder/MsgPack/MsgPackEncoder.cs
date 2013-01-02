@@ -7,7 +7,7 @@ namespace Netronics.Protocol.PacketEncoder.MsgPack
 {
     public class MsgPackEncoder : IPacketEncoder
     {
-        public static MsgPackDecoder Encoder = new MsgPackDecoder();
+        public static MsgPackEncoder Encoder = new MsgPackEncoder();
 
         public PacketBuffer Encode(IChannel channel, object data)
         {

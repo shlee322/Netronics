@@ -1,10 +1,11 @@
-﻿using Netronics.Microthreading;
+﻿using Netronics.Scheduling.Microthreading;
 
 namespace Netronics.Ant.Ant
 {
     public interface IAnt
     {
-        string GetName();
+        Ants GetAnts();
+        int GetId();
         IYield SendTask(int index);
         IYield SendMessage(int index);
     }

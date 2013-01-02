@@ -18,9 +18,9 @@ namespace Netronics.Scheduling
         private Worker[] _workers = new Worker[0];
         private Thread _monitoringThread;
 
-        private Scheduler()
+        public Scheduler(int count = 4)
         {
-            SetThreadCount(4);
+            SetThreadCount(count);
         }
 
         /// <summary>

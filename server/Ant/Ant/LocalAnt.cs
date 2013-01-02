@@ -1,22 +1,33 @@
-﻿using System.Net;
+﻿
 using Netronics.Scheduling.Microthreading;
 
 namespace Netronics.Ant.Ant
 {
-    class Ant : IAnt
+    class LocalAnt : IAnt
     {
         private Ants _ants;
+        private AntModel _model;
         private int _id;
 
-        public Ant(Ants ants, int id)
+        public LocalAnt(Ants ants, AntModel model)
         {
             _ants = ants;
-            _id = id;
+            _model = model;
+        }
+
+        public AntModel GetModel()
+        {
+            return _model;
         }
 
         public Ants GetAnts()
         {
             return _ants;
+        }
+
+        public void SetId(int id)
+        {
+            _id = id;
         }
 
         public int GetId()
@@ -32,10 +43,6 @@ namespace Netronics.Ant.Ant
         public IYield SendMessage(int index)
         {
             throw new System.NotImplementedException();
-        }
-
-        public void AddPipeline(IPEndPoint endPoint)
-        {
         }
     }
 }

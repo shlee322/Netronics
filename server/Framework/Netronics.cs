@@ -113,5 +113,16 @@ namespace Netronics
         {
             return AddChannel(Properties.GetChannelPipe().CreateChannel(this, socket));
         }
+
+        public void AddSocket(EndPoint endPoint)
+        {
+            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.BeginConnect(endPoint, ar =>
+                {
+                    socket.EndConnect(ar);
+                    var channel = AddChannel(Properties.GetChannelPipe().CreateChannel(this, socket));
+                    channel.Connect();
+                }, null);
+        }
     }
 }
