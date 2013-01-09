@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using Netronics.Ant.Ant.Network;
 using Netronics.Channel.Channel;
+using Netronics.Scheduling.Microthreading;
 using Newtonsoft.Json.Linq;
 using Netronics.Ant.Packet;
 
@@ -31,6 +32,8 @@ namespace Netronics.Ant.Ant
         private LocalAnt _localAnt;
 
         private IChannel _queenChannel;
+
+        private Func<Task, IEnumerator<IYield>>[] _tasks = new Func<Task, IEnumerator<IYield>>[1000];
 
 
         public static Kernel GetKernel()
@@ -150,7 +153,7 @@ namespace Netronics.Ant.Ant
             foreach (var ant_packet in network)
             {
                 var ants = _ants[ant_packet.Value<int>("ant")];
-                var ant = new Ant(ants, ant_packet.Value<int>("id"));
+                var ant = new RemoteAnt(ants, ant_packet.Value<int>("id"));
                 ants.JoinAnt(ant);
 
                 int port = ant_packet.Value<int>("port");
@@ -172,9 +175,24 @@ namespace Netronics.Ant.Ant
         public void HelloAnt(IChannel channel, int antsId, int id)
         {
             var ants = _ants[antsId];
-            var ant = new Ant(ants, id);
-            channel.SetTag(ant);
+            var ant = new RemoteAnt(ants, id);
+            ant.AddChannel(channel);
             ants.JoinAnt(ant);
+        }
+
+        public Ants GetAnts(string name)
+        {
+            return _antNames[name];
+        }
+
+        public void AddTask(int index, Func<Task, IEnumerator<IYield>> task)
+        {
+            _tasks[index] = task;
+        }
+
+        public Func<Task, IEnumerator<IYield>> GetTask(int index)
+        {
+            return _tasks[index];
         }
     }
 }

@@ -87,6 +87,7 @@
     <Compile Include="Event\StartEventArgs.cs" />
     <Compile Include="Channel\MessageContext.cs" />
     <Compile Include="Scheduling\Microthreading\IO\NioStream.cs" />
+    <Compile Include="Scheduling\Microthreading\NoneYield.cs" />
     <Compile Include="Scheduling\Microthreading\SleepYield.cs" />
     <Compile Include="Scheduling\Microthreading\IYield.cs" />
     <Compile Include="Scheduling\Microthreading\Microthread.cs" />
@@ -157,7 +158,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" />
+      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

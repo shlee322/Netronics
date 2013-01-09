@@ -70,6 +70,8 @@ namespace Netronics.Scheduling.Microthreading
             {
                 if (_enumerator.Current is Microthread)
                     worker.RunMicrothread(_enumerator.Current as Microthread);
+                if (_enumerator.Current is NoneYield)
+                    return true;
                 return false;
             }
             return true;
@@ -82,8 +84,8 @@ namespace Netronics.Scheduling.Microthreading
 
         public static IYield Sleep(long sec)
         {
-            if(sec < 1)
-                throw new Exception("시간은 1이상이여야 합니다.");
+            if (sec < 1)
+                return None();
             SleepDataQueue.Enqueue(new SleepData(Thread.Value, sec));
             return new SleepYield();
         }
@@ -93,11 +95,16 @@ namespace Netronics.Scheduling.Microthreading
             if (waitEvent.IsSet())
             {
                 Run(Thread.Value);
-                return null;
+                return None();
             }
 
             waitEvent.AddWaitMicrothread(Thread.Value);
             return new WaitEventYield();
+        }
+
+        public static IYield None()
+        {
+            return new NoneYield();
         }
 
         public static void Run(Microthread microthread)

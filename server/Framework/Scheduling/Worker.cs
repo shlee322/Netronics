@@ -22,6 +22,8 @@ namespace Netronics.Scheduling
         public int _time;
         public bool _work;
 
+        private int _timeout;
+
         public Worker()
         {
             _time = Environment.TickCount;
@@ -56,6 +58,16 @@ namespace Netronics.Scheduling
         public void RunMicrothread(Microthread microthread)
         {
             QueueWorkItem(() => microthread.Run(this));
+        }
+
+        public void SetTimeout(int ms)
+        {
+            _timeout = ms;
+        }
+
+        public int GetTimeout()
+        {
+            return _timeout;
         }
 
         /// <summary>

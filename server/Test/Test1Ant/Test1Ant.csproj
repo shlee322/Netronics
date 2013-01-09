@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +48,10 @@
     <ProjectReference Include="..\..\Ant\Ant.csproj">
       <Project>{4CA1EF2C-573E-4885-B167-56AD75F6B5F1}</Project>
       <Name>Ant</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Netronics.csproj">
+      <Project>{394898C7-12EE-478A-AD9A-7377B5DCC081}</Project>
+      <Name>Netronics</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

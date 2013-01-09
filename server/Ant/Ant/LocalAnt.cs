@@ -1,5 +1,6 @@
 ﻿
 using Netronics.Scheduling.Microthreading;
+using Newtonsoft.Json.Linq;
 
 namespace Netronics.Ant.Ant
 {
@@ -35,14 +36,18 @@ namespace Netronics.Ant.Ant
             return _id;
         }
 
-        public IYield SendTask(int index)
+        public IYield SendTask(int index, JToken o)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
-        public IYield SendMessage(int index)
+        public IYield SendMessage(int index, JToken o)
         {
-            throw new System.NotImplementedException();
+            return null;
+        }
+
+        public void SendResponseTask(int tId, JToken message)
+        {
         }
     }
 }

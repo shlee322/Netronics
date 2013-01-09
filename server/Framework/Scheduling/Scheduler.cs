@@ -18,8 +18,11 @@ namespace Netronics.Scheduling
         private Worker[] _workers = new Worker[0];
         private Thread _monitoringThread;
 
-        public Scheduler(int count = 4)
+        private int _defaultTimeout;
+
+        public Scheduler(int count = 4, int defaultTimeout = -1)
         {
+            _defaultTimeout = defaultTimeout;
             SetThreadCount(count);
         }
 
@@ -156,7 +159,6 @@ namespace Netronics.Scheduling
                 }
 
                 Thread.Sleep(60000);
-
             }
         }
     }

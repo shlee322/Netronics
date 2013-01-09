@@ -51,7 +51,7 @@
   <ItemGroup>
     <Compile Include="AntConfig.cs" />
     <Compile Include="Ant\AntLoader.cs" />
-    <Compile Include="Ant\Ant.cs" />
+    <Compile Include="Ant\RemoteAnt.cs" />
     <Compile Include="Ant\Kernel.cs" />
     <Compile Include="Ant\LocalAnt.cs" />
     <Compile Include="Ant\Network\AntPipeline.cs" />
@@ -59,6 +59,9 @@
     <Compile Include="Ant\Ants.cs" />
     <Compile Include="Ant\AntModel.cs" />
     <Compile Include="Ant\IAnt.cs" />
+    <Compile Include="Ant\Task.cs" />
+    <Compile Include="Ant\Transaction\Task.cs" />
+    <Compile Include="Ant\Transaction\Transaction.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Packet\Packet.cs" />
     <Compile Include="QueenAnt\Ant.cs" />

@@ -55,6 +55,19 @@ namespace Netronics.Scheduling.Microthreading
             _microthreads.Add(microthread);
         }
 
+        public IEnumerable<Microthread> GetWaitMicrothread()
+        {
+            if (_isLock)
+            {
+                lock (_microthreads)
+                {
+                    return _microthreads;
+                }
+            }
+
+            return _microthreads;
+        }
+
         public bool IsSet()
         {
             return _set;

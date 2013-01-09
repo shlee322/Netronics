@@ -45,18 +45,16 @@ namespace Netronics.Ant.Ant.Network
             return _netronics.GetEndIPPoint().Port;
         }
 
-        public void AddPipeline(Ant ant, IPEndPoint endPoint)
+        public void AddPipeline(RemoteAnt ant, IPEndPoint endPoint)
         {
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(endPoint);
-            var channel = _netronics.AddSocket(socket);
-            channel.SetTag(ant);
-
-
-            var packet = new JObject();
-            packet.Add("ant", Kernel.GetKernel().GetLocalAnt().GetAnts().GetId());
-            packet.Add("id", Kernel.GetKernel().GetLocalAnt().GetId());
-            channel.SendMessage("hello_ant", packet);
+            _netronics.AddSocket(endPoint, (netronics, channel) =>
+                {
+                    ant.AddChannel(channel);
+                    var packet = new JObject();
+                    packet.Add("ant", Kernel.GetKernel().GetLocalAnt().GetAnts().GetId());
+                    packet.Add("id", Kernel.GetKernel().GetLocalAnt().GetId());
+                    channel.SendMessage("hello_ant", packet);
+                });
         }
 
         public void Connected(IReceiveContext context)
@@ -77,6 +75,14 @@ namespace Netronics.Ant.Ant.Network
                 case "hello_ant":
                     var args = packet["args"].Value<JObject>();
                     Kernel.GetKernel().HelloAnt(context.GetChannel(), args.Value<int>("ant"), args.Value<int>("id"));
+                    break;
+                case "request":
+                    var ant = context.GetChannel().GetTag() as RemoteAnt;
+                    ant.ReceiveTask(packet["t_id"].Value<int>(), packet["m_type"].Value<int>(), packet["args"]);
+                    break;
+                case "response":
+                    ant = context.GetChannel().GetTag() as RemoteAnt;
+                    ant.ResponseTask(packet["t_id"].Value<int>(), packet["args"]);
                     break;
             }
         }

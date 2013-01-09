@@ -111,16 +111,19 @@ namespace Netronics
         /// <returns>추가된 Channel</returns>
         public virtual IChannel AddSocket(Socket socket)
         {
-            return AddChannel(Properties.GetChannelPipe().CreateChannel(this, socket));
+            var channel = AddChannel(Properties.GetChannelPipe().CreateChannel(this, socket));
+            return channel;
         }
 
-        public void AddSocket(EndPoint endPoint)
+        public void AddSocket(EndPoint endPoint, Action<Netronics, IChannel> action = null)
         {
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.BeginConnect(endPoint, ar =>
                 {
                     socket.EndConnect(ar);
                     var channel = AddChannel(Properties.GetChannelPipe().CreateChannel(this, socket));
+                    if (action != null)
+                        action(this, channel);
                     channel.Connect();
                 }, null);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Netronics.Scheduling.Microthreading;
+using Newtonsoft.Json.Linq;
 
 namespace Netronics.Ant.Ant
 {
@@ -13,14 +14,14 @@ namespace Netronics.Ant.Ant
 
         public virtual void OnStart()
         {
-            throw new NotImplementedException();
         }
 
-        protected void AddTask(int index, Func<IAnt, object, IEnumerator<IYield>> task)
+        protected void AddTask(int index, Func<Task, IEnumerator<IYield>> task)
         {
+            Kernel.GetKernel().AddTask(index, task);
         }
 
-        protected void AddMessage(int index, Func<IAnt, object, IEnumerator<IYield>> action)
+        protected void AddMessage(int index, Func<IAnt, JToken, IEnumerator<IYield>> action)
         {
         }
     }
