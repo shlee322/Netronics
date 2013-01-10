@@ -1,4 +1,6 @@
-﻿namespace Netronics.Ant.Ant
+﻿using System.Collections.Concurrent;
+
+namespace Netronics.Ant.Ant
 {
     public class Ants
     {
@@ -7,6 +9,7 @@
 
         private IAnt[] _ant = new IAnt[100];
         private int _maxAntId=-1;
+        private ConcurrentQueue<int> _connectAnt = new ConcurrentQueue<int>(); 
 
         public static Ants GetAnts(string name)
         {
@@ -27,20 +30,24 @@
         public void JoinAnt(IAnt ant)
         {
             _ant[ant.GetId()] = ant;
+            _connectAnt.Enqueue(ant.GetId());
             if (_maxAntId < ant.GetId())
                 _maxAntId = ant.GetId();
         }
 
         public IAnt GetAnt()
         {
-            //원래 랜덤으로 줘야함
-            for (int i = 0; i <= _maxAntId; i++)
-            {
-                if(_ant[i] == null)
-                    continue;
-                return _ant[i];
-            }
-            return null;
+            int id;
+            if (!_connectAnt.TryPeek(out id))
+                return null;
+            var ant = _ant[id];
+            _connectAnt.Enqueue(id);
+            return ant;
+        }
+
+        public IAnt GetAnt(int id)
+        {
+            return _ant[id];
         }
     }
 }

@@ -68,7 +68,6 @@ namespace Netronics.Ant.Ant.Network
         public void MessageReceive(IReceiveContext context)
         {
             var packet = (JObject)context.GetMessage();
-            System.Console.WriteLine(packet);
             string type = packet["type"].Value<string>();
             switch (type)
             {
@@ -83,6 +82,9 @@ namespace Netronics.Ant.Ant.Network
                 case "response":
                     ant = context.GetChannel().GetTag() as RemoteAnt;
                     ant.ResponseTask(packet["t_id"].Value<int>(), packet["args"]);
+                    break;
+                default:
+                    System.Console.WriteLine(packet);
                     break;
             }
         }

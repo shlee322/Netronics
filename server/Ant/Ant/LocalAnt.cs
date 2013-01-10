@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Concurrent;
 using Netronics.Scheduling.Microthreading;
 using Newtonsoft.Json.Linq;
 
@@ -10,10 +11,13 @@ namespace Netronics.Ant.Ant
         private AntModel _model;
         private int _id;
 
+        private Transaction.LocalTransaction _transaction;
+
         public LocalAnt(Ants ants, AntModel model)
         {
             _ants = ants;
             _model = model;
+            _transaction = new Transaction.LocalTransaction(this);
         }
 
         public AntModel GetModel()
@@ -38,16 +42,17 @@ namespace Netronics.Ant.Ant
 
         public IYield SendTask(int index, JToken o)
         {
-            return null;
+            return _transaction.SendTask(index, o);
         }
 
         public IYield SendMessage(int index, JToken o)
         {
-            return null;
+            return Microthread.None();
         }
 
         public void SendResponseTask(int tId, JToken message)
         {
+            _transaction.ResponseTask(tId, message);
         }
     }
 }

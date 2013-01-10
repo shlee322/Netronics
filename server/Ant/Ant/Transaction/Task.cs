@@ -9,7 +9,7 @@ namespace Netronics.Ant.Ant.Transaction
 
         public Task()
         {
-            _event = new WaitEvent();
+            _event = new WaitEvent(true); //차후 수정할 방법을 생각해보자.
         }
 
         public WaitEvent GetWaitEvent()
@@ -19,12 +19,8 @@ namespace Netronics.Ant.Ant.Transaction
 
         public void Run(JToken o)
         {
-            foreach (var thread in _event.GetWaitMicrothread())
-            {
-                thread.Result = o;
-            }
+            _event.ForeachMicrothreads((thread) => { thread.Result = o; });
             _event.Set();
         }
-
     }
 }

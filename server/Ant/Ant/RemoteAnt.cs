@@ -10,13 +10,13 @@ namespace Netronics.Ant.Ant
     {
         private Ants _ants;
         private int _id;
-        private Transaction.Transaction _transaction;
+        private Transaction.RemoteTransaction _transaction;
 
         public RemoteAnt(Ants ants, int id)
         {
             _ants = ants;
             _id = id;
-            _transaction = new Transaction.Transaction(this);
+            _transaction = new Transaction.RemoteTransaction(this);
         }
 
         public Ants GetAnts()

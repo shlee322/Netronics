@@ -21,7 +21,7 @@ namespace Test1Ant
 
         private IEnumerator<IYield> Task1(Task task)
         {
-            System.Console.WriteLine("test");
+            //System.Console.WriteLine("test");
             task.Response(new JValue(321));
 
             Netronics.Scheduling.Scheduler.Default.RunMicrothread(0, new Microthread(()=>TestMethod1(task.GetAnt())));
@@ -30,11 +30,12 @@ namespace Test1Ant
 
         private IEnumerator<IYield> TestMethod1(IAnt ant = null)
         {
-            yield return Microthread.Sleep(5);
+            yield return Microthread.Sleep(1);
             if(ant == null)
                 ant = Ants.GetAnts("Test1").GetAnt();
             yield return ant.SendTask(0, new JValue(123));
-            System.Console.WriteLine("Result : " + Microthread.CurrentMicrothread.Result);
+            //System.Console.WriteLine("Result : " + Microthread.CurrentMicrothread.Result);
+            Netronics.Scheduling.Scheduler.Default.RunMicrothread(0, new Microthread(() => TestMethod1()));
         }
     }
 }

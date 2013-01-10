@@ -60,6 +60,8 @@
     <Compile Include="Ant\AntModel.cs" />
     <Compile Include="Ant\IAnt.cs" />
     <Compile Include="Ant\Task.cs" />
+    <Compile Include="Ant\Transaction\LocalTransaction.cs" />
+    <Compile Include="Ant\Transaction\RemoteTransaction.cs" />
     <Compile Include="Ant\Transaction\Task.cs" />
     <Compile Include="Ant\Transaction\Transaction.cs" />
     <Compile Include="Loader.cs" />

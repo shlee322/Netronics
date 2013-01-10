@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Netronics.Scheduling.Microthreading
 {
@@ -6,6 +7,7 @@ namespace Netronics.Scheduling.Microthreading
     {
         private readonly bool _isLock;
         private bool _set = false;
+        private object _lock = new object();
         private readonly List<Microthread> _microthreads = new List<Microthread>();
 
         public WaitEvent(bool isLock = false)
@@ -17,11 +19,11 @@ namespace Netronics.Scheduling.Microthreading
         {
             if(_isLock)
             {
-                lock (_microthreads)
+                lock (_lock)
                 {
                     SetA();
-                    return;
                 }
+                return;
             }
             
             SetA();
@@ -45,27 +47,33 @@ namespace Netronics.Scheduling.Microthreading
         {
             if (_isLock)
             {
-                lock (_microthreads)
+                lock (_lock)
                 {
                     _microthreads.Add(microthread);
-                    return;
                 }
+                return;
             }
 
             _microthreads.Add(microthread);
         }
 
-        public IEnumerable<Microthread> GetWaitMicrothread()
+        public void ForeachMicrothreads(Action<Microthread> action)
         {
             if (_isLock)
             {
-                lock (_microthreads)
+                lock (_lock)
                 {
-                    return _microthreads;
+                    foreach (var thread in _microthreads)
+                    {
+                        action(thread);
+                    }
                 }
+                return;
             }
-
-            return _microthreads;
+            foreach (var thread in _microthreads)
+            {
+                action(thread);
+            }
         }
 
         public bool IsSet()
